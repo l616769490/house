@@ -48,6 +48,8 @@ public class HBaseUtil {
     /**
      * 创建表
      *
+     *
+     *
      * @param tableName    表名
      * @param columnFamily 列族
      * @return 是否创建成功
