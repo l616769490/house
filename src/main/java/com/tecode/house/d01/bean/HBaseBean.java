@@ -1,4 +1,5 @@
-package com.tecode.house.d01.bean; 
+package com.tecode.house.d01.bean;
+
 public class HBaseBean { 
 private String CONTROL;public String getCONTROL() { return CONTROL;} 
 public void setCONTROL(String CONTROL) {this.CONTROL = CONTROL;}
