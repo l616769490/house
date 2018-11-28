@@ -18,13 +18,10 @@ import java.util.List;
 public class HBaseDaoImpl implements HBaseDao {
     private Connection conn = HBaseUtil.setConn();
     private final String NS = "thads";
-//    private final String TB1 = "2011";
-//    private final String TB2 = "2013";
-    private final String ROWKEY = "CONTROL";
     private final byte[] CD1 = Bytes.toBytes("info");
     private final byte[] CD2 = Bytes.toBytes("cost");
     private final byte[] CD3 = Bytes.toBytes("fmt");
-    private final String[] INFO_CLUMS = new String[]{"AGE1","METRO3","REGION","LMED","FMR","L30","L50","L80",
+    private final String[] INFO_CLUMS = new String[]{"CONTROL","AGE1","METRO3","REGION","LMED","FMR","L30","L50","L80",
                                     "IPOV","BEDRMS","BUILT","STATUS","TYPE","VALUE","VACANCY","TENURE",
                                     "NUNITS","ROOMS","WEIGHT","PER","ZINC2","ZADEQ","ZSMHC","STRUCTURETYPE",
                                     "OWNRENT","UTILITY","OTHERCOST","COST06","COST12","COST08","COSTMED",
@@ -48,8 +45,8 @@ public class HBaseDaoImpl implements HBaseDao {
     public void create(String tableName) {
         try {
             Admin admin = conn.getAdmin();
-            NamespaceDescriptor npDesc = NamespaceDescriptor.create(NS).build();
-            admin.createNamespace(npDesc);
+          //  NamespaceDescriptor npDesc = NamespaceDescriptor.create(NS).build();
+          //  admin.createNamespace(npDesc);
             HTableDescriptor htDesc = new HTableDescriptor(TableName.valueOf(tableName));
             HColumnDescriptor hcDesc1 = new HColumnDescriptor(CD1);
             HColumnDescriptor hcDesc2 = new HColumnDescriptor(CD2);
@@ -63,11 +60,10 @@ public class HBaseDaoImpl implements HBaseDao {
     }
 
     @Override
-    public void insert(String tableName) {
+    public void insert(String tableName,String path) {
         try {
             Table table = conn.getTable(TableName.valueOf(tableName));
-            Put put = new Put(Bytes.toBytes(ROWKEY));
-            List<Put> list = HBaseUtil.putFile(put,CD1,CD2,CD3,INFO_CLUMS,COST_CLUMS,FMT_CLUMS);
+            List<Put> list = HBaseUtil.putFile(CD1,CD2,CD3,INFO_CLUMS,COST_CLUMS,FMT_CLUMS,path);
             table.put(list);
             table.close();
         } catch (IOException e) {

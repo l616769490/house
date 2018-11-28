@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,28 +41,30 @@ public class HBaseUtil {
         }
     }
 
-    public static List<Put> putFile(Put put, byte[] info,byte[] cost,byte[] fmt, String[] infoClums,String[] costClums,String[] fmtClums) throws IOException {
+    public static List<Put> putFile(byte[] info,byte[] cost,byte[] fmt, String[] infoClums,String[] costClums,String[] fmtClums,String path) throws IOException {
         List<Put> list = new ArrayList<>();
-        FileInputStream fis = new FileInputStream("e:/american/thads2011.txt");
+        FileInputStream fis = new FileInputStream(path);
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-        String line = br.readLine();
-        String[] spls = line.split(",");
-        if(spls.length!=(infoClums.length+costClums.length+fmtClums.length)){
-            System.out.println("导入数据出错！");
-            return null;
-        }
-        for (int i=0;i<spls.length;i++) {
-            String newWord = spls[i].replace("\'","");
-            if(i<infoClums.length){
-                Put putInfo = put.addColumn(info, Bytes.toBytes(infoClums[i]), Bytes.toBytes(newWord));
-                list.add(putInfo);
-            }else if(i<(infoClums.length+costClums.length)){
-                Put putCost = put.addColumn(cost,Bytes.toBytes(costClums[i]),Bytes.toBytes(newWord));
-                list.add(putCost);
-            }else {
-                Put putFmt = put.addColumn(fmt,Bytes.toBytes(fmtClums[i]),Bytes.toBytes(newWord));
-                list.add(putFmt);
+        String line;
+        while (br.ready()) {
+            line = br.readLine();
+            String[] spls = line.split(",");
+            if (spls.length != (infoClums.length + costClums.length + fmtClums.length)) {
+                System.out.println("导入数据出错！");
+                return null;
             }
+            Put put = new Put(Bytes.toBytes(spls[2].replace("\'", "") + "_" + spls[0].replace("\'", "")));
+            for(int i=0;i<spls.length;i++){
+                if(i<infoClums.length){
+                    put.addColumn(info,Bytes.toBytes(infoClums[i]),Bytes.toBytes(spls[i].replace("\'","")));
+                }else if(i<infoClums.length+costClums.length){
+
+                    put.addColumn(cost,Bytes.toBytes(costClums[i-infoClums.length]),Bytes.toBytes(spls[i]));
+                }else {
+                    put.addColumn(fmt,Bytes.toBytes(fmtClums[i-infoClums.length-costClums.length]),Bytes.toBytes(spls[i]));
+                }
+            }
+            list.add(put);
         }
         br.close();
         fis.close();

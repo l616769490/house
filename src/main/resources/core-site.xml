@@ -22,13 +22,13 @@
 		<!--配置默认的文件系统的参数-->
 		<name>fs.defaultFS</name>
 		<!--文件系统所在地-->
-		<value>hdfs://166.166.166.167</value>
+		<value>hdfs://166.166.2.111</value>
 	</property>
 	<!--配置hadoop的临时目录-->
 	<property>
 		<name>hadoop.tmp.dir</name>
 		<!--存放的目录地址，一般可以防止$HADOOP_HOME/data/,或者当前启动进程的用户的家目录下-->
-		<value>/home/centos/hadoop</value>
+		<value>/home/zz/hadoop</value>
 	</property>
 
 <!--启用回收站 存放时间为1分钟-->
