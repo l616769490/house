@@ -6,6 +6,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -66,7 +67,7 @@ public class HBaseUtil {
      * @return 是否删除成功
      */
     public static boolean deleteTable(String tableName) {
-        if (tableExists(tableName)) {
+        if (!tableExists(tableName)) {
             return false;
         }
         try {
@@ -81,6 +82,32 @@ public class HBaseUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+    /**
+     * 批量插入数据
+     *
+     * @param tableName 表名
+     * @param puts      数据集
+     * @return 是否插入成功
+     */
+    public static boolean addDatas(String tableName, List<Put> puts) {
+        if (!tableExists(tableName)) {
+            return false;
+        }
+
+        try {
+            // 获取表名
+            TableName tn = TableName.valueOf(tableName);
+            // 获取表
+            Table table = connection.getTable(tn);
+            table.put(puts);
+            table.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
