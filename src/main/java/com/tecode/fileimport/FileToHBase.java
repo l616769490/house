@@ -149,6 +149,11 @@ public class FileToHBase {
             return;
         }
 
+        count++;
+        if(count % 1000 == 0) {
+            System.out.println("已插入：" + count + "行");
+        }
+
         // rowKey
         String rowKey = line[2] + "_" + line[0];
         // 列族
