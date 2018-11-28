@@ -23,7 +23,7 @@
 <configuration>
 	<property>
 		<name>hbase.rootdir</name>
-		<value>hdfs://hadoop001:8020/hbase</value>
+		<value>hdfs://hadoop000:8020/hbase</value>
 	</property>
 	<property>
 		<name>hbase.cluster.distributed</name>
@@ -36,7 +36,7 @@
 	</property>
 	<property>
 		<name>hbase.zookeeper.quorum</name>
-		<value>hadoop001:2181,hadoop002:2181,hadoop003:2181</value>
+		<value>hadoop000:2181,hadoop001:2181,hadoop002:2181</value>
 	</property>
 	<property>
 		<name>hbase.zookeeper.property.dataDir</name>

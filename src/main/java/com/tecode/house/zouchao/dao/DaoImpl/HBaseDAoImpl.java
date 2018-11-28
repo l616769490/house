@@ -1,7 +1,7 @@
 package com.tecode.house.zouchao.dao.DaoImpl;
 
 import com.tecode.house.zouchao.dao.HBaseDao;
-import com.tecode.house.zouchao.dao.HBaseScalaDao;
+
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
