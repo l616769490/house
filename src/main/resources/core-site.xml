@@ -20,11 +20,11 @@
 	<!-- 指定HDFS中NameNode的地址 -->
 	<property>
 		<name>fs.defaultFS</name>
-        <value>hdfs://166.166.5.101</value>
+        <value>hdfs://master</value>
 	</property>
 <!-- 指定hadoop运行时产生文件的存储目录 -->
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>/home/centos/hadoop</value>
+		<value>/home/lijin/hadoop_tmp</value>
 	</property>
 </configuration>

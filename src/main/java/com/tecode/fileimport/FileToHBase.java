@@ -170,9 +170,7 @@ public class FileToHBase {
         puts.add(put);
         if (puts.size() >= MAX_NUM - 24) {
             HBaseUtil.addDatas(tableName, puts);
-            System.out.println("########" +puts.size());
             puts.clear();
-            System.out.println(">>>>>" + puts.size());
         }
 
     }
