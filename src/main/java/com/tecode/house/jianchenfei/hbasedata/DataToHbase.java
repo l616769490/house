@@ -15,6 +15,9 @@ import java.util.List;
  */
 public class DataToHbase {
 
+    public DataToHbase() {
+    }
+
     /**
      * 从文件中导入数据到HBase
      *
@@ -38,40 +41,41 @@ public class DataToHbase {
             List<Put> puts = new ArrayList<>(1024);
 
             while ((line = br.readLine()) != null) {
-                if(line.isEmpty()) {
+                if (line.isEmpty()) {
                     continue;
                 }
 
-                String[] list =  line.split(",");
+                String[] list = line.split(",");
                 String rowKey = fields[0] + "_" + fields[2];
                 Put put = new Put(Bytes.toBytes(rowKey));
-                for(int i = 0;i <list.length; i++) {
+                for (int i = 0; i < list.length; i++) {
                     String cloumnName = fields[i].toLowerCase();
 
-                    String columnFamliy ;
-                    if (cloumnName.startsWith("cost") && cloumnName.length() > 7){
+                    String columnFamliy;
+                    if (cloumnName.startsWith("cost") && cloumnName.length() > 7) {
                         columnFamliy = "cost";
-                    }else if(cloumnName.startsWith("fmt")){
+                    } else if (cloumnName.startsWith("fmt")) {
                         columnFamliy = "fmt";
-                    }else{
-                         columnFamliy = "info";
+                    } else {
+                        columnFamliy = "info";
                     }
                     String value = list[i];
 
-                    put.addColumn(Bytes.toBytes(columnFamliy),Bytes.toBytes(cloumnName),Bytes.toBytes(value));
+                    put.addColumn(Bytes.toBytes(columnFamliy), Bytes.toBytes(cloumnName), Bytes.toBytes(value));
 
 
-                puts.add(put);
+                    puts.add(put);
 
-                if(puts.size() >= 1024) {
-                    HBaseUtil.addDatas("thads:2013",puts);
-                    puts.clear();
+                    if (puts.size() >= 1024) {
+                        HBaseUtil.addDatas("thads:2013", puts);
+                        puts.clear();
+                    }
+
+                    if (puts.size() > 0) {
+                        HBaseUtil.addDatas("thads:2013", puts);
+                        puts.clear();
+                    }
                 }
-            }
-            if(puts.size() > 0) {
-                HBaseUtil.addDatas("thads:2013",puts);
-                puts.clear();
-            }
             }
         } catch (IOException e) {
             e.printStackTrace();
