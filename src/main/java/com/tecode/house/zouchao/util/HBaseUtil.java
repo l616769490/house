@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HBaseUtil {
-    public static Boolean isExits(String tableName) throws IOException {
+    public static Boolean isTableExits(String tableName) throws IOException {
         //获得配置文件的对象  new HBaseConfiguration()过时，使用HBaseConfiguration.create()替换了。
         Configuration conf = HBaseConfiguration.create();
         //新的API
@@ -21,15 +21,12 @@ public class HBaseUtil {
     }
 
     public static void createTable(String tableName, String... cf) throws IOException {
-        if (isExits(tableName)) {
-            System.out.println("表已存在");
+        if (isTableExits(tableName)) {
             return;
         }
         Configuration conf = HBaseConfiguration.create();
         Connection conn = ConnectionFactory.createConnection(conf);
         Admin admin = conn.getAdmin();
-
-
         //创建表的描述器
         HTableDescriptor hTableDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
         //遍历传入的列族。
@@ -45,7 +42,11 @@ public class HBaseUtil {
         admin.createTable(hTableDescriptor);
     }
 
+    //创建命名空间
     public static void createNameSpace(String name) throws IOException {
+        if (isNameSpaceExits(name)) {
+            return;
+        }
         Configuration conf = HBaseConfiguration.create();
         Connection conn = ConnectionFactory.createConnection(conf);
         Admin admin = conn.getAdmin();
@@ -54,6 +55,7 @@ public class HBaseUtil {
         admin.createNamespace(namespaceDescriptor);
     }
 
+    //判断命名空间是否存在
     public static Boolean isNameSpaceExits(String name) throws IOException {
         Boolean b = false;
         Configuration conf = HBaseConfiguration.create();
@@ -65,5 +67,22 @@ public class HBaseUtil {
             b = true;
         }
         return b;
+    }
+
+    //删除表
+    public static void deleteTable(String tableName) throws IOException {
+
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
+        Admin admin = conn.getAdmin();
+
+        //判断表是否是disable
+        if (!admin.isTableDisabled(TableName.valueOf(tableName))) {
+            //设置表为disable
+            admin.disableTable(TableName.valueOf(tableName));
+        }
+        //进行表的删除
+        admin.deleteTable(TableName.valueOf(tableName));
+
     }
 }
