@@ -1,6 +1,7 @@
 package com.tecode.house.liuhao.test;
 
 import com.tecode.house.liuhao.utils.DataToHbase;
+import com.tecode.house.liuhao.utils.HBaseUtil;
 
 import java.io.IOException;
 
@@ -9,9 +10,9 @@ import java.io.IOException;
  */
 public class TestDataToHbase {
     public static void main(String[] args) throws IOException {
-        DataToHbase t = new DataToHbase();
-        t.readFile();
 
+/* DataToHbase t = new DataToHbase();
+        t.readFile();*/
 
     }
 }
