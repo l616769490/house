@@ -9,7 +9,7 @@ trait HBaseScalaDao {
     * @param tableName 表名
     * @return
     */
-  def getAllRent(tableName: String): ArrayBuffer[Integer]
+  def getAllRent(tableName: String): ArrayBuffer[Int]
 
   /**
     * 获取建成年份及传入的列的值
