@@ -24,6 +24,6 @@
 
 	<property>
         <name>dfs.namenode.secondary.http-address</name>
-        <value>snn:50090</value>
+        <value>snn:50070</value>
 	</property>
 </configuration>

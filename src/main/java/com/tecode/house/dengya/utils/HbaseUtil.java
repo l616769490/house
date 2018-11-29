@@ -127,7 +127,7 @@ public static  boolean isTableExists(String tableName) throws IOException{
       * @throws IOException
       */
 
-     public static List<Put> addRow(String tableName, String[] INFO, String[] COST, String[] FMT, String path) throws IOException{
+     public static List<Put> addRow(String tableName, List<String> INFO, List<String> COST, List<String> FMT, String path) throws IOException{
 
           conf = HBaseConfiguration.create();
           conn = ConnectionFactory.createConnection(conf);
@@ -135,35 +135,41 @@ public static  boolean isTableExists(String tableName) throws IOException{
          FileInputStream file = new FileInputStream(path);
          InputStreamReader reader = new InputStreamReader(file);
          BufferedReader buffer = new BufferedReader(reader);
-         String line = buffer.readLine();
+         buffer.readLine();
+        // System.out.println(line);
 
          //使用Connection连接对象调用getTable(TableName tableName) 来获得Table的对象
          Table table = conn.getTable(TableName.valueOf(tableName));
-         while(line != null){
-
+         while(buffer.ready()){
+             String line = buffer.readLine();
              String[] split = line.split(",");
+            // System.out.println(split);
              String rowKey = split[2].replaceAll("\'","")+"_"+split[0].replace("\'","");
              //构建Put的对象  使用 行键作为构造器的参数传入Put的构造器，来返回一个Put的对象。
-             if(INFO.length+COST.length+FMT.length != split.length){
+           //  System.out.println(INFO);
+           //  System.out.println(COST);
+            // System.out.println(FMT);
+             if(INFO.size()+COST.size()+FMT.size() != split.length){
+
                  System.out.println("数据有误");
                  return  null;}
                  Put put = new Put(Bytes.toBytes(rowKey));
                  //使用addColumn()方法 来设置需要在哪个列族的列新增值
              for(int i = 0;i < split.length;i ++){
                  String word = split[i];
-                 if(i < INFO.length){
-                     put.addColumn(Bytes.toBytes(info), Bytes.toBytes(INFO[i]),  Bytes.toBytes(word.replace("\'","")));
-                 }else if(i < INFO.length+COST.length){
-                     put.addColumn(Bytes.toBytes(cost), Bytes.toBytes(i-INFO.length),  Bytes.toBytes(word.replace("\'","")));
+                 if(i < INFO.size()){
+                     put.addColumn(Bytes.toBytes(info), Bytes.toBytes(INFO.get(i)),  Bytes.toBytes(word.replace("\'","")));
+                 }else if(i < INFO.size()+COST.size()){
+                     put.addColumn(Bytes.toBytes(cost), Bytes.toBytes(COST.get(i-INFO.size())),  Bytes.toBytes(word.replace("\'","")));
                  }else{
-                     put.addColumn(Bytes.toBytes(fmt), Bytes.toBytes(i-INFO.length-COST.length),  Bytes.toBytes(word.replace("\'","")));
+                     put.addColumn(Bytes.toBytes(fmt), Bytes.toBytes(FMT.get(i-INFO.size()-COST.size())),  Bytes.toBytes(word.replace("\'","")));
                  }
 
 
              }
              list.add(put);
             table.put(list);
-            conn.close();
+
 
          }
          return list;
