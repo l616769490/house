@@ -1,6 +1,8 @@
 package com.tecode.house.d01.bean;
 
-public class HBaseBean { 
+public class HBaseBean {
+private String rowKey;public String getRowKey() {return rowKey;}
+public void setRowKey(String rowKey) {this.rowKey = rowKey;}
 private String CONTROL;public String getCONTROL() { return CONTROL;} 
 public void setCONTROL(String CONTROL) {this.CONTROL = CONTROL;}
 private String AGE1;public String getAGE1() { return AGE1;} 
