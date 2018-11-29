@@ -34,9 +34,9 @@ public class DataToHbase {
         String tablename = "2013";
         String[] family = {"INFO","COST","FMT"};
 
-        t.createTable(tablename,family);
-
-        File file = new File("d;/thads2013n.csv");
+        boolean newtable = t.createTable(tablename, family);
+        System.out.println(newtable);
+        File file = new File("d://thads2013n.csv");
         InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
         BufferedReader in = new BufferedReader(isr);
 
@@ -45,10 +45,10 @@ public class DataToHbase {
         TableName tn = TableName.valueOf(tablename);
         // 获取表
         Table table = connection.getTable(tn);
+        String line;
+        while((line=in.readLine())!=null){
 
-        while(in.readLine()!=null){
-            String line = in.readLine();
-            String[] split = line.replaceAll("\'", "").split(",");
+            String[] split = line.replaceAll("\'","").split(",");
             String row = split[2]+"_"+split[0];
             Put put = new Put(Bytes.toBytes(row));
             for (int i = 0; i < split.length; i++) {

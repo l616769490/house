@@ -42,9 +42,9 @@ public class HBaseUtil {
      * @return 是否创建成功
      */
     public static boolean createTable(String tableName, String... columnFamily) {
-        if (tableExists(tableName)) {
+       /* if (tableExists(tableName)) {
             return false;
-        }
+        }*/
         try {
             Connection connection = HBaseUtil.getConnection();
             Admin admin = connection.getAdmin();
