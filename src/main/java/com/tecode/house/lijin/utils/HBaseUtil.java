@@ -17,6 +17,7 @@ import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * HBase工具类
@@ -25,18 +26,35 @@ import java.io.IOException;
  * 开发：李晋
  */
 public class HBaseUtil {
-    private static Configuration cfg;
+
+
+    /**
+     * HBase 配置
+     */
+    private static Configuration cfg = HBaseConfiguration.create();
+    /**
+     * HBase连接
+     */
     private static Connection connection;
+
+    static {
+        try {
+            // 获取连接
+            connection = ConnectionFactory.createConnection(cfg);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     /**
      * 判断表是否存在
      *
      * @param tableName 表名
-     * @return
+     * @return  是否存在
      */
     public static boolean tableExists(String tableName) {
         try {
-            Connection connection = HBaseUtil.getConnection();
             Admin admin = connection.getAdmin();
             return admin.tableExists(TableName.valueOf(tableName));
         } catch (IOException e) {
@@ -57,7 +75,6 @@ public class HBaseUtil {
             return false;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             Admin admin = connection.getAdmin();
             HTableDescriptor desc = new HTableDescriptor(TableName.valueOf(tableName));
             for (String s : columnFamily) {
@@ -78,11 +95,10 @@ public class HBaseUtil {
      * @return 是否删除成功
      */
     public static boolean deleteTable(String tableName) {
-        if (tableExists(tableName)) {
+        if (!tableExists(tableName)) {
             return false;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             Admin admin = connection.getAdmin();
             TableName tn = TableName.valueOf(tableName);
             if (!admin.isTableDisabled(tn)) {
@@ -97,7 +113,7 @@ public class HBaseUtil {
     }
 
     /**
-     * 插入数据
+     * 插入单条数据
      *
      * @param tableName    表名
      * @param rowKey       行键
@@ -112,7 +128,6 @@ public class HBaseUtil {
             return false;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             // 获取表名
             TableName tn = TableName.valueOf(tableName);
             // 获取表
@@ -130,6 +145,34 @@ public class HBaseUtil {
     }
 
     /**
+     * 批量插入数据
+     *
+     * @param tableName 表名
+     * @param puts      数据集
+     * @return 是否插入成功
+     */
+    public static boolean addDatas(String tableName, List<Put> puts) {
+        if (!tableExists(tableName)) {
+            return false;
+        }
+
+        try {
+            // 获取表名
+            TableName tn = TableName.valueOf(tableName);
+            // 获取表
+            Table table = connection.getTable(tn);
+            table.put(puts);
+            table.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
      * 删除数据
      *
      * @param tableName    表名
@@ -143,7 +186,6 @@ public class HBaseUtil {
             return false;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             // 获取表名
             TableName tn = TableName.valueOf(tableName);
             // 获取表
@@ -172,7 +214,6 @@ public class HBaseUtil {
             return null;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             // 获取表名
             TableName tn = TableName.valueOf(tableName);
             // 获取表
@@ -200,7 +241,6 @@ public class HBaseUtil {
             return null;
         }
         try {
-            Connection connection = HBaseUtil.getConnection();
             // 获取表名
             TableName tn = TableName.valueOf(tableName);
             // 获取表
@@ -215,16 +255,6 @@ public class HBaseUtil {
         return null;
     }
 
-
-    static {
-        cfg = HBaseConfiguration.create();
-        try {
-            //创建连接
-            connection = ConnectionFactory.createConnection(cfg);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * HBase的连接方法
@@ -246,5 +276,4 @@ public class HBaseUtil {
             e.printStackTrace();
         }
     }
-
 }
