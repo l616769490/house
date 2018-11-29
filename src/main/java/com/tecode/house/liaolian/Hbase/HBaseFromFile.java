@@ -1,7 +1,9 @@
-package com.tecode.house.lijin.hbase;
+package com.tecode.house.liaolian.Hbase;
 
-import com.tecode.house.lijin.utils.ConfigUtil;
-import com.tecode.house.lijin.utils.HBaseUtil;
+
+
+import com.tecode.house.liaolian.utils.HBaseUtil;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

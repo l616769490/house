@@ -1,7 +1,7 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.liaolian.test;
 
-import com.tecode.table.TablePost;
 import com.tecode.table.Table;
+import com.tecode.table.TablePost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
