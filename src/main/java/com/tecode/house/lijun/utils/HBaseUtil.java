@@ -28,6 +28,7 @@ import java.util.*;
 public class HBaseUtil {
 
 
+
     /**
      * HBase 配置
      */
