@@ -26,7 +26,7 @@ public class DataToHbase {
     public static void fileToHbase(String path) {
 
         try {
-           // long t1 = System.currentTimeMillis();
+            long t1 = System.currentTimeMillis();
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line = br.readLine();
             // 取第一个做判断
@@ -70,18 +70,18 @@ public class DataToHbase {
                 }
                 puts.add(put);
                 if (puts.size() >= 1024) {
-                   // System.out.println("asasa");
-                    HBaseUtil.addDatas("thads:2013", puts);
+                    System.out.println("asasa");
+                    HBaseUtil.addDatas("thads:2011", puts);
                     puts.clear();
                 }
             }
 
             if (puts.size() > 0) {
-                HBaseUtil.addDatas("thads:2013", puts);
+                HBaseUtil.addDatas("thads:2011", puts);
                 puts.clear();
             }
-           // long t2 = System.currentTimeMillis();
-            //System.out.println(t2 - t1);
+            long t2 = System.currentTimeMillis();
+            System.out.println(t2 - t1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,14 +114,14 @@ public class DataToHbase {
     public static void main(String[] args) {
         // HBaseUtil.createTable("thads:2011","info","cost","fmt");
 
-        if (HBaseUtil.tableExists("thads:2013")) {
-            HBaseUtil.deleteTable("thads:2013");
-            HBaseUtil.createTable("thads:2013", "info", "cost", "fmt");
+        if (HBaseUtil.tableExists("thads:2011")) {
+            HBaseUtil.deleteTable("thads:2011");
+            HBaseUtil.createTable("thads:2011", "info", "cost", "fmt");
         } else {
-            HBaseUtil.createTable("thads:2013", "info", "cost", "fmt");
+            HBaseUtil.createTable("thads:2011", "info", "cost", "fmt");
         }
 
-        String path = DataToHbase.class.getClassLoader().getResource("").getPath() + "../notebook/upload/2013.csv";
+        String path =  "D:\\thads2011.csv";
         fileToHbase(path);
 
 
