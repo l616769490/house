@@ -127,28 +127,25 @@ public static  boolean isTableExists(String tableName) throws IOException{
       * @throws IOException
       */
 
-     public static List<Put> addRow(String tableName, List<String> INFO, List<String> COST, List<String> FMT, String path) throws IOException{
+     public static List<List<Put>> addRow(String tableName, List<String> INFO, List<String> COST, List<String> FMT, String path) throws IOException{
 
           conf = HBaseConfiguration.create();
           conn = ConnectionFactory.createConnection(conf);
+          List<List<Put>>  lists = new ArrayList<>();
           List<Put> list = new ArrayList<>();
          FileInputStream file = new FileInputStream(path);
          InputStreamReader reader = new InputStreamReader(file);
          BufferedReader buffer = new BufferedReader(reader);
-         buffer.readLine();
+         String s;
         // System.out.println(line);
 
          //使用Connection连接对象调用getTable(TableName tableName) 来获得Table的对象
-         Table table = conn.getTable(TableName.valueOf(tableName));
-         while(buffer.ready()){
-             String line = buffer.readLine();
-             String[] split = line.split(",");
-            // System.out.println(split);
-             String rowKey = split[2].replaceAll("\'","")+"_"+split[0].replace("\'","");
+         while((s=buffer.readLine())!=null){
+
+             String[] split = s.split(",");
+             String rowKey = split[2].replace("\'","")+"_"+split[0].replace("\'","");
              //构建Put的对象  使用 行键作为构造器的参数传入Put的构造器，来返回一个Put的对象。
-           //  System.out.println(INFO);
-           //  System.out.println(COST);
-            // System.out.println(FMT);
+
              if(INFO.size()+COST.size()+FMT.size() != split.length){
 
                  System.out.println("数据有误");
@@ -165,13 +162,18 @@ public static  boolean isTableExists(String tableName) throws IOException{
                      put.addColumn(Bytes.toBytes(fmt), Bytes.toBytes(FMT.get(i-INFO.size()-COST.size())),  Bytes.toBytes(word.replace("\'","")));
                  }
 
-
+                    if(lists.size() <= 100){
+                        list.add(put);
+                    }else{
+                        lists.add(list);
+                        list.clear();
+                        list.add(put);
+                    }
              }
-             list.add(put);
-            table.put(list);
-
 
          }
-         return list;
+        lists.add(list);
+         return lists;
+
      }
 }

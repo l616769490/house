@@ -9,6 +9,7 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ public class FileToHbase {
     private static List<String> INFO;
     private static List<String> COST;
     private static List<String> FMT;
-    private static String path ;
     private static final String info = "info";
     private static final String cost = "cost";
     private static final String fmt = "fmt";
@@ -31,7 +31,7 @@ public class FileToHbase {
         INFO = new ArrayList<>();
         COST = new ArrayList<>();
         FMT = new ArrayList<>();
-         path ="D:\\thads2013n.csv";
+        String path = "d:/thads2013n.csv";
         File file = new File(path);
         InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
         BufferedReader buffer = new BufferedReader(reader);
@@ -61,10 +61,17 @@ public class FileToHbase {
     }
 
     public static void insert() throws Exception {
-        path ="D:\\thads2013n.csv";
+        String path = "d:/thads2011.txt";
+        conf = HBaseConfiguration.create();
+        conn = ConnectionFactory.createConnection(conf);
+        Table table = conn.getTable(TableName.valueOf("thads:2011"));
 
        // Table table =  conn.getTable(TableName.valueOf("thads:2013"));
-        List<Put> list = HbaseUtil.addRow("thads:2013",INFO,COST,FMT,path);
+        List<List<Put>> lists = HbaseUtil.addRow("thads:2011", INFO, COST, FMT, path);
+        for (List<Put> list : lists) {
+            table.put(list);
+        }
+        table.close();
 
       }
     public static void main(String[] args) throws Exception {
