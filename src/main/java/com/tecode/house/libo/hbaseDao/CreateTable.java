@@ -86,59 +86,108 @@ public class CreateTable {
     /**
      * 读取并插入数据数据
      */
-    public static List<Put> readData(String TABLENAME,String path) throws IOException {
+    public static List<List<Put>> readData(String path) throws IOException {
+
         conf = HBaseConfiguration.create();
         conn = ConnectionFactory.createConnection(conf);
-        List<Put> list = new ArrayList<Put>();
-        //String filePath = "d:/thads2013n.csv";
+        List<List<Put>> list = new ArrayList<>();
+        List<Put> l = new ArrayList<>();
+
         File file = new File(path);
+        //流
         InputStreamReader isr = new InputStreamReader(new FileInputStream(file));
         BufferedReader in = new BufferedReader(isr);
         String s;
-        Table table = conn.getTable(TableName.valueOf(TABLENAME));
-        while((s=in.readLine())!=null){
+      // Table table = conn.getTable(TableName.valueOf(TABLENAME));
+        while((s = in.readLine())!=null){
             String[] split = s.split(",");
-            String rowKey = split[2].replaceAll("\'","")+"_"+split[0].replaceAll("\'","");
-
             //长度判断
             if(split.length!=(info_clm.length+cost_clm.length+fmt_clm.length)){
                 System.out.println("数据有误！");
                 return null;
             }
+            String rowKey = split[2].replaceAll("\'","")+"_"+split[0].replaceAll("\'","");
             Put put = new Put(Bytes.toBytes(rowKey));
             for(int i=0;i<split.length;i++){
-
                 String word = split[i];
                 //往info添加数据
-                if(i<info_clm.length){
-                    put.addColumn(Bytes.toBytes(INFO),Bytes.toBytes(info_clm[i]),Bytes.toBytes(word.replace("\'","")));
-
-                }else if(i<info_clm.length+cost_clm.length){
-                    put.addColumn(Bytes.toBytes(COST),Bytes.toBytes(cost_clm[i-info_clm.length]),Bytes.toBytes(word.replace("\'","")));
-                }else{
-                    put.addColumn(Bytes.toBytes(FMT),Bytes.toBytes(fmt_clm[i-info_clm.length-cost_clm.length]),Bytes.toBytes(word.replace("\'","")));
+                if (i < info_clm.length) {
+                    put.addColumn(Bytes.toBytes(INFO), Bytes.toBytes(info_clm[i]), Bytes.toBytes(word.replace("\'", "")));
+                } else if (i < info_clm.length + cost_clm.length) {
+                    put.addColumn(Bytes.toBytes(COST), Bytes.toBytes(cost_clm[i - info_clm.length]), Bytes.toBytes(word.replace("\'", "")));
+                } else {
+                    put.addColumn(Bytes.toBytes(FMT), Bytes.toBytes(fmt_clm[i - info_clm.length - cost_clm.length]), Bytes.toBytes(word.replace("\'", "")));
+                }
+                l.add(put);
+                if(l.size()==3000){
+                    list.add(l);
+                    l = new ArrayList<>();
                 }
             }
-            list.add(put);
-
         }
-        table.put(list);
-        table.close();
+//        for (List list1 : list) {
+//           System.out.println(list.size());
+//            table.put(list1);
+//        }
+
+       // table.close();
+        list.add(l);
         isr.close();
         in.close();
         return list;
 
     }
 
+    /**
+     * put
+     * @throws IOException
+     */
+    public static void insertToHbase(String TABLENAME,String path) throws IOException {
+        conf = HBaseConfiguration.create();
+        conn = ConnectionFactory.createConnection(conf);
+
+        Table table = conn.getTable(TableName.valueOf(TABLENAME));
+        List<List<Put>> list = readData(path);
+
+        for (List<Put> puts : list) {
+            System.out.println("===="+puts.size());
+            table.put(puts);
+        }
+        table.close();
+
+
+    }
+
     public static void main(String[] args) throws IOException {
-        //initNamespace();
-        //init("2013",INFO,COST,FMT);
-        //插数据
+
         String path = "d:/thads2013n.csv";
         long t1 = System.currentTimeMillis();
-        readData("2013",path);
+        insertToHbase("thads:201352",path);
         long t2 = System.currentTimeMillis();
         System.out.println((t2-t1)/1000);
+//        List<List<Put>> lists = readData(path);
+//
+//        insertToHbase(lists,"thads:201352");
+
+//        initNamespace();
+//       init("thads:201352",INFO,COST,FMT);
+
+
+        //插数据S
+//        conf = HBaseConfiguration.create();
+//        conn = ConnectionFactory.createConnection(conf);
+       // Table table = conn.getTable(TableName.valueOf("thads:2013"));
+//        String path = "d:/thads2013n.csv";
+//
+//        long t1 = System.currentTimeMillis();
+//
+//            readData("thads:201352", path);
+//        long t2 = System.currentTimeMillis();
+//        System.out.println((t2-t1)/1000);
+//        for (List<Put> list : lists) {
+//            table.put(list);
+//        }
+//        table.close();
     }
 
 
