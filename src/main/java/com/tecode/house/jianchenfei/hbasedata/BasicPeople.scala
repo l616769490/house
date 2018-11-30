@@ -29,15 +29,43 @@ object BasicPeople {
   val hBaseRDD = sc newAPIHadoopRDD(hbaseconf, classOf[TableInputFormat],
     classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
     classOf[org.apache.hadoop.hbase.client.Result])
-  val count = hBaseRDD.count()
-  println(count)
-  hBaseRDD.foreach{case (_,result) =>{
+  //val count = hBaseRDD.count()
+  //println(count)
+
+    /**
+      * 获取家庭人数数据
+      */
+   val PERRDD = hBaseRDD.map{case (_,result) =>{
     //获取行键
-    val key = Bytes.toString(result.getRow)
+    //val key = Bytes.toString(result.getRow)
+    //通过列族和列名获取列
+     Bytes.toString(result.getValue("info".getBytes,"PER".getBytes))
+   }}.map(x=>(x,1)).reduceByKey(_+_).groupBy(_._1).foreach(println)
+
+    /**
+      * 获取房产税数据，按建成年份划分
+      */
+    val RateRDD = hBaseRDD.map{case (_,result) =>{
+      //获取行键
+      //val key = Bytes.toString(result.getRow)
+      //通过列族和列名获取列
+      Bytes.toString(result.getValue("info".getBytes,"ZSMHC".getBytes))
+    }
 
 
-    println("Row key:"+key)
-  }}
+    /**
+      * 获取独栋比例数据，按照区域划分
+      */
+    val SingleRDD = hBaseRDD.map{case (_,result) =>{
+      //获取行键
+      //val key = Bytes.toString(result.getRow)
+      //通过列族和列名获取列
+      Bytes.toString(result.getValue("info".getBytes,"NUNITS".getBytes))
+    }
+
+
+
+
   sc.stop()
 
 
