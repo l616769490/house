@@ -22,7 +22,6 @@ public class FilleToHBase {
         util.createTable(tableName, "info", "cost", "fmt");
         BufferedReader br = new BufferedReader(new FileReader(path));
         int count = 0;
-        int num = 0;
         List<String[]> lists = new ArrayList<>();
         while (br.ready()) {
             String line = br.readLine();
@@ -32,7 +31,7 @@ public class FilleToHBase {
                 name = splits;
             } else {
                 String[] split = trims(splits);
-                if (lists.size() < 100) {
+                if (lists.size() < 500) {
                     lists.add(split);
                 } else {
                     putInHBase(lists, tableName);
@@ -53,7 +52,7 @@ public class FilleToHBase {
             //构建Put的对象  使用 行键作为构造器的参数传入Put的构造器，来返回一个Put的对象。
             Put put = new Put(Bytes.toBytes(split[2] + "_" + split[0]));
             //使用addColumn()方法 来设置需要在哪个列族的列新增值
-            for (int i = 1; i < split.length; i++) {
+            for (int i = 0; i < split.length; i++) {
                 String famliy = "info";
                 if (i <= 49) {
                 } else if (49 < i && i <= 73) {

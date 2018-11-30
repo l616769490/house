@@ -17,13 +17,13 @@ class HBaseScalaDaoImpl extends HBaseScalaDao {
     */
   override def getAllRent(tableName: String): ArrayBuffer[Int] = {
     val rents = new ArrayBuffer[Int]()
-    //获得配置文件的对象
-    val conf = HBaseConfiguration.create
-    //新的API
-    val conn = ConnectionFactory.createConnection(conf)
-    val table = conn.getTable(TableName.valueOf(tableName))
-    //    添加过滤器，获取info列族下的FMR列
-    val scan: Scan = new Scan().addColumn(Bytes.toBytes("info"), Bytes.toBytes("FMR"))
+//    //获得配置文件的对象
+//    val conf = HBaseConfiguration.create
+//    //新的API
+//    val conn = ConnectionFactory.createConnection(conf)
+//    val table = conn.getTable(TableName.valueOf(tableName))
+//    //    添加过滤器，获取info列族下的FMR列
+//    val scan: Scan = new Scan().addColumn(Bytes.toBytes("info"), Bytes.toBytes("FMR"))
 //    val resultScanner: ResultScanner = table.getScanner(scan)
 //    for (result: Result <- resultScanner) {
 //      val cells: Array[Cell] = result.rawCells()
@@ -44,13 +44,13 @@ class HBaseScalaDaoImpl extends HBaseScalaDao {
     */
   override def getAllByCreateYear(tableName: String, qualifiername: String): ArrayBuffer[(Int, Int)] = {
     val results = new ArrayBuffer[(Int, Int)]()
-    val conf = HBaseConfiguration.create
-    //新的API
-    val conn = ConnectionFactory.createConnection(conf)
-    val table = conn.getTable(TableName.valueOf(tableName))
-    //    添加过滤器，获取info列族下的FMR列
-    val scan: Scan = new Scan().addColumn(Bytes.toBytes("info"), Bytes.toBytes("BUILT"))
-      .addColumn(Bytes.toBytes("info"), Bytes.toBytes(qualifiername))
+//    val conf = HBaseConfiguration.create
+//    //新的API
+//    val conn = ConnectionFactory.createConnection(conf)
+//    val table = conn.getTable(TableName.valueOf(tableName))
+//    //    添加过滤器，获取info列族下的FMR列
+//    val scan: Scan = new Scan().addColumn(Bytes.toBytes("info"), Bytes.toBytes("BUILT"))
+//      .addColumn(Bytes.toBytes("info"), Bytes.toBytes(qualifiername))
 //    val resultScanner: ResultScanner = table.getScanner(scan)
 //    for (result: Result <- resultScanner) {
 //      var year: Int = 0
