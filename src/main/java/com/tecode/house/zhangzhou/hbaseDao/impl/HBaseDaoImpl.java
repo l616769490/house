@@ -63,8 +63,12 @@ public class HBaseDaoImpl implements HBaseDao {
     public void insert(String tableName,String path) {
         try {
             Table table = conn.getTable(TableName.valueOf(tableName));
-            List<Put> list = HBaseUtil.putFile(CD1,CD2,CD3,INFO_CLUMS,COST_CLUMS,FMT_CLUMS,path);
-            table.put(list);
+            List<List<Put>> list = HBaseUtil.putFile(CD1,CD2,CD3,INFO_CLUMS,COST_CLUMS,FMT_CLUMS,path);
+            //System.out.println("list:"+list.size());
+            for (List<Put> puts : list) {
+                System.out.println("======"+puts.size());
+                table.put(puts);
+            }
             table.close();
         } catch (IOException e) {
             e.printStackTrace();

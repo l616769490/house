@@ -41,7 +41,8 @@ public class HBaseUtil {
         }
     }
 
-    public static List<Put> putFile(byte[] info,byte[] cost,byte[] fmt, String[] infoClums,String[] costClums,String[] fmtClums,String path) throws IOException {
+    public static List<List<Put>> putFile(byte[] info,byte[] cost,byte[] fmt, String[] infoClums,String[] costClums,String[] fmtClums,String path) throws IOException {
+        List<List<Put>> re = new ArrayList<>();
         List<Put> list = new ArrayList<>();
         FileInputStream fis = new FileInputStream(path);
         BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -58,17 +59,22 @@ public class HBaseUtil {
                 if(i<infoClums.length){
                     put.addColumn(info,Bytes.toBytes(infoClums[i]),Bytes.toBytes(spls[i].replace("\'","")));
                 }else if(i<infoClums.length+costClums.length){
-
-                    put.addColumn(cost,Bytes.toBytes(costClums[i-infoClums.length]),Bytes.toBytes(spls[i]));
+                    put.addColumn(cost,Bytes.toBytes(costClums[i-infoClums.length]),Bytes.toBytes(spls[i].replace("\'","")));
                 }else {
-                    put.addColumn(fmt,Bytes.toBytes(fmtClums[i-infoClums.length-costClums.length]),Bytes.toBytes(spls[i]));
+                    put.addColumn(fmt,Bytes.toBytes(fmtClums[i-infoClums.length-costClums.length]),Bytes.toBytes(spls[i].replace("\'","")));
                 }
             }
             list.add(put);
+            if(list.size()==1000){
+                re.add(list);
+                //System.out.println("put:"+list.size());
+                list=new ArrayList<>();
+            }
         }
+        re.add(list);
         br.close();
         fis.close();
-        return list;
+        return re;
     }
 
 }
