@@ -25,8 +25,16 @@
             </dataSource>
         </environment>
     </environments>
+    <!-- Mapper文件 -->
     <mappers>
-        <mapper resource="com/how2java/pojo/Category.xml"/>
+        <mapper resource="mapper/DataMapper.xml"/>
+        <mapper resource="mapper/DiagramMapper.xml"/>
+        <mapper resource="mapper/DimensionMapper.xml"/>
+        <mapper resource="mapper/LegendMapper.xml"/>
+        <mapper resource="mapper/ReportMapper.xml"/>
+        <mapper resource="mapper/SearchMapper.xml"/>
+        <mapper resource="mapper/XAxisMapper.xml"/>
+        <mapper resource="mapper/YAxisMapper.xml"/>
     </mappers>
 
 </configuration>

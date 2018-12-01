@@ -12,11 +12,11 @@ import javax.annotation.Resource;
  * 成员：李晋
  */
 public class TestAnalysis implements Analysis {
-    @Resource(name = "BasicsRoomsNumServer")
-    MysqlServer server;
+
+
     @Override
     public boolean analysis(String tableName) {
-//        MysqlServer server = new BasicsRoomsNumServer();
+        MysqlServer server = new BasicsRoomsNumServer();
         server.insert(null);
         return false;
     }

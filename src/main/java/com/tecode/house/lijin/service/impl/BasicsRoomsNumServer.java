@@ -4,8 +4,15 @@ import com.tecode.echarts.Option;
 import com.tecode.house.lijin.service.MysqlServer;
 import com.tecode.mysql.bean.Report;
 import com.tecode.mysql.dao.*;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -62,12 +69,17 @@ public class BasicsRoomsNumServer implements MysqlServer {
     @Autowired
     private SearchMapper search;
 
+    private SqlSession session;
+
+    public BasicsRoomsNumServer() {
+        initSqlSession();
+    }
+
     @Override
     public void insert(Map<String, String> datas) {
         // 报表表>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        // 查询报表是否存在，不存在则创建
-        Report report = this.report.selectByName("基础分析-房间数统计");
-        System.out.println(report);
+        // 查询报表是否存在，不存在则创建Report report = this.report.selectByName("基础分析-房间数统计");
+        //        System.out.println(report);
 
 
 
@@ -83,5 +95,21 @@ public class BasicsRoomsNumServer implements MysqlServer {
     @Override
     public Option select(String reportName) {
         return null;
+    }
+
+    /**
+     * 获取数据源
+     *
+     * @return
+     */
+    private void initSqlSession() {
+        String resource = "mybatis-config2.xml";
+        try {
+            InputStream inputStream = Resources.getResourceAsStream(resource);
+            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+            session = sqlSessionFactory.openSession();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -18,7 +18,6 @@ import javax.annotation.Resource;
  * 版本：2018/12/1 V1.0
  * 成员：李晋
  */
-@Controller
 public class SQLController {
 
     /**
@@ -26,8 +25,6 @@ public class SQLController {
      *
      * @return 结果
      */
-    @ResponseBody
-    @RequestMapping(value = "/analysis", method = RequestMethod.GET)
     public String start() {
         Analysis basicHouseNum = new TestAnalysis();
         basicHouseNum.analysis("thads:2013");
