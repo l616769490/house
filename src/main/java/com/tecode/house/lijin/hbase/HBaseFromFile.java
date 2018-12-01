@@ -14,8 +14,6 @@ public class HBaseFromFile {
 
     /**
      * 表名
-     *
-     *
      */
     private String tableName;
 
