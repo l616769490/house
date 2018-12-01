@@ -29,8 +29,8 @@ object BasicPeople {
   val hBaseRDD = sc newAPIHadoopRDD(hbaseconf, classOf[TableInputFormat],
     classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
     classOf[org.apache.hadoop.hbase.client.Result])
-  //val count = hBaseRDD.count()
-  //println(count)
+  val count = hBaseRDD.count()
+  println(count)
 
     /**
       * 获取家庭人数数据
@@ -50,7 +50,7 @@ object BasicPeople {
       //val key = Bytes.toString(result.getRow)
       //通过列族和列名获取列
       Bytes.toString(result.getValue("info".getBytes,"ZSMHC".getBytes))
-    }
+    }}.map(x=>(x,1)).reduceByKey(_+_).foreach(println)
 
 
     /**
@@ -61,7 +61,7 @@ object BasicPeople {
       //val key = Bytes.toString(result.getRow)
       //通过列族和列名获取列
       Bytes.toString(result.getValue("info".getBytes,"NUNITS".getBytes))
-    }
+    }}.map(x=>(x,1)).reduceByKey(_+_).foreach(println)
 
 
 
