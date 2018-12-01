@@ -1,8 +1,13 @@
 package com.tecode.house.zouchao.serivce.impl
 
+import java.sql.{Connection, PreparedStatement, ResultSet, SQLException}
 import java.util
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.zouchao.bean._
+import com.tecode.house.zouchao.dao.MySQLDao
+import com.tecode.house.zouchao.dao.impl.MySQLDaoImpl
+import com.tecode.house.zouchao.util.MySQLUtil
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -38,7 +43,6 @@ class PriceByBuildAnalysis extends Analysis {
     //    将Buffer类型转换为java的List类型
     val rentbuffer: mutable.Buffer[(String, Double)] = rent.collect().toBuffer
     val rentlist: util.List[(String, Double)] = scala.collection.JavaConversions.bufferAsJavaList(rentbuffer)
-
 
 
     //    价格
@@ -114,4 +118,82 @@ class PriceByBuildAnalysis extends Analysis {
     })
     v
   }
+
+
+  def packageDate(tableName: String) = {
+    var conn: Connection = null;
+    val ps: PreparedStatement = null;
+    val rs: ResultSet = null;
+    val dao: MySQLDao = new MySQLDaoImpl()
+    try {
+      conn = MySQLUtil.getConn();
+      //事务控制，开启事务
+      conn.setAutoCommit(false);
+      //      插入报表表
+      val report: Report = new Report()
+      report.setName("价格统计")
+      report.setCreate(System.currentTimeMillis())
+      report.setYear(Integer.valueOf(tableName.split(":")(1)))
+      report.setGroup("年份统计")
+      report.setStatus(1)
+      val reportId: Int = dao.putInTableReport(conn, report)
+
+      //折线图
+
+      //价格折线图
+
+      val lineDiagram: Diagram = new Diagram()
+      lineDiagram.setName("各建成年份区间价格平均值")
+      lineDiagram.setType(0)
+      lineDiagram.setReportId(reportId)
+      lineDiagram.setSubtext("统计各建成年份区间价格平均值")
+
+      val lineDiagramId: Int = dao.putInTableDiagram(conn, lineDiagram)
+
+
+      //    插入x轴表
+      val lineXaxis: Xaxis = new Xaxis()
+      lineXaxis.setName("年份")
+      lineXaxis.setDiagramId(lineDiagramId)
+      lineXaxis.setDimGroupName("建成年份")
+
+      val lineXaxisId: Int = dao.putInTableXaxis(conn, lineXaxis)
+
+      //    插入y轴表
+      val lineYaxis = new Yaxis()
+      lineYaxis.setName("美元")
+      lineYaxis.setDiagramId(lineDiagramId)
+
+      val lineYaxisId: Int = dao.putInTableYaxis(conn, lineYaxis)
+      //    插入数据集表
+      val lineLegend = new Legend()
+      lineLegend.setName("价格统计")
+      lineLegend.setDiagramId(lineDiagramId)
+      lineLegend.setDimGroupName("价格统计")
+
+      val lineLegendId = dao.putInTableLegend(conn, lineLegend)
+
+
+
+      //    插入数据表
+
+
+      //    插入搜索表
+
+
+    } catch {
+      case e: Exception => {
+        //回滚事务
+        try {
+          conn.rollback();
+        } catch {
+          case e1: SQLException => e1.printStackTrace()
+        }
+        e.printStackTrace();
+      }
+    } finally {
+      MySQLUtil.close(conn);
+    }
+  }
+
 }
