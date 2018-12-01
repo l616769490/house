@@ -6,6 +6,8 @@
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="xId" jdbcType="INTEGER" property="xid" />
     <result column="legendId" jdbcType="INTEGER" property="legendid" />
+    <result column="x" jdbcType="VARCHAR" property="x" />
+    <result column="legend" jdbcType="VARCHAR" property="legend" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, value, xId, legendId
+    id, value, xId, legendId, x, legend
   </sql>
   <select id="selectByExample" parameterType="com.tecode.mysql.bean.DataExample" resultMap="BaseResultMap">
     select
@@ -100,9 +102,11 @@
   </delete>
   <insert id="insert" parameterType="com.tecode.mysql.bean.Data">
     insert into data (id, value, xId, 
-      legendId)
+      legendId, x, legend
+      )
     values (#{id,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{xid,jdbcType=INTEGER}, 
-      #{legendid,jdbcType=INTEGER})
+      #{legendid,jdbcType=INTEGER}, #{x,jdbcType=VARCHAR}, #{legend,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Data">
     insert into data
@@ -119,6 +123,12 @@
       <if test="legendid != null">
         legendId,
       </if>
+      <if test="x != null">
+        x,
+      </if>
+      <if test="legend != null">
+        legend,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -132,6 +142,12 @@
       </if>
       <if test="legendid != null">
         #{legendid,jdbcType=INTEGER},
+      </if>
+      <if test="x != null">
+        #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="legend != null">
+        #{legend,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -156,6 +172,12 @@
       <if test="record.legendid != null">
         legendId = #{record.legendid,jdbcType=INTEGER},
       </if>
+      <if test="record.x != null">
+        x = #{record.x,jdbcType=VARCHAR},
+      </if>
+      <if test="record.legend != null">
+        legend = #{record.legend,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +188,9 @@
     set id = #{record.id,jdbcType=INTEGER},
       value = #{record.value,jdbcType=VARCHAR},
       xId = #{record.xid,jdbcType=INTEGER},
-      legendId = #{record.legendid,jdbcType=INTEGER}
+      legendId = #{record.legendid,jdbcType=INTEGER},
+      x = #{record.x,jdbcType=VARCHAR},
+      legend = #{record.legend,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +207,12 @@
       <if test="legendid != null">
         legendId = #{legendid,jdbcType=INTEGER},
       </if>
+      <if test="x != null">
+        x = #{x,jdbcType=VARCHAR},
+      </if>
+      <if test="legend != null">
+        legend = #{legend,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -190,7 +220,9 @@
     update data
     set value = #{value,jdbcType=VARCHAR},
       xId = #{xid,jdbcType=INTEGER},
-      legendId = #{legendid,jdbcType=INTEGER}
+      legendId = #{legendid,jdbcType=INTEGER},
+      x = #{x,jdbcType=VARCHAR},
+      legend = #{legend,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

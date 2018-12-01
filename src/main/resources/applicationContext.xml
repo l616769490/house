@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
     <!-- 搜索spring控件 -->
-    <context:component-scan base-package="com.tecode.house">
+    <context:component-scan base-package="com.tecode">
         <!-- 扫描时跳过 @Controller 注解的JAVA类（控制器） -->
         <context:exclude-filter type="annotation"
                                 expression="org.springframework.stereotype.Controller"/>

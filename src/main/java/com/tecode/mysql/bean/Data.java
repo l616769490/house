@@ -9,6 +9,10 @@ public class Data {
 
     private Integer legendid;
 
+    private String x;
+
+    private String legend;
+
     public Integer getId() {
         return id;
     }
@@ -39,5 +43,21 @@ public class Data {
 
     public void setLegendid(Integer legendid) {
         this.legendid = legendid;
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x == null ? null : x.trim();
+    }
+
+    public String getLegend() {
+        return legend;
+    }
+
+    public void setLegend(String legend) {
+        this.legend = legend == null ? null : legend.trim();
     }
 }

@@ -353,6 +353,146 @@ public class DataExample {
             addCriterion("legendId not between", value1, value2, "legendid");
             return (Criteria) this;
         }
+
+        public Criteria andXIsNull() {
+            addCriterion("x is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andXIsNotNull() {
+            addCriterion("x is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andXEqualTo(String value) {
+            addCriterion("x =", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXNotEqualTo(String value) {
+            addCriterion("x <>", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXGreaterThan(String value) {
+            addCriterion("x >", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXGreaterThanOrEqualTo(String value) {
+            addCriterion("x >=", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXLessThan(String value) {
+            addCriterion("x <", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXLessThanOrEqualTo(String value) {
+            addCriterion("x <=", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXLike(String value) {
+            addCriterion("x like", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXNotLike(String value) {
+            addCriterion("x not like", value, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXIn(List<String> values) {
+            addCriterion("x in", values, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXNotIn(List<String> values) {
+            addCriterion("x not in", values, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXBetween(String value1, String value2) {
+            addCriterion("x between", value1, value2, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andXNotBetween(String value1, String value2) {
+            addCriterion("x not between", value1, value2, "x");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendIsNull() {
+            addCriterion("legend is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendIsNotNull() {
+            addCriterion("legend is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendEqualTo(String value) {
+            addCriterion("legend =", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendNotEqualTo(String value) {
+            addCriterion("legend <>", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendGreaterThan(String value) {
+            addCriterion("legend >", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendGreaterThanOrEqualTo(String value) {
+            addCriterion("legend >=", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendLessThan(String value) {
+            addCriterion("legend <", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendLessThanOrEqualTo(String value) {
+            addCriterion("legend <=", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendLike(String value) {
+            addCriterion("legend like", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendNotLike(String value) {
+            addCriterion("legend not like", value, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendIn(List<String> values) {
+            addCriterion("legend in", values, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendNotIn(List<String> values) {
+            addCriterion("legend not in", values, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendBetween(String value1, String value2) {
+            addCriterion("legend between", value1, value2, "legend");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegendNotBetween(String value1, String value2) {
+            addCriterion("legend not between", value1, value2, "legend");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
