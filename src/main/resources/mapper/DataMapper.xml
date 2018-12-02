@@ -1,222 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tecode.mysql.dao.DataMapper">
-  <resultMap id="BaseResultMap" type="com.tecode.mysql.bean.Data">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="value" jdbcType="VARCHAR" property="value" />
-    <result column="xId" jdbcType="INTEGER" property="xid" />
-    <result column="legendId" jdbcType="INTEGER" property="legendid" />
-    <result column="x" jdbcType="VARCHAR" property="x" />
-    <result column="legend" jdbcType="VARCHAR" property="legend" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+    <resultMap id="BaseResultMap" type="com.tecode.mysql.bean.Data">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="value" jdbcType="VARCHAR" property="value"/>
+        <result column="xId" jdbcType="INTEGER" property="xid"/>
+        <result column="legendId" jdbcType="INTEGER" property="legendid"/>
+        <result column="x" jdbcType="VARCHAR" property="x"/>
+        <result column="legend" jdbcType="VARCHAR" property="legend"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
             </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
     id, value, xId, legendId, x, legend
   </sql>
-  <select id="selectByExample" parameterType="com.tecode.mysql.bean.DataExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    from data
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from data
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectByExample" parameterType="com.tecode.mysql.bean.DataExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List"/>
+        from data
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from data
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from data
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.tecode.mysql.bean.DataExample">
-    delete from data
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Data">
-    insert into data (id, value, xId, 
+    <delete id="deleteByExample" parameterType="com.tecode.mysql.bean.DataExample">
+        delete from data
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.tecode.mysql.bean.Data" useGeneratedKeys="true" keyProperty="id">
+    insert into data (value, xId,
       legendId, x, legend
       )
-    values (#{id,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{xid,jdbcType=INTEGER}, 
+    values ( #{value,jdbcType=VARCHAR}, #{xid,jdbcType=INTEGER},
       #{legendid,jdbcType=INTEGER}, #{x,jdbcType=VARCHAR}, #{legend,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Data">
-    insert into data
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="value != null">
-        value,
-      </if>
-      <if test="xid != null">
-        xId,
-      </if>
-      <if test="legendid != null">
-        legendId,
-      </if>
-      <if test="x != null">
-        x,
-      </if>
-      <if test="legend != null">
-        legend,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="value != null">
-        #{value,jdbcType=VARCHAR},
-      </if>
-      <if test="xid != null">
-        #{xid,jdbcType=INTEGER},
-      </if>
-      <if test="legendid != null">
-        #{legendid,jdbcType=INTEGER},
-      </if>
-      <if test="x != null">
-        #{x,jdbcType=VARCHAR},
-      </if>
-      <if test="legend != null">
-        #{legend,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.tecode.mysql.bean.DataExample" resultType="java.lang.Long">
-    select count(*) from data
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update data
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.value != null">
+    <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Data">
+        insert into data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="value != null">
+                value,
+            </if>
+            <if test="xid != null">
+                xId,
+            </if>
+            <if test="legendid != null">
+                legendId,
+            </if>
+            <if test="x != null">
+                x,
+            </if>
+            <if test="legend != null">
+                legend,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="value != null">
+                #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="xid != null">
+                #{xid,jdbcType=INTEGER},
+            </if>
+            <if test="legendid != null">
+                #{legendid,jdbcType=INTEGER},
+            </if>
+            <if test="x != null">
+                #{x,jdbcType=VARCHAR},
+            </if>
+            <if test="legend != null">
+                #{legend,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="countByExample" parameterType="com.tecode.mysql.bean.DataExample" resultType="java.lang.Long">
+        select count(*) from data
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map">
+        update data
+        <set>
+            <if test="record.id != null">
+                id = #{record.id,jdbcType=INTEGER},
+            </if>
+            <if test="record.value != null">
+                value = #{record.value,jdbcType=VARCHAR},
+            </if>
+            <if test="record.xid != null">
+                xId = #{record.xid,jdbcType=INTEGER},
+            </if>
+            <if test="record.legendid != null">
+                legendId = #{record.legendid,jdbcType=INTEGER},
+            </if>
+            <if test="record.x != null">
+                x = #{record.x,jdbcType=VARCHAR},
+            </if>
+            <if test="record.legend != null">
+                legend = #{record.legend,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map">
+        update data
+        set id = #{record.id,jdbcType=INTEGER},
         value = #{record.value,jdbcType=VARCHAR},
-      </if>
-      <if test="record.xid != null">
         xId = #{record.xid,jdbcType=INTEGER},
-      </if>
-      <if test="record.legendid != null">
         legendId = #{record.legendid,jdbcType=INTEGER},
-      </if>
-      <if test="record.x != null">
         x = #{record.x,jdbcType=VARCHAR},
-      </if>
-      <if test="record.legend != null">
-        legend = #{record.legend,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update data
-    set id = #{record.id,jdbcType=INTEGER},
-      value = #{record.value,jdbcType=VARCHAR},
-      xId = #{record.xid,jdbcType=INTEGER},
-      legendId = #{record.legendid,jdbcType=INTEGER},
-      x = #{record.x,jdbcType=VARCHAR},
-      legend = #{record.legend,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tecode.mysql.bean.Data">
-    update data
-    <set>
-      <if test="value != null">
-        value = #{value,jdbcType=VARCHAR},
-      </if>
-      <if test="xid != null">
-        xId = #{xid,jdbcType=INTEGER},
-      </if>
-      <if test="legendid != null">
-        legendId = #{legendid,jdbcType=INTEGER},
-      </if>
-      <if test="x != null">
-        x = #{x,jdbcType=VARCHAR},
-      </if>
-      <if test="legend != null">
-        legend = #{legend,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.tecode.mysql.bean.Data">
+        legend = #{record.legend,jdbcType=VARCHAR}
+        <if test="_parameter != null">
+            <include refid="Update_By_Example_Where_Clause"/>
+        </if>
+    </update>
+    <update id="updateByPrimaryKeySelective" parameterType="com.tecode.mysql.bean.Data">
+        update data
+        <set>
+            <if test="value != null">
+                value = #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="xid != null">
+                xId = #{xid,jdbcType=INTEGER},
+            </if>
+            <if test="legendid != null">
+                legendId = #{legendid,jdbcType=INTEGER},
+            </if>
+            <if test="x != null">
+                x = #{x,jdbcType=VARCHAR},
+            </if>
+            <if test="legend != null">
+                legend = #{legend,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tecode.mysql.bean.Data">
     update data
     set value = #{value,jdbcType=VARCHAR},
       xId = #{xid,jdbcType=INTEGER},

@@ -98,10 +98,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Search">
-    insert into search (id, name, dimGroupName, 
+  <insert id="insert" parameterType="com.tecode.mysql.bean.Search"  useGeneratedKeys="true" keyProperty="id">
+    insert into search (name, dimGroupName,
       reportId)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{dimgroupname,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{dimgroupname,jdbcType=VARCHAR},
       #{reportid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Search">

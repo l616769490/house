@@ -98,10 +98,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.XAxis">
-    insert into xaxis (id, name, diagramId, 
+  <insert id="insert" parameterType="com.tecode.mysql.bean.XAxis" useGeneratedKeys="true" keyProperty="id">
+    insert into xaxis (name, diagramId,
       dimGroupName)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{diagramid,jdbcType=INTEGER}, 
+    values (#{name,jdbcType=VARCHAR}, #{diagramid,jdbcType=INTEGER},
       #{dimgroupname,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.XAxis">

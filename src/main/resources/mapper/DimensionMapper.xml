@@ -98,10 +98,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Dimension">
-    insert into dimension (id, groupName, dimName, 
+  <insert id="insert" parameterType="com.tecode.mysql.bean.Dimension"  useGeneratedKeys="true" keyProperty="id">
+    insert into dimension ( groupName, dimName,
       dimNameEN)
-    values (#{id,jdbcType=INTEGER}, #{groupname,jdbcType=VARCHAR}, #{dimname,jdbcType=VARCHAR}, 
+    values ( #{groupname,jdbcType=VARCHAR}, #{dimname,jdbcType=VARCHAR},
       #{dimnameen,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Dimension">

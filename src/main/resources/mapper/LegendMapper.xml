@@ -98,10 +98,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Legend">
-    insert into legend (id, name, dimGroupName, 
+  <insert id="insert" parameterType="com.tecode.mysql.bean.Legend"  useGeneratedKeys="true" keyProperty="id">
+    insert into legend (name, dimGroupName,
       diagramId)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{dimgroupname,jdbcType=VARCHAR}, 
+    values ( #{name,jdbcType=VARCHAR}, #{dimgroupname,jdbcType=VARCHAR},
       #{diagramid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Legend">

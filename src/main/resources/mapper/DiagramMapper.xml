@@ -109,10 +109,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Diagram">
-    insert into diagram (id, name, type, 
+  <insert id="insert" parameterType="com.tecode.mysql.bean.Diagram" useGeneratedKeys="true" keyProperty="id">
+    insert into diagram (name, type,
       reportId, subtext)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+    values (#{name,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
       #{reportid,jdbcType=INTEGER}, #{subtext,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.Diagram">

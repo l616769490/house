@@ -97,10 +97,10 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.YAxis">
-    insert into yaxis (id, name, diagramId
+  <insert id="insert" parameterType="com.tecode.mysql.bean.YAxis"  useGeneratedKeys="true" keyProperty="id">
+    insert into yaxis (name, diagramId
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{diagramid,jdbcType=INTEGER}
+    values (#{name,jdbcType=VARCHAR}, #{diagramid,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.tecode.mysql.bean.YAxis">
