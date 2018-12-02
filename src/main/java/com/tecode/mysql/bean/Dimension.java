@@ -40,4 +40,14 @@ public class Dimension {
     public void setDimnameen(String dimnameen) {
         this.dimnameen = dimnameen == null ? null : dimnameen.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Dimension{" +
+                "id=" + id +
+                ", groupname='" + groupname + '\'' +
+                ", dimname='" + dimname + '\'' +
+                ", dimnameen='" + dimnameen + '\'' +
+                '}';
+    }
 }

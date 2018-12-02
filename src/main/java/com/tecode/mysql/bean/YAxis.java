@@ -30,4 +30,13 @@ public class YAxis {
     public void setDiagramid(Integer diagramid) {
         this.diagramid = diagramid;
     }
+
+    @Override
+    public String toString() {
+        return "YAxis{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", diagramid=" + diagramid +
+                '}';
+    }
 }

@@ -1,10 +1,8 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.lijin.test.db;
 
 import com.tecode.house.d01.service.Analysis;
-import com.tecode.house.lijin.service.MysqlServer;
+import com.tecode.house.lijin.service.InsertMysqlServer;
 import com.tecode.house.lijin.service.impl.BasicsRoomsNumServer;
-
-import javax.annotation.Resource;
 
 /**
  * 测试用
@@ -16,8 +14,12 @@ public class TestAnalysis implements Analysis {
 
     @Override
     public boolean analysis(String tableName) {
-        MysqlServer server = new BasicsRoomsNumServer();
-        server.insert(null);
+        InsertMysqlServer server = new BasicsRoomsNumServer();
+        server.insert(null,2013);
         return false;
+    }
+
+    public static void main(String[] args) {
+        new TestAnalysis().analysis("");
     }
 }

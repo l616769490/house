@@ -20,6 +20,8 @@ public interface DiagramMapper {
 
     Diagram selectByPrimaryKey(Integer id);
 
+    List<Diagram> selectByReportKey(Integer id);
+
     int updateByExampleSelective(@Param("record") Diagram record, @Param("example") DiagramExample example);
 
     int updateByExample(@Param("record") Diagram record, @Param("example") DiagramExample example);

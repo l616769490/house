@@ -40,4 +40,14 @@ public class Legend {
     public void setDiagramid(Integer diagramid) {
         this.diagramid = diagramid;
     }
+
+    @Override
+    public String toString() {
+        return "Legend{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dimgroupname='" + dimgroupname + '\'' +
+                ", diagramid=" + diagramid +
+                '}';
+    }
 }

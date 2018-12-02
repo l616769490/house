@@ -40,4 +40,14 @@ public class XAxis {
     public void setDimgroupname(String dimgroupname) {
         this.dimgroupname = dimgroupname == null ? null : dimgroupname.trim();
     }
+
+    @Override
+    public String toString() {
+        return "XAxis{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", diagramid=" + diagramid +
+                ", dimgroupname='" + dimgroupname + '\'' +
+                '}';
+    }
 }

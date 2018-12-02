@@ -60,4 +60,16 @@ public class Report {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Report{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", create=" + create +
+                ", year=" + year +
+                ", group='" + group + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }

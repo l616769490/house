@@ -3,6 +3,7 @@ package com.tecode.house.lijin.utils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 /**
  * 读取配置文件
@@ -15,20 +16,10 @@ public class ConfigUtil {
     private static Properties props = new Properties();
 
     static{
-        String path = ConfigUtil.class.getClassLoader()
-                .getResource("conf.properties").getPath();
-        InputStream is = null;
-        try {
-            is = new FileInputStream(path);
+        try ( InputStreamReader is = new InputStreamReader(ConfigUtil.class.getResourceAsStream("/conf.properties"), "UTF-8")){
             props.load(is);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

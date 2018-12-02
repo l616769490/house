@@ -60,4 +60,16 @@ public class Data {
     public void setLegend(String legend) {
         this.legend = legend == null ? null : legend.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", xid=" + xid +
+                ", legendid=" + legendid +
+                ", x='" + x + '\'' +
+                ", legend='" + legend + '\'' +
+                '}';
+    }
 }

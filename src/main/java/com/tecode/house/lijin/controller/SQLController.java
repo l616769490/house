@@ -1,17 +1,7 @@
 package com.tecode.house.lijin.controller;
 
 import com.tecode.house.d01.service.Analysis;
-import com.tecode.house.lijin.hbase.BasicsHouseNum;
-import com.tecode.house.lijin.service.MysqlServer;
-import com.tecode.house.lijin.service.impl.BasicsRoomsNumServer;
-import com.tecode.house.lijin.test.TestAnalysis;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
+import com.tecode.house.lijin.test.db.TestAnalysis;
 
 /**
  * 分析并保存数据到SQL

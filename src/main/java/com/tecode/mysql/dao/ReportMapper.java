@@ -20,7 +20,7 @@ public interface ReportMapper {
 
     Report selectByPrimaryKey(Integer id);
 
-    Report selectByName(String name);
+    Report selectByNameAndYear(@Param("name")String name, @Param("aaa")Integer year);
 
     int updateByExampleSelective(@Param("record") Report record, @Param("example") ReportExample example);
 

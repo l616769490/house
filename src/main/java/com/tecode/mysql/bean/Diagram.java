@@ -50,4 +50,15 @@ public class Diagram {
     public void setSubtext(String subtext) {
         this.subtext = subtext == null ? null : subtext.trim();
     }
+
+    @Override
+    public String toString() {
+        return "Diagram{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", reportid=" + reportid +
+                ", subtext='" + subtext + '\'' +
+                '}';
+    }
 }

@@ -4,9 +4,9 @@
     <resultMap id="BaseResultMap" type="com.tecode.mysql.bean.Report">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="create" jdbcType="BIGINT" property="create"/>
+        <result column="`create`" jdbcType="BIGINT" property="create"/>
         <result column="year" jdbcType="INTEGER" property="year"/>
-        <result column="group" jdbcType="VARCHAR" property="group"/>
+        <result column="`group`" jdbcType="VARCHAR" property="group"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -70,7 +70,7 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, name, create, year, group, status
+    id, name, `create`, year, `group`, status
   </sql>
     <select id="selectByExample" parameterType="com.tecode.mysql.bean.ReportExample" resultMap="BaseResultMap">
         select
@@ -93,12 +93,12 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <!-- 根据名字查找报表 -->
-    <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!-- 根据名字和所属年份查找报表 -->
+    <select id="selectByNameAndYear" parameterType="map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from report
-        where `name` = #{name,jdbcType=VARCHAR}
+        where `name`= #{name,jdbcType=VARCHAR} AND year = #{aaa,jdbcType=INTEGER}
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -111,11 +111,11 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.tecode.mysql.bean.Report">
-    insert into report (id, name, create, 
-      year, group, status
+    <insert id="insert" parameterType="com.tecode.mysql.bean.Report"  useGeneratedKeys="true" keyProperty="id">
+    insert into report (name, `create`,
+      year, `group`, status
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{create,jdbcType=BIGINT}, 
+    values (#{name,jdbcType=VARCHAR}, #{create,jdbcType=BIGINT},
       #{year,jdbcType=INTEGER}, #{group,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}
       )
   </insert>
@@ -129,13 +129,13 @@
                 name,
             </if>
             <if test="create != null">
-                create,
+                `create`,
             </if>
             <if test="year != null">
                 year,
             </if>
             <if test="group != null">
-                group,
+                `group`,
             </if>
             <if test="status != null">
                 status,
@@ -178,13 +178,13 @@
                 name = #{record.name,jdbcType=VARCHAR},
             </if>
             <if test="record.create != null">
-                create = #{record.create,jdbcType=BIGINT},
+                `create` = #{record.create,jdbcType=BIGINT},
             </if>
             <if test="record.year != null">
                 year = #{record.year,jdbcType=INTEGER},
             </if>
             <if test="record.group != null">
-                group = #{record.group,jdbcType=VARCHAR},
+                `group` = #{record.group,jdbcType=VARCHAR},
             </if>
             <if test="record.status != null">
                 status = #{record.status,jdbcType=INTEGER},
@@ -198,9 +198,9 @@
         update report
         set id = #{record.id,jdbcType=INTEGER},
         name = #{record.name,jdbcType=VARCHAR},
-        create = #{record.create,jdbcType=BIGINT},
+        `create` = #{record.create,jdbcType=BIGINT},
         year = #{record.year,jdbcType=INTEGER},
-        group = #{record.group,jdbcType=VARCHAR},
+        `group` = #{record.group,jdbcType=VARCHAR},
         status = #{record.status,jdbcType=INTEGER}
         <if test="_parameter != null">
             <include refid="Update_By_Example_Where_Clause"/>
@@ -213,13 +213,13 @@
                 name = #{name,jdbcType=VARCHAR},
             </if>
             <if test="create != null">
-                create = #{create,jdbcType=BIGINT},
+                `create` = #{create,jdbcType=BIGINT},
             </if>
             <if test="year != null">
                 year = #{year,jdbcType=INTEGER},
             </if>
             <if test="group != null">
-                group = #{group,jdbcType=VARCHAR},
+                `group` = #{group,jdbcType=VARCHAR},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=INTEGER},
@@ -230,9 +230,9 @@
     <update id="updateByPrimaryKey" parameterType="com.tecode.mysql.bean.Report">
     update report
     set name = #{name,jdbcType=VARCHAR},
-      create = #{create,jdbcType=BIGINT},
+      `create` = #{create,jdbcType=BIGINT},
       year = #{year,jdbcType=INTEGER},
-      group = #{group,jdbcType=VARCHAR},
+      `group` = #{group,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

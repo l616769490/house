@@ -40,4 +40,14 @@ public class Search {
     public void setReportid(Integer reportid) {
         this.reportid = reportid;
     }
+
+    @Override
+    public String toString() {
+        return "Search{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dimgroupname='" + dimgroupname + '\'' +
+                ", reportid=" + reportid +
+                '}';
+    }
 }
