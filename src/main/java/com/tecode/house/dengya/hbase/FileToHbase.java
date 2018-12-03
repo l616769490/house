@@ -67,7 +67,7 @@ public class FileToHbase {
         Table table = conn.getTable(TableName.valueOf("thads:2011"));
 
        // Table table =  conn.getTable(TableName.valueOf("thads:2013"));
-        List<List<Put>> lists = HbaseUtil.addRow("thads:2011", INFO, COST, FMT, path);
+        List<List<Put>> lists = HbaseUtil.addRow( INFO, COST, FMT, path);
         for (List<Put> list : lists) {
             table.put(list);
         }
