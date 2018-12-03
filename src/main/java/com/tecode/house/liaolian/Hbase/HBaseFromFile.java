@@ -2,6 +2,7 @@ package com.tecode.house.liaolian.Hbase;
 
 
 
+import com.tecode.house.liaolian.utils.ConfigUtil;
 import com.tecode.house.liaolian.utils.HBaseUtil;
 
 import java.io.BufferedReader;
