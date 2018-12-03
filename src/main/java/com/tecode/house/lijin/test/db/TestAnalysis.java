@@ -1,10 +1,13 @@
 package com.tecode.house.lijin.test.db;
 
+import com.tecode.echarts.Option;
 import com.tecode.house.d01.service.Analysis;
 import com.tecode.house.lijin.service.InsertMysqlServer;
-import com.tecode.house.lijin.service.impl.BasicsRoomsNumServer;
+import com.tecode.house.lijin.service.impl.InsertBasicsRoomsNumServer;
+import com.tecode.house.lijin.service.impl.SelectBasicsRoomsNumServer;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -17,9 +20,9 @@ public class TestAnalysis implements Analysis {
 
     @Override
     public boolean analysis(String tableName) {
-        InsertMysqlServer server = new BasicsRoomsNumServer();
+        InsertMysqlServer server = new InsertBasicsRoomsNumServer();
         // 房间数
-        Map<String, String> roomMap = new HashMap<>(11);
+        Map<String, String> roomMap = new LinkedHashMap<>(11);
         roomMap.put("1", "100");
         roomMap.put("2", "200");
         roomMap.put("3", "300");
@@ -33,7 +36,7 @@ public class TestAnalysis implements Analysis {
         roomMap.put("10+", "2000");
 
         // 卧室数
-        Map<String, String> bedrmMap = new HashMap<>(11);
+        Map<String, String> bedrmMap = new LinkedHashMap<>(11);
         bedrmMap.put("1", "10");
         bedrmMap.put("2", "20");
         bedrmMap.put("3", "30");
@@ -55,6 +58,11 @@ public class TestAnalysis implements Analysis {
     }
 
     public static void main(String[] args) {
-        new TestAnalysis().analysis("thads:2013");
+        // 插入数据
+//        new TestAnalysis().analysis("thads:2013");
+        // 读取数据
+        SelectBasicsRoomsNumServer select = new SelectBasicsRoomsNumServer();
+        Option option = select.select(2013, "基础-房间数分析");
+        System.out.println(option);
     }
 }

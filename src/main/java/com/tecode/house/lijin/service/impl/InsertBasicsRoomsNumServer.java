@@ -15,7 +15,7 @@ import java.util.Map;
  * 版本：2018/12/1 V1.0
  * 成员：李晋
  */
-public class BasicsRoomsNumServer extends InsertMysqlServer {
+public class InsertBasicsRoomsNumServer extends InsertMysqlServer {
     /**
      * 报表组
      */
@@ -58,7 +58,7 @@ public class BasicsRoomsNumServer extends InsertMysqlServer {
      * 图例维度组
      */
 //    private static final String LEGEND_DDIM_GROUP_NAME = "房间数卧室数统计";
-    public BasicsRoomsNumServer() {
+    public InsertBasicsRoomsNumServer() {
         super(ConfigUtil.get("mybatis-config2"));
     }
 
@@ -100,6 +100,6 @@ public class BasicsRoomsNumServer extends InsertMysqlServer {
 //        System.out.println(report);
 
         // 提交并关闭事务
-        // close();
+         close();
     }
 }

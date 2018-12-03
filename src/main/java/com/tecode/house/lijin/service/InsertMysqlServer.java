@@ -268,7 +268,7 @@ public abstract class InsertMysqlServer {
         DataMapper mapper = session.getMapper(DataMapper.class);
         for (Data data : dataList) {
             DataExample dataExample = new DataExample();
-            dataExample.or().andXidEqualTo(data.getXid()).andLegendidEqualTo(data.getLegendid());
+            dataExample.or().andXidEqualTo(data.getXid()).andLegendidEqualTo(data.getLegendid()).andXEqualTo(data.getX()).andLegendEqualTo(data.getLegend());
             // 如果数据已经存在先将其删除
             List<Data> dataList1 = mapper.selectByExample(dataExample);
             if (dataList1 != null && dataList1.size() != 0) {

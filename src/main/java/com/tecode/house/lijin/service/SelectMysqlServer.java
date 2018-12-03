@@ -12,7 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 从数据库中查询数据
@@ -41,10 +44,9 @@ public abstract class SelectMysqlServer {
      *
      * @param year       年份
      * @param reportName 报表名
-     * @param groupName  组名
      * @return Echarts格式的报表
      */
-    public abstract Option select(int year, String reportName, String groupName);
+    public abstract Option select(int year, String reportName);
 
     /**
      * 关闭session
@@ -58,10 +60,9 @@ public abstract class SelectMysqlServer {
      *
      * @param year       年份
      * @param reportName 报表名
-     * @param groupName  报表组
      * @return 报表
      */
-    protected Report getReport(int year, String reportName, String groupName) {
+    protected Report getReport(int year, String reportName) {
         ReportMapper reportMapper = session.getMapper(ReportMapper.class);
         return reportMapper.selectByNameAndYear(reportName, year);
     }
@@ -109,7 +110,7 @@ public abstract class SelectMysqlServer {
      * @param diagram 图表
      * @return 图例
      */
-    protected List<Legend> getLefends(Diagram diagram) {
+    protected List<Legend> getLegends(Diagram diagram) {
         LegendMapper mapper = session.getMapper(LegendMapper.class);
         LegendExample legendExample = new LegendExample();
         legendExample.or().andDiagramidEqualTo(diagram.getId());
@@ -136,7 +137,7 @@ public abstract class SelectMysqlServer {
      * @param legend 图例
      * @return 数据集
      */
-    protected List<Data> getData(XAxis xAxis, Legend legend) {
+    protected Map<String, Map<String, String>> getDatum(XAxis xAxis, Legend legend) {
         // x轴id
         Integer xAxisId = xAxis.getId();
         // 图例id
@@ -145,19 +146,34 @@ public abstract class SelectMysqlServer {
         DataExample dataExample = new DataExample();
         dataExample.or().andXidEqualTo(xAxisId).andLegendidEqualTo(legendId);
 
-        return mapper.selectByExample(dataExample);
+        List<Data> dataList = mapper.selectByExample(dataExample);
+        Map<String, Map<String, String>> datum = new LinkedHashMap<>();
+        for (Data data : dataList) {
+            // 图例维度
+            String l = data.getLegend();
+            // x轴维度
+            String x = data.getX();
+            if (datum.get(l) != null) {
+                datum.get(l).put(x, data.getValue());
+            } else {
+                Map<String, String> map = new HashMap<>();
+                map.put(x, data.getValue());
+                datum.put(l, map);
+            }
+        }
+        return datum;
     }
 
     /**
      * 获取搜索
      *
-     * @param id 报表Id
+     * @param report 报表
      * @return 搜索组
      */
-    protected List<Search> getSearch(Integer id) {
+    protected List<Search> getSearch(Report report) {
         SearchMapper mapper = session.getMapper(SearchMapper.class);
         SearchExample searchExample = new SearchExample();
-        searchExample.or().andReportidEqualTo(id);
+        searchExample.or().andReportidEqualTo(report.getId());
         return mapper.selectByExample(searchExample);
     }
 
