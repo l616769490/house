@@ -9,6 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +40,7 @@ public abstract class InsertMysqlServer {
      * @param datas 数据集
      * @param year  数据所属年份
      */
-    public abstract void insert(Map<String, String> datas, int year);
+    public abstract void insert(Map<String, Map<String, String>> datas, int year);
 
     /**
      * 提交并关闭session

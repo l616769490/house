@@ -4,13 +4,14 @@ import com.tecode.house.lijin.service.InsertMysqlServer;
 import com.tecode.house.lijin.utils.ConfigUtil;
 import com.tecode.mysql.bean.*;
 import com.tecode.mysql.dao.*;
+import org.hibernate.validator.internal.metadata.aggregated.rule.ReturnValueMayOnlyBeMarkedOnceAsCascadedPerHierarchyLine;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 基础-房间数统计-房间数
+ * 基础-房间数统计
  * 版本：2018/12/1 V1.0
  * 成员：李晋
  */
@@ -46,47 +47,154 @@ public class BasicsRoomsNumServer extends InsertMysqlServer {
     /**
      * x轴维度组
      */
-    private static final String X_DIM_GROUP_NAME = "";
+    private static final String X_DIM_GROUP_NAME = "房间数";
 
     /**
      * 图例名
      */
-    private static final String LEGEND_NAME = "";
+    private static final String LEGEND_NAME = "房间数卧室数";
 
     /**
      * 图例维度组
      */
-    private static final String LEGEND_DDIM_GROUP_NAME = "";
+    private static final String LEGEND_DDIM_GROUP_NAME = "房间数卧室数统计";
 
     public BasicsRoomsNumServer() {
         super(ConfigUtil.get("mybatis-config2"));
     }
 
     @Override
-    public void insert(Map<String, String> datas, int year) {
+    public void insert(Map<String, Map<String, String>> datas, int year) {
         // 报表表>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         Report report = getReport(year);
+        System.out.println("报表：");
         System.out.println(report);
         // 图表表
         List<Diagram> diagrams = getDiagrams(report);
+        System.out.println("图表：");
         System.out.println(diagrams);
         // x轴
         List<XAxis> xAxes = getXAxes(diagrams.get(0));
+        System.out.println("X轴：");
         System.out.println(xAxes);
 
         // y轴
         List<YAxis> yAxes = getYAxes(diagrams.get(0));
+        System.out.println("Y轴：");
         System.out.println(yAxes);
 
         // 图例
         List<Legend> legends = getLefends(diagrams.get(0));
+        System.out.println("图例：");
         System.out.println(legends);
 
-        // 数据
-        // 搜索
+        // 生成数据库能识别的数据集
+        List<Data> dataList = getDatas(report, datas, xAxes.get(0), legends.get(0));
+        // 写入数据
+        insertDataList(dataList);
+        System.out.println("数据：");
+        System.out.println(dataList);
+
+        // 修改状态
 
         // 提交并关闭事务
         // close();
+    }
+
+
+    /**
+     * 存储数据集
+     *
+     * @param dataList 数据集
+     */
+    private void insertDataList(List<Data> dataList) {
+        DataMapper mapper = session.getMapper(DataMapper.class);
+        for (Data data : dataList) {
+            mapper.insert(data);
+        }
+    }
+
+    /**
+     * 组装Data
+     *
+     * @param report 报表
+     * @param datas  数据，数据类型为List<Map<String, String>>，list为图例维度，Map为x轴维度
+     * @param xAxis  x轴
+     * @param legend 图例
+     * @return 数据集
+     */
+    private List<Data> getDatas(Report report, Map<String, Map<String, String>> datas, XAxis xAxis, Legend legend) {
+        System.out.println("维度：");
+        // x轴维度组
+        List<Dimension> xDimensions = getDimensions(xAxis.getDimgroupname());
+        System.out.println(xDimensions);
+
+        // 图例维度组
+        List<Dimension> legendDimensions = getDimensions(legend.getDimgroupname());
+        System.out.println(legendDimensions);
+
+
+        if (datas.size() != legendDimensions.size()) {
+            return null;
+        }
+
+        List<Data> dataList = new ArrayList<>();
+        for (int i = 0; i < legendDimensions.size(); i++) {
+            // 获取图例维度
+            String lengendDimname = legendDimensions.get(i).getDimname();
+            // 对应的数据集
+            Map<String, String> map = datas.get(lengendDimname);
+
+            for (int j = 0; j < map.size(); j++) {
+                String xDimname = xDimensions.get(j).getDimname();
+                // 取出数据
+                String value = map.get(xDimname);
+                Data data = new Data();
+                data.setLegendid(legend.getId());
+                data.setLegend(lengendDimname);
+                data.setXid(xAxis.getId());
+                data.setX(xDimname);
+                data.setValue(value);
+                dataList.add(data);
+                if (j == 0) {
+                    insertSearch(report.getId(), legendDimensions.get(i).getDimname(), xDimensions.get(j).getGroupname());
+                }
+            }
+
+        }
+
+        return dataList;
+    }
+
+    /**
+     * 写入搜索
+     *
+     * @param id        报表ID
+     * @param dimname   搜索名（单个图例）
+     * @param groupname 搜索条件（该图例对应的x轴维度组）
+     */
+    private void insertSearch(Integer id, String dimname, String groupname) {
+        SearchMapper mapper = session.getMapper(SearchMapper.class);
+        Search search = new Search();
+        search.setName(dimname);
+        search.setDimgroupname(groupname);
+        search.setReportid(id);
+        mapper.insert(search);
+        System.out.println("搜索：");
+        System.out.println(search);
+    }
+
+    /**
+     * 获取维度
+     *
+     * @param groupName 维度组名
+     * @return 维度
+     */
+    private List<Dimension> getDimensions(String groupName) {
+        DimensionMapper mapper = session.getMapper(DimensionMapper.class);
+        DimensionExample dimensionExample = new DimensionExample();
+        dimensionExample.or().andGroupnameEqualTo(groupName);
+        return mapper.selectByExample(dimensionExample);
     }
 
     /**
