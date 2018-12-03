@@ -54,23 +54,6 @@ public class ImportIntoDataImpl implements ImportIntoData {
                 String line = br.readLine();
                 //替换掉字段中含有'的部分，然后按逗号切分
                 String[] split = line.replace("\'", "").split(",");
-
-//                    String rowkey = split[2]+"_"+split[0];
-//
-//                    String [] p =  new String [5];
-//
-//                    for(int i = 0; i < split.length; i++){
-//                        if(i < info.length){
-//                            //insertIntoData("thads:2013",rowkey,INFO,info[i],split[i]);
-//
-//                        }else if (info.length<= i && i < cost.length+ info.length){
-//                            //insertIntoData("thads:2013",rowkey,COST,cost[i-info.length],split[i]);
-//
-//                        }else {
-//                            //insertIntoData("thads:2013",rowkey,FMT,fmt[i-(info.length+cost.length)],split[i]);
-//
-//                        }
-//                    }
                 list.add(split);
                 if (list.size() == 100) {
                     insertIntoData(list);
@@ -78,7 +61,6 @@ public class ImportIntoDataImpl implements ImportIntoData {
                 }
 
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,24 +73,18 @@ public class ImportIntoDataImpl implements ImportIntoData {
         Connection conn = ConnectionFactory.createConnection(conf);
         System.out.println("建表中，不要打扰");
         Admin admin = conn.getAdmin();
-        //命名空间
-        //NamespaceDescriptor namespaceDescriptor = NamespaceDescriptor.create("thads").build();
         //构建表的描述器
         HTableDescriptor hd = new HTableDescriptor(TableName.valueOf(tableName));
         //构建列族的描述器
         HColumnDescriptor hcd = new HColumnDescriptor(INFO);
-
         HColumnDescriptor chcd = new HColumnDescriptor(COST);
         HColumnDescriptor fhcd = new HColumnDescriptor(FMT);
-        //System.out.println(Bytes.toString(hcd.getName())+"++++++"+chcd.getName()+"++++++++"+fhcd.getName()+"+++++++++++");
         //把列族绑定到表描述器中
         hd.addFamily(hcd).addFamily(chcd).addFamily(fhcd);
-        //admin.createNamespace(namespaceDescriptor);
         admin.createTable(hd);
         admin.close();
         conn.close();
     }
-
 
     @Override
     public void insertIntoData(List<String[]> list) throws IOException {
@@ -124,13 +100,10 @@ public class ImportIntoDataImpl implements ImportIntoData {
                     put.addColumn(Bytes.toBytes(INFO), Bytes.toBytes(info[i]), Bytes.toBytes(str[i]));
                 } else if (info.length <= i && i < (cost.length + info.length)) {
                     put.addColumn(Bytes.toBytes(COST), Bytes.toBytes(cost[i-info.length]), Bytes.toBytes(str[i]));
-                    //insertIntoData("thads:2013",rowkey,COST,cost[i-info.length],split[i]);
                 } else {
                     put.addColumn(Bytes.toBytes(FMT), Bytes.toBytes(fmt[i-(info.length+cost.length)]), Bytes.toBytes(str[i]));
-                    //insertIntoData("thads:2013",rowkey,FMT,fmt[i-(info.length+cost.length)],split[i]);
                 }
                 lists.add(put);
-
             }
         }
         table.put(lists);
