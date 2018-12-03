@@ -1,7 +1,8 @@
 package com.tecode.fileimport;
 
-import com.tecode.house.lijin.utils.ConfigUtil;
-import com.tecode.house.lijin.utils.HBaseUtil;
+
+import com.tecode.house.jianchenfei.utils.ConfigUtil;
+import com.tecode.house.jianchenfei.utils.HBaseUtil;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
