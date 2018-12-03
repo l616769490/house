@@ -1,4 +1,4 @@
-package com.tecode.house.zouchao.bean;
+package com.tecode.house.liuhao.bean;
 
 public class Diagram {
     /*
