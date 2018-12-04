@@ -131,6 +131,13 @@
       <version>${hbase.version}</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.46</version>
+    </dependency>
+
     <!-- redis -->
     <dependency>
       <groupId>redis.clients</groupId>
@@ -138,6 +145,8 @@
       <version>2.9.0</version>
     </dependency>
   </dependencies>
+
+
 
   <build>
     <finalName>notebook</finalName>
