@@ -17,72 +17,62 @@ status	int	1	0：创建中，1：已创建
     private int year;
     private String group;
     private int status;
-
-    public Report() {
-    }
-
-    public Report(String name, long create, int year, String group, int status) {
-        this.name = name;
-        this.create = create;
-        this.year = year;
-        this.group = group;
-        this.status = status;
-    }
-
-    public Report(int id, String name, long create, int year, String group, int status) {
-        this.id = id;
-        this.name = name;
-        this.create = create;
-        this.year = year;
-        this.group = group;
-        this.status = status;
-    }
-
-    public int getId() {
-        return id;
-    }
+    private String url;
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public long getCreate() {
-        return create;
-    }
-
     public void setCreate(long create) {
         this.create = create;
-    }
-
-    public int getYear() {
-        return year;
     }
 
     public void setYear(int year) {
         this.year = year;
     }
 
-    public String getGroup() {
-        return group;
-    }
-
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getId() {
+
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getCreate() {
+        return create;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public int getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public String getUrl() {
+        return url;
     }
 }
