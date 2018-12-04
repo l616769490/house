@@ -23,6 +23,7 @@ object StructureType{
     val read = stru.read("2011","STRUCTURETYPE")
     println("数据读取完成，开始分析...")
     val analy = stru.analyStructureType(read)
+
     println("分析完成，开始导入...")
     stru.packageBean("2013",analy)
     println("导入完成")
@@ -96,21 +97,25 @@ class StructureType {
 
    val dao:MysqlDao = new MysqlDaoImpl()
    val conn = MySQLUtil.getConn()
-   //开启事务
-   conn.setAutoCommit(false)
+//   //开启事务
+//   conn.setAutoCommit(false)
    //封装到report的bean
    val report = new Report()
-   report.setName("建筑结构类型")
-   report.setCreate(System.currentTimeMillis())
-   report.setYear(Integer.valueOf(tablename.split(":")(1)))
-   report.setGroup("基础分析")
-   report.setStatus(0)
+   report.setName("类型")
+   //report.setCreate(System.currentTimeMillis())
+   report.setCreate(123)
+   report.setYear(Integer.valueOf(tablename))
+
+   report.setGroup("基础")
+   report.setStatus(1)
+   report.setUrl("/url")
    val reportId = dao.putToTableReport(conn,report)
+   println(reportId)
   //柱状图封装bean
    val digram = new Diagram()
    digram.setName("建筑结构类型分布柱状图")
    digram.setType(1)
-   digram.setId(reportId)
+   digram.setReportId(reportId)
    digram.setSubtext("统计建筑结构类型的分布情况统计")
    val diagramId = dao.putToTableDiagram(conn,digram)
    //封装x轴

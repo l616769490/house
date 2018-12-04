@@ -21,8 +21,8 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableReport(Connection conn, Report report) throws SQLException {
-        String sql = "insert into `report`(name,create,year,group,status,url) value(?,?,?,?,?,?)";
-        PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
+        String sql = "insert into report (name,`create`,year,`group`,status,url) value(?,?,?,?,?,?)";
+        PreparedStatement ps = conn.prepareStatement(sql,new String[]{"id"});
 
         ps.setString(1,report.getName());
         ps.setLong(2,report.getCreate());
@@ -34,9 +34,10 @@ public class MysqlDaoImpl implements MysqlDao {
         int len = ps.executeUpdate();
         int id = -1;
         if(len>0){
-            ResultSet rs = ps.getGeneratedKeys();
-            if(rs.next()){
-               id =  rs.getInt(1);
+           ResultSet rs = ps.getGeneratedKeys();
+           if(rs.next()){
+               System.out.println("true");
+              id =  rs.getInt(1);
             }
         }
 
@@ -51,7 +52,7 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableDiagram(Connection conn, Diagram diagram) throws SQLException {
-        String sql = "insert into `diagram`(name,type,reportId,subtext) value(?,?,?,?)";
+        String sql = "insert into diagram (`name`,`type`,reportId,subtext) value(?,?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,diagram.getName());
@@ -78,7 +79,7 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTablexAxis(Connection conn, Xaxis x) throws SQLException {
-        String sql = "insert into `xaxis`(name,diagramId,dimGruopName) value(?,?,?)";
+        String sql = "insert into xaxis (name,diagramId,dimGroupName) value(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,x.getName());
@@ -98,7 +99,7 @@ public class MysqlDaoImpl implements MysqlDao {
 
     @Override
     public int putToTableYaxis(Connection conn, Yaxis y) throws SQLException {
-        String sql = "insert into `yaxis`(name,diagramId) value(?,?)";
+        String sql = "insert into yaxis (name,diagramId) value(?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,y.getName());
@@ -123,7 +124,7 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableDimension(Connection conn, Dimension dimension) throws SQLException {
-        String sql = "insert into `dimension`(groupNmae,dimName,dimNameEN) value(?,?,?)";
+        String sql = "insert into dimension (groupNmae,dimName,dimNameEN) value(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,dimension.getGroupName());
@@ -150,7 +151,7 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableLegend(Connection conn, Legend legend) throws SQLException {
-        String sql = "insert into `lengend`(name,dimGruopName,diagramId) value(?,?,?)";
+        String sql = "insert into legend (name,dimGroupName,diagramId) value(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,legend.getName());
@@ -177,11 +178,11 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableData(Connection conn, Data data) throws SQLException {
-        String sql = "insert into `data`(value,xId,legendId) value(?,?,?)";
+        String sql = "insert into data (value,xId,legendId) value(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,data.getValue());
-        ps.setInt(3,data.getxId());
+        ps.setInt(2,data.getxId());
         ps.setInt(3,data.getLegendId());
 
         //执行
@@ -204,7 +205,7 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTablesearch(Connection conn, Search search) throws SQLException {
-        String sql = "insert into `data`(name,dimGruopName,reportId) value(?,?,?)";
+        String sql = "insert into search (name,dimGroupName,reportId) value(?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,search.getName());
