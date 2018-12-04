@@ -7,6 +7,7 @@ import com.tecode.house.liuhao.utils.MySQLUtil
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
+import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
@@ -20,7 +21,7 @@ object StructureType{
   def main(args: Array[String]): Unit = {
     println("读取数据中...")
     val stru = new StructureType()
-    val read = stru.read("2011","STRUCTURETYPE")
+    val read = stru.read("2013","STRUCTURETYPE")
     println("数据读取完成，开始分析...")
     val analy = stru.analyStructureType(read)
 
@@ -54,8 +55,10 @@ class StructureType {
       val rawCells: Array[Cell] = x.rawCells()
       var value = 0
       for (elem <- rawCells) {
-        if (CellUtil.cloneQualifier(elem).toString.equals(qualifiername)) {
-          value = CellUtil.cloneValue(elem).toString.toInt
+
+        if (Bytes.toString(CellUtil.cloneQualifier(elem)).equals(qualifiername)) {
+          println(Bytes.toString(CellUtil.cloneValue(elem)).toInt)
+          value = Bytes.toString(CellUtil.cloneValue(elem)).toInt
         }
       }
       value
@@ -69,8 +72,9 @@ class StructureType {
     * @return
     */
   def analyStructureType(rdd:RDD[Int]):RDD[(String,Int)] = {
-      val value = rdd.map(x=>(x,1)).reduceByKey(_+_)
+      val value = rdd.map(x=>(x,1))
       val result = value.map(x=>{
+        println(x._1)
         if(x._1 == 1){
           ("独栋建筑",x._2)
         }else if (x._1 ==2){
@@ -85,7 +89,8 @@ class StructureType {
           ("移动建筑",x._2)
         }
 
-      })
+      }).reduceByKey(_+_)
+  result.collect().foreach(println)
   result
   }
 
@@ -102,8 +107,8 @@ class StructureType {
    //封装到report的bean
    val report = new Report()
    report.setName("类型")
-   //report.setCreate(System.currentTimeMillis())
-   report.setCreate(123)
+   report.setCreate(System.currentTimeMillis())
+
    report.setYear(Integer.valueOf(tablename))
 
    report.setGroup("基础")
@@ -139,7 +144,9 @@ class StructureType {
 
    //封装到databean
    val x1 = value.foreach(x=>x._1).toString
+   println(x1)
    val xvalue = value.foreach(x=>x._2).toString
+   println(xvalue)
    val data = new Data()
    data.setValue(x1)
    data.setLegendId(legendId)
@@ -155,9 +162,6 @@ class StructureType {
     search.setReportId(reportId)
 
     dao.putToTablesearch(conn,search)
-
-
-
 
 
  }
