@@ -22,7 +22,7 @@
 		<!--配置默认的文件系统的参数-->
 		<name>fs.defaultFS</name>
 		<!--文件系统所在地-->
-		<value>hdfs://166.166.6.103</value>
+		<value>hdfs://166.166.166.167</value>
 	</property>
 	<!--配置hadoop的临时目录-->
 	<property>
