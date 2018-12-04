@@ -100,6 +100,6 @@ public class InsertBasicsRoomsNumServer extends InsertMysqlServer {
 //        System.out.println(report);
 
         // 提交并关闭事务
-         close();
+        close();
     }
 }

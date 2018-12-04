@@ -8,6 +8,7 @@ import com.tecode.house.lijin.service.SelectMysqlServer;
 import com.tecode.house.lijin.utils.ConfigUtil;
 import com.tecode.mysql.bean.*;
 import com.tecode.mysql.bean.Legend;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,9 @@ import java.util.Set;
 
 /**
  * @version ：2018/12/3 V1.0
- * @author: 李晋
+ * @author : 李晋
  */
+@Service("basicsRoomsNumServer")
 public class SelectBasicsRoomsNumServer extends SelectMysqlServer {
 
     public SelectBasicsRoomsNumServer() {
@@ -53,7 +55,7 @@ public class SelectBasicsRoomsNumServer extends SelectMysqlServer {
         // 图例
         com.tecode.echarts.Legend legendOption = new com.tecode.echarts.Legend().setAlign(Align.right);
         Set<String> legendItems = datum.keySet();
-        boolean b = true;
+        int b = 0;
         // 按图例遍历
         for (String legendItem : legendItems) {
             // 生成一组数据
@@ -62,9 +64,9 @@ public class SelectBasicsRoomsNumServer extends SelectMysqlServer {
             Map<String, String> xMap = datum.get(legendItem);
             for (Map.Entry<String, String> data : xMap.entrySet()) {
                 series.addData(Integer.parseInt(data.getValue()));
-                if (b) {
+                if (b < xMap.size()) {
                     x.addData(data.getValue());
-                    b = false;
+                    b ++;
                 }
             }
             legendOption.addData(legendItem);

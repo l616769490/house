@@ -39,7 +39,7 @@
     </div>
     <div class="row">
         <div id="btns" class="col-lg-6 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="show('/test-line')">折线图</button>
+            <button id="btn-1" class="btn btn-success" onclick="show('/basics_rooms_num')">基础-房间数分析</button>
             <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/test-bar')">柱状图</button>
             <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/test-pie')">饼状图</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
@@ -58,7 +58,7 @@
         $.ajax({
             url: show_url,
             type: "POST",
-            data:"year=2011",
+            data:"year=2013",
             success: function (result) {
                 // 使用刚指定的配置项和数据显示图表。
                 myChart.setOption(result);
