@@ -1,7 +1,7 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
-import com.tecode.house.lijin.service.impl.InsertRegionZsmhcNumServer
+import com.tecode.house.lijin.service.impl.{InsertFromXml, InsertRegionZsmhcNumServer}
 import com.tecode.house.lijin.utils.ConfigUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
@@ -11,6 +11,8 @@ import org.apache.hadoop.hbase.mapreduce.{TableInputFormat, TableMapReduceUtil}
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.collection.JavaConverters.getClass
 
 /**
   * 按区域-房产税统计
@@ -38,8 +40,8 @@ class RegionZsmhcNum extends Analysis {
     val array = getRegion(hBaseRDD)
     val map = getMap(array)
 
-    new InsertRegionZsmhcNumServer().insert(map, Integer.parseInt(tableName.split(":")(1)))
-
+//    new InsertRegionZsmhcNumServer().insert(map, Integer.parseInt(tableName.split(":")(1)))
+    new InsertFromXml(ConfigUtil.get("mybatis-config2"), getClass.getResource("/report/region-zsmhc.xml").getPath()).insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
     true
   }
 

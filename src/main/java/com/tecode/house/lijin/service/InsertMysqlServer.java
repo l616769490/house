@@ -27,8 +27,7 @@ public abstract class InsertMysqlServer {
      */
     protected SqlSession session = null;
 
-    public InsertMysqlServer(String path) {
-        String resource = path;
+    public InsertMysqlServer(String resource) {
         try {
             InputStream inputStream = Resources.getResourceAsStream(resource);
             SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);

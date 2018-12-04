@@ -1,7 +1,7 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
-import com.tecode.house.lijin.service.impl.InsertBasicsRoomsNumServer
+import com.tecode.house.lijin.service.impl.{InsertBasicsRoomsNumServer, InsertFromXml}
 import com.tecode.house.lijin.utils.ConfigUtil
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Result, Scan}
@@ -84,8 +84,8 @@ class BasicsHouseNum extends Analysis {
 
     val map = Map("卧室数" -> getMap(bedrmsRDD).asJava, "房间数" -> getMap(roomsRDD).asJava)
 
-    new InsertBasicsRoomsNumServer().insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
-
+//    new InsertBasicsRoomsNumServer().insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
+    new InsertFromXml(ConfigUtil.get("mybatis-config2"), getClass.getResource("/report/basics-rooms.xml").getPath()).insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
     true
   }
 

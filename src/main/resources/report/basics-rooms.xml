@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <!-- 报表名 -->
+    <name>基础-房间数分析</name>
+    <!-- 报表组名 -->
+    <group>基础分析</group>
+    <!-- 报表请求地址 -->
+    <url>http://166.166.0.13:8080/basics_rooms_num</url>
+    <!-- 图表 -->
+    <diagrams>
+        <diagram name="房间数和卧室数分布图" subName="房间数卧室数分布趋势">
+            <!-- y轴 -->
+            <yAxes>
+                <yAxis name="数量"/>
+            </yAxes>
+            <!-- x轴 -->
+            <xAxes>
+                <xAxis>
+                    <name>分类</name>
+                    <dimGroupName>房间数</dimGroupName>
+                </xAxis>
+            </xAxes>
+            <!-- 图例 -->
+            <legends>
+                <legend>
+                    <name>房间数卧室数</name>
+                    <dimGroupName>房间数卧室数统计</dimGroupName>
+                </legend>
+            </legends>
+        </diagram>
+    </diagrams>
+</report>
