@@ -38,8 +38,5 @@
 		<name>hbase.zookeeper.quorum</name>
 		<value>hadoop111:2181,hadoop112:2181,hadoop113:2181</value>
 	</property>
-	<property>
-		<name>hbase.zookeeper.property.dataDir</name>
-		<value>/home/zz/zookeeper</value>
-	</property>
+
 </configuration>
