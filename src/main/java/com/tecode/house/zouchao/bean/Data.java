@@ -7,27 +7,63 @@ public class Data {
 value	varchar	50	数据值
 xId	int		x轴id
 legendId	int		图例id
-
+ `x` varchar(50)    x维度名    DEFAULT NULL,
+  `legend` varchar(50)  数据集维度名  DEFAULT NULL,
      */
     private int id;
     private String value;
     private int xId;
     private int legendId;
+    private String x;
+    private String legend;
 
-    public Data(String value, int xId, int legendId) {
+    @Override
+    public String toString() {
+        return "Data{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", xId=" + xId +
+                ", legendId=" + legendId +
+                ", x='" + x + '\'' +
+                ", legend='" + legend + '\'' +
+                '}';
+    }
+
+    public Data(int id, String value, int xId, int legendId, String x, String legend) {
+        this.id = id;
         this.value = value;
         this.xId = xId;
         this.legendId = legendId;
+        this.x = x;
+        this.legend = legend;
+    }
+
+    public Data(String value, int xId, int legendId, String x, String legend) {
+        this.value = value;
+        this.xId = xId;
+        this.legendId = legendId;
+        this.x = x;
+        this.legend = legend;
     }
 
     public Data() {
     }
 
-    public Data(int id, String value, int xId, int legendId) {
-        this.id = id;
-        this.value = value;
-        this.xId = xId;
-        this.legendId = legendId;
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
+    }
+
+    public String getLegend() {
+        return legend;
+    }
+
+    public void setLegend(String legend) {
+        this.legend = legend;
     }
 
     public int getId() {

@@ -14,12 +14,14 @@ public class MySQLDaoImpl implements MySQLDao {
 
     @Override
     public int putInTableData(Connection conn, Data data) throws SQLException {
-        String dataSql = "insert into `data`(`value`,xId,legendId) values(?,?,?)";
+        String dataSql = "insert into `data`(`value`,xId,legendId,x,legend) values(?,?,?,?,?)";
         ps = conn.prepareStatement(dataSql, new String[]{"id"});
         //占位符赋值
         ps.setString(1, data.getValue());
         ps.setInt(2, data.getxId());
         ps.setInt(3, data.getLegendId());
+        ps.setString(4, data.getX());
+        ps.setString(5, data.getLegend());
         //执行
         int len1 = ps.executeUpdate();
         //获取新生成的主键的值
@@ -27,14 +29,17 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableData() {
+    public Data getByTableData() {
+
         String sql = "select * from data where id = ?";
+        Data data = new Data();
+        return data;
     }
 
     @Override
@@ -61,14 +66,15 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableDiagram() {
-
+    public Diagram getByTableDiagram() {
+        Diagram diagram = new Diagram();
+        return diagram;
     }
 
     @Override
@@ -92,14 +98,15 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableDimension() {
-
+    public Dimension getByTableDimension() {
+        Dimension dimension = new Dimension();
+        return dimension;
     }
 
     @Override
@@ -123,15 +130,16 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
 
     @Override
-    public void getByTableLegend() {
-
+    public Legend getByTableLegend() {
+        Legend legend = new Legend();
+        return legend;
     }
 
     @Override
@@ -148,7 +156,7 @@ public class MySQLDaoImpl implements MySQLDao {
          */
         String reportSql = "insert into report(name,`create`,year,`group` ,status) values (?,?,?,?,?)";
         ps = conn.prepareStatement(reportSql, new String[]{"id"});
-        //占位符赋值
+        //占位符赋值、
         ps.setString(1, report.getName());
         ps.setLong(2, report.getCreate());
         ps.setInt(3, report.getYear());
@@ -161,13 +169,18 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableReport() {
+    public Report getByTableReport(Connection conn, String name) {
+        Report report = new Report();
+
+
+        return report;
+
 
     }
 
@@ -192,14 +205,15 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableSearch() {
-
+    public Search getByTableSearch() {
+        Search search = new Search();
+        return search;
     }
 
     @Override
@@ -223,14 +237,15 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableXaxis() {
-
+    public Xaxis getByTableXaxis() {
+        Xaxis xaxis = new Xaxis();
+        return xaxis;
     }
 
     @Override
@@ -252,14 +267,15 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
+            //System.out.println(id);
         }
         return id;
     }
 
     @Override
-    public void getByTableYaxis() {
-
+    public Yaxis getByTableYaxis() {
+        Yaxis yaxis = new Yaxis();
+        return yaxis;
     }
 
     @Override

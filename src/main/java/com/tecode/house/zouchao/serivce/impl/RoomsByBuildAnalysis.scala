@@ -35,25 +35,23 @@ class RoomsByBuildAnalysis extends Analysis {
     val bedrmsRDD: RDD[(Int, Int)] = read(tableName, "BEDRMS", sc)
     //    调用分析方法，求各区间的均值
     //    总房间数
-    val rooms: RDD[(String, Double)] = calculation(roomsRDD)
+    val rooms: RDD[(String, Int)] = calculation(roomsRDD)
 
     //    println("总房屋===========")
     //    rooms.collect().foreach(println)
     //    println("卧室数==================")
     //    bedrms.collect().foreach(println)
 
-    val roomsbuffer: mutable.Buffer[(String, Double)] = rooms.collect().toBuffer
-    val valuelist: util.List[(String, Double)] = scala.collection.JavaConversions.bufferAsJavaList(roomsbuffer)
+    val roomsList: List[(String, Int)] = rooms.collect().toList
 
 
     //    卧室数
-    val bedrms: RDD[(String, Double)] = calculation(bedrmsRDD)
+    val bedrms: RDD[(String, Int)] = calculation(bedrmsRDD)
 
 
-    val bedrmsbuffer: mutable.Buffer[(String, Double)] = bedrms.collect().toBuffer
-    val bedrmslist: util.List[(String, Double)] = scala.collection.JavaConversions.bufferAsJavaList(bedrmsbuffer)
+    val bedrmList: List[(String, Int)] = bedrms.collect().toList
 
-
+    packageDate(tableName, roomsList, bedrmList)
     sc.stop()
     true
   }
@@ -93,14 +91,14 @@ class RoomsByBuildAnalysis extends Analysis {
   /**
     * 分析数据
     *
-    * @param rdd
-    * @return 包含建成年份区间及其平均值的RDD
+    * @param rdd 包含（建成年份，房间数）的RDD
+    * @return 包含建成年份区间及其房屋数的RDD
     */
-  def calculation(rdd: RDD[(Int, Int)]): RDD[(String, Double)] = {
+  def calculation(rdd: RDD[(Int, Int)]): RDD[(String, Int)] = {
     //    val d = rdd.map(_._2).sum()
     //    println("总数：  " + d)
     //    将具体的建成年份转换成建成年份区间
-    val result: RDD[(String, Double)] = rdd.map(x => {
+    val result: RDD[(String, Int)] = rdd.map(x => {
       if (x._1 < 2000) {
         ("(1900,2000)", x._2)
       } else if (x._1 < 2010) {
@@ -109,21 +107,23 @@ class RoomsByBuildAnalysis extends Analysis {
         ("(2010,2018)", x._2)
       }
     })
-    //按建成年份区间分组
-    val value: RDD[(String, Double)] = result.reduceByKey(_ + _)
+    //统计各建成年份区间的和
+    val value: RDD[(String, Int)] = result.reduceByKey(_ + _)
     value
   }
 
-
-  def packageDate(tableName: String) = {
-    var conn: Connection = null;
-    val ps: PreparedStatement = null;
-    val rs: ResultSet = null;
+  /**
+    * 将分析结果导入MySQL数据库
+    *
+    * @param tableName HBase数据库表名
+    */
+  def packageDate(tableName: String, roomsList: List[(String, Int)], bedrmList: List[(String, Int)]) = {
+    var conn: Connection = null
     val dao: MySQLDao = new MySQLDaoImpl()
     try {
-      conn = MySQLUtil.getConn();
+      conn = MySQLUtil.getConn
       //事务控制，开启事务
-      conn.setAutoCommit(false);
+      conn.setAutoCommit(false)
       //      插入报表表
       val report: Report = new Report()
       report.setName("房间数统计")
@@ -150,7 +150,7 @@ class RoomsByBuildAnalysis extends Analysis {
 
       //    插入x轴表
       val lineXaxis: Xaxis = new Xaxis()
-      lineXaxis.setName("年份")
+      lineXaxis.setName("年份区间")
       lineXaxis.setDiagramId(lineDiagramId)
       lineXaxis.setDimGroupName("建成年份")
 
@@ -173,23 +173,45 @@ class RoomsByBuildAnalysis extends Analysis {
 
 
       //    插入数据表
+      //      房间数
+      for (elem <- roomsList) {
+        /*
+        private var value: String = null
+    private var xId: Int = 0
+    private var legendId: Int = 0
+    private var x: String = null
+    private var legend: String = null
+         */
+        val data = new Data(elem._2.toString, lineXaxisId, lineLegendId, elem._1, "总房间数")
+        dao.putInTableData(conn, data)
+      }
 
+      //      卧室数
+      for (elem <- bedrmList) {
+        val data = new Data(elem._2.toString, lineXaxisId, lineLegendId, elem._1, "总卧室数")
+        dao.putInTableData(conn, data)
+      }
 
       //    插入搜索表
-
-
+      //建成年份区间搜索
+      val yearYearch = new Search("建成年份区间搜索", "建成年份", reportId)
+      dao.putInTableSearch(conn, yearYearch)
+      //     城市规模搜索
+      val cityYearch = new Search("城市规模搜索", "城市规模", reportId)
+      dao.putInTableSearch(conn, cityYearch)
+      conn.commit()
     } catch {
       case e: Exception => {
         //回滚事务
         try {
-          conn.rollback();
+          conn.rollback()
         } catch {
           case e1: SQLException => e1.printStackTrace()
         }
-        e.printStackTrace();
+        e.printStackTrace()
       }
     } finally {
-      MySQLUtil.close(conn);
+      MySQLUtil.close(conn)
     }
   }
 

@@ -14,6 +14,16 @@ reportId	int		报表id，外键（FK_search_report_id）
     private String dimGroupName;
     private int reportId;
 
+    @Override
+    public String toString() {
+        return "Search{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dimGroupName='" + dimGroupName + '\'' +
+                ", reportId=" + reportId +
+                '}';
+    }
+
     public Search(String name, String dimGroupName, int reportId) {
         this.name = name;
         this.dimGroupName = dimGroupName;

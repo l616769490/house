@@ -17,25 +17,49 @@ status	int	1	0：创建中，1：已创建
     private int year;
     private String group;
     private int status;
+    private String url;
+
+    @Override
+    public String toString() {
+        return "Report{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", create=" + create +
+                ", year=" + year +
+                ", group='" + group + '\'' +
+                ", status=" + status +
+                ", url='" + url + '\'' +
+                '}';
+    }
 
     public Report() {
     }
 
-    public Report(String name, long create, int year, String group, int status) {
+    public Report(String name, long create, int year, String group, int status, String url) {
         this.name = name;
         this.create = create;
         this.year = year;
         this.group = group;
         this.status = status;
+        this.url = url;
     }
 
-    public Report(int id, String name, long create, int year, String group, int status) {
+    public Report(int id, String name, long create, int year, String group, int status, String url) {
         this.id = id;
         this.name = name;
         this.create = create;
         this.year = year;
         this.group = group;
         this.status = status;
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getId() {

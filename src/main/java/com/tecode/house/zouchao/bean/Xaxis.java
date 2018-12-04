@@ -13,6 +13,16 @@ dimGroupName	varchar	50	维度组名字（对应维度表的维度组名）
     private int diagramId;
     private String dimGroupName;
 
+    @Override
+    public String toString() {
+        return "Xaxis{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", diagramId=" + diagramId +
+                ", dimGroupName='" + dimGroupName + '\'' +
+                '}';
+    }
+
     public Xaxis(int id, String name, int diagramId, String dimGroupName) {
         this.id = id;
         this.name = name;

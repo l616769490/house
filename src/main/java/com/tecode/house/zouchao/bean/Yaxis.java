@@ -11,6 +11,15 @@ diagramId	int		表id，外键（FK_xAxis_diagram_id）
     private String name;
     private int diagramId;
 
+    @Override
+    public String toString() {
+        return "Yaxis{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", diagramId=" + diagramId +
+                '}';
+    }
+
     public Yaxis(int id, String name, int diagramId) {
         this.id = id;
         this.name = name;

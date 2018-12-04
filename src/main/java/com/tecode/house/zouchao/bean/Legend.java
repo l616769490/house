@@ -13,6 +13,16 @@ diagramId	int		表id，外键（FK_legend_diagram_id）
     private String dimGroupName;
     private int diagramId;
 
+    @Override
+    public String toString() {
+        return "Legend{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dimGroupName='" + dimGroupName + '\'' +
+                ", diagramId=" + diagramId +
+                '}';
+    }
+
     public Legend(String name, String dimGroupName, int diagramId) {
         this.name = name;
         this.dimGroupName = dimGroupName;
