@@ -100,11 +100,11 @@ class RoomsByBuildAnalysis extends Analysis {
     //    将具体的建成年份转换成建成年份区间
     val result: RDD[(String, Int)] = rdd.map(x => {
       if (x._1 < 2000) {
-        ("(1900,2000)", x._2)
+        ("1900-2000", x._2)
       } else if (x._1 < 2010) {
-        ("(2000,2010)", x._2)
+        ("2000-2010", x._2)
       } else {
-        ("(2010,2018)", x._2)
+        ("2010-2018", x._2)
       }
     })
     //统计各建成年份区间的和
@@ -131,6 +131,7 @@ class RoomsByBuildAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("年份统计")
       report.setStatus(1)
+      report.setUrl("http://166.166.0.10/roomsByBuild")
       val reportId: Int = dao.putInTableReport(conn, report)
 
 

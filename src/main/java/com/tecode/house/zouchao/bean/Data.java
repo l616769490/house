@@ -1,5 +1,7 @@
 package com.tecode.house.zouchao.bean;
 
+import java.util.Objects;
+
 public class Data {
 
     /*
@@ -16,6 +18,24 @@ legendId	int		图例id
     private int legendId;
     private String x;
     private String legend;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Data data = (Data) o;
+        return id == data.id &&
+                xId == data.xId &&
+                legendId == data.legendId &&
+                Objects.equals(value, data.value) &&
+                Objects.equals(x, data.x) &&
+                Objects.equals(legend, data.legend);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, value, xId, legendId, x, legend);
+    }
 
     @Override
     public String toString() {

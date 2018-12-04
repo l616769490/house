@@ -98,11 +98,11 @@ class PriceByBuildAnalysis extends Analysis {
     //    将具体的建成年份转换成建成年份区间
     val result: RDD[(String, Double)] = rdd.map(x => {
       if (x._1 < 2000) {
-        ("(1900,2000)", x._2)
+        ("1900-2000", x._2)
       } else if (x._1 < 2010) {
-        ("(2000,2010)", x._2)
+        ("2000-2010", x._2)
       } else {
-        ("(2010,2018)", x._2)
+        ("2010-2018", x._2)
       }
     })
     //按建成年份区间分组
@@ -123,9 +123,9 @@ class PriceByBuildAnalysis extends Analysis {
     var conn: Connection = null;
     val dao: MySQLDao = new MySQLDaoImpl()
     try {
-      conn = MySQLUtil.getConn();
+      conn = MySQLUtil.getConn()
       //事务控制，开启事务
-      conn.setAutoCommit(false);
+      conn.setAutoCommit(false)
       //      插入报表表
       val report: Report = new Report()
       report.setName("价格统计")
@@ -133,6 +133,7 @@ class PriceByBuildAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("年份统计")
       report.setStatus(1)
+      report.setUrl("http://166.166.0.10/priceByBuild")
       val reportId: Int = dao.putInTableReport(conn, report)
 
       //折线图

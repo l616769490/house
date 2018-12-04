@@ -35,17 +35,17 @@ class RentAnalysis extends Analysis {
     //将具体的租金转换为租金区间并计数
     val rents: RDD[(String, Int)] = rentsRDD.map(x => {
       if (x < 1000) {
-        ("(0,1000)", 1)
+        ("0-1000", 1)
       } else if (x < 1500) {
-        ("(1000,1500)", 1)
+        ("1000-1500", 1)
       } else if (x < 2000) {
-        ("(1500,2000)", 1)
+        ("1500-2000", 1)
       } else if (x < 2500) {
-        ("(2000,2500)", 1)
+        ("2000-2500", 1)
       } else if (x < 3000) {
-        ("(2500,3000)", 1)
+        ("2500-3000", 1)
       } else {
-        ("(3000,)", 1)
+        ("3000+", 1)
       }
     })
     //    统计各租金区间的总数
@@ -124,6 +124,7 @@ class RentAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
+      report.setUrl("http://166.166.0.10/rent")
 
       //      println(report)
 

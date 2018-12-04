@@ -7,9 +7,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySQLDaoImpl implements MySQLDao {
     private PreparedStatement ps;
+    private ResultSet rs;
 
 
     @Override
@@ -35,11 +38,27 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Data getByTableData() {
+    public List<Data> getByTableData(Connection conn, int legendId, int xId) throws SQLException {
+        List<Data> list = new ArrayList<>();
+        String sql = "select * from data where legendId = ? and xId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, legendId);
+        ps.setInt(2, xId);
 
-        String sql = "select * from data where id = ?";
-        Data data = new Data();
-        return data;
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `value` varchar(50) NOT NULL,
+  `xId` int(11) NOT NULL,
+  `legendId` int(11) NOT NULL,
+  `x` varchar(50) DEFAULT NULL,
+  `legend` varchar(50) DEFAULT NULL,
+             */
+            Data data = new Data(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5), rs.getString(6));
+            list.add(data);
+        }
+        return list;
     }
 
     @Override
@@ -72,9 +91,25 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Diagram getByTableDiagram() {
-        Diagram diagram = new Diagram();
-        return diagram;
+    public List<Diagram> getByTableDiagram(Connection conn, int reportId) throws SQLException {
+
+        List<Diagram> list = new ArrayList<>();
+        String sql = "select * from diagram where reportId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, reportId);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `type` int(1) NOT NULL,
+  `reportId` int(11) NOT NULL,
+  `subtext` varchar(100) DEFAULT NULL,
+             */
+            Diagram d = new Diagram(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getString(5));
+            list.add(d);
+        }
+        return list;
     }
 
     @Override
@@ -104,9 +139,16 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Dimension getByTableDimension() {
-        Dimension dimension = new Dimension();
-        return dimension;
+    public List<String> getByTableDimension(Connection conn, String groupName) throws SQLException {
+        List<String> list = new ArrayList<>();
+        String sql = "select dimName from dimension where groupName = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setString(1, groupName);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            list.add(rs.getString(1));
+        }
+        return list;
     }
 
     @Override
@@ -137,9 +179,23 @@ public class MySQLDaoImpl implements MySQLDao {
 
 
     @Override
-    public Legend getByTableLegend() {
-        Legend legend = new Legend();
-        return legend;
+    public List<Legend> getByTableLegend(Connection conn, int diagramId) throws SQLException {
+        List<Legend> list = new ArrayList<>();
+        String sql = "select * from legend where diagramId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, diagramId);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `dimGroupName` varchar(50) NOT NULL,
+  `diagramId` int(11) NOT NULL,
+             */
+            Legend l = new Legend(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4));
+            list.add(l);
+        }
+        return list;
     }
 
     @Override
@@ -154,7 +210,7 @@ public class MySQLDaoImpl implements MySQLDao {
 
   "insert into report(name,create,year,group,status) values(?,?,?,?,?,)";
          */
-        String reportSql = "insert into report(name,`create`,year,`group` ,status) values (?,?,?,?,?)";
+        String reportSql = "insert into report(name,`create`,year,`group` ,status,url) values (?,?,?,?,?,?)";
         ps = conn.prepareStatement(reportSql, new String[]{"id"});
         //占位符赋值、
         ps.setString(1, report.getName());
@@ -162,6 +218,7 @@ public class MySQLDaoImpl implements MySQLDao {
         ps.setInt(3, report.getYear());
         ps.setString(4, report.getGroup());
         ps.setInt(5, report.getStatus());
+        ps.setString(6, report.getUrl());
         //执行
         int len1 = ps.executeUpdate();
         //获取新生成的主键的值
@@ -175,10 +232,25 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Report getByTableReport(Connection conn, String name) {
-        Report report = new Report();
-
-
+    public Report getByTableReport(Connection conn, String name, int year) throws SQLException {
+        Report report = null;
+        String sql = "select * from report where name = ? and year = ? ";
+        ps = conn.prepareStatement(sql);
+        ps.setString(1, name);
+        ps.setInt(2, year);
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `create` bigint(20) NOT NULL,
+  `year` int(4) NOT NULL,
+  `group` varchar(50) NOT NULL,
+  `status` int(1) NOT NULL,
+  `url` varchar(100) NOT NULL,
+             */
+            report = new Report(rs.getInt(1), rs.getString(2), rs.getLong(3), rs.getInt(4), rs.getString(5), rs.getInt(6), rs.getString(7));
+        }
         return report;
 
 
@@ -211,9 +283,23 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Search getByTableSearch() {
-        Search search = new Search();
-        return search;
+    public List<Search> getByTableSearch(Connection conn, int reportId) throws SQLException {
+        List<Search> list = new ArrayList<>();
+        String sql = "select * from search where reportId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, reportId);
+        rs = ps.executeQuery();
+        while (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `dimGroupName` varchar(50) NOT NULL,
+  `reportId` int(11) NOT NULL,
+             */
+            Search s = new Search(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4));
+            list.add(s);
+        }
+        return list;
     }
 
     @Override
@@ -243,8 +329,22 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Xaxis getByTableXaxis() {
-        Xaxis xaxis = new Xaxis();
+    public Xaxis getByTableXaxis(Connection conn, int diagramId) throws SQLException {
+        Xaxis xaxis = null;
+        String sql = "select * from xaxis where diagramId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, diagramId);
+
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            /*
+              `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `diagramId` int(11) NOT NULL,
+  `dimGroupName` varchar(50) NOT NULL,
+             */
+            xaxis = new Xaxis(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4));
+        }
         return xaxis;
     }
 
@@ -273,8 +373,21 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Yaxis getByTableYaxis() {
-        Yaxis yaxis = new Yaxis();
+    public Yaxis getByTableYaxis(Connection conn, int diagramId) throws SQLException {
+        Yaxis yaxis = null;
+        String sql = "select * from yaxis where diagramId = ?";
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, diagramId);
+
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            /*
+             `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `diagramId` int(11) NOT NULL,
+             */
+            yaxis = new Yaxis(rs.getInt(1), rs.getString(2), rs.getInt(3));
+        }
         return yaxis;
     }
 

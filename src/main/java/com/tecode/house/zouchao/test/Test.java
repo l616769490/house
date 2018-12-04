@@ -12,9 +12,12 @@ import com.tecode.house.zouchao.util.MySQLUtil;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws IOException {
+
         //HBaseUtil util = new HBaseUtil();
         //util.deleteTable("thads:2011");
         //      System.out.println(util.isNameSpaceExits("thads"));
@@ -25,13 +28,13 @@ public class Test {
         //fth.readFile("D:\\thads2013n.csv","thads:2013");
 
         //分析租金数据
-        //RentAnalysis rentAnalysis = new RentAnalysis();
-        //rentAnalysis.analysis("thads:2011");
+        RentAnalysis rentAnalysis = new RentAnalysis();
+        rentAnalysis.analysis("thads:2011");
 
 
         //分析价格
-        //PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
-        //System.out.println(rentByBuildAnalysis.analysis("thads:2011"));
+        PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
+        System.out.println(rentByBuildAnalysis.analysis("thads:2011"));
 
         //分析房间数
         RoomsByBuildAnalysis roomsByBuildAnalysis = new RoomsByBuildAnalysis();
