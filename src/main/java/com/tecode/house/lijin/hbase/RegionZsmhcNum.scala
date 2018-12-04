@@ -1,6 +1,7 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.service.impl.InsertRegionZsmhcNumServer
 import com.tecode.house.lijin.utils.ConfigUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
@@ -34,8 +35,33 @@ class RegionZsmhcNum extends Analysis {
   override def analysis(tableName: String): Boolean = {
     val hBaseRDD = readHBase(tableName)
 
-    // 获取(地区,房产税)
-    hBaseRDD.map(row => {
+    val array = getRegion(hBaseRDD)
+    val map = getMap(array)
+
+    new InsertRegionZsmhcNumServer().insert(map, Integer.parseInt(tableName.split(":")(1)))
+
+    true
+  }
+
+  /**
+    * 将统计结果组装成存储接口需要的格式
+    *
+    * @param arr 统计结果
+    * @return 传递给存储接口的格式
+    */
+  def getMap(arr: Array[(Int, (Int, Int, Int, Int, Int, Int, Int, Int))]): java.util.Map[String, java.util.Map[String, String]] = {
+    val list1 = List("0-500", "500-1000","1000-1500", "1500-2000", "2000-2500", "2500-3000", "3000-35000", "3500+")
+    var map = Map[String, java.util.Map[String, String]]()
+    for(a <- arr) {
+      val list2 = List(a._2._1 + "",a._2._2 + "",a._2._3 + "",a._2._4 + "",a._2._5 + "",a._2._6 + "",a._2._7 + "", a._2._8 + "")
+      val m = list1.zip(list2).toMap.asJava
+      map += ((a._1 + "", m))
+    }
+    map.asJava
+  }
+
+  def getRegion(rdd: RDD[(ImmutableBytesWritable, Result)]): Array[(Int, (Int, Int, Int, Int, Int, Int, Int, Int))] = {
+    rdd.map(row => {
       var REGION, ZSMHC = 0
 
       for (cell <- row._2.rawCells()) {
@@ -73,9 +99,7 @@ class RegionZsmhcNum extends Analysis {
       }
     }).reduceByKey(
       (x1, x2) => (x1._1 + x2._1, x1._2 + x2._2, x1._3 + x2._3, x1._4 + x2._4, x1._5 + x2._5, x1._6 + x2._6, x1._7 + x2._7, x1._1 + x2._8)
-    )
-
-    true
+    ).collect()
   }
 
 
@@ -107,6 +131,6 @@ class RegionZsmhcNum extends Analysis {
 
 object RegionZsmhcNum {
   def main(args: Array[String]): Unit = {
-    new RegionZsmhcNum().readHBase("thads:2013")
+    new RegionZsmhcNum().analysis("thads:2013")
   }
 }
