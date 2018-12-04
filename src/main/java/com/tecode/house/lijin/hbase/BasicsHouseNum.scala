@@ -1,5 +1,7 @@
 package com.tecode.house.lijin.hbase
 
+import java.util
+
 import com.tecode.house.d01.bean.HBaseBean
 import com.tecode.house.d01.service.Analysis
 import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
@@ -72,7 +74,6 @@ class BasicsHouseNum extends Analysis {
       }
 
     )
-    hbaseRDD.foreach(s => println(s._1.getClass))
 
     // 卧室数
     val bedrmsRDD = hbaseRDD.map(_._1)
@@ -80,11 +81,22 @@ class BasicsHouseNum extends Analysis {
     // 房间数
     val roomsRDD = hbaseRDD.map(_._2)
 
-    bedrmsRDD.map((_, 1)).reduceByKey(_ + _).glom().foreach(s => s.foreach(println))
-    println("-----------------------")
-    roomsRDD.map((_, 1)).reduceByKey(_ + _).glom().foreach(s => s.foreach(println))
+    val map = ("卧室数" -> getMap(bedrmsRDD), "房间数" -> getMap(roomsRDD))
+    println(map)
 
     true
+  }
+
+  def getMap(rdd: RDD[Int]): Map[String, String] = {
+    var map = Map[String, String]()
+    rdd.map(n => {
+      if (n > 10) {
+        ("10+", 1)
+      } else {
+        (n + "", 1)
+      }
+    }).reduceByKey(_ + _).map(t => (t._1, t._2 + "")).collect().foreach(t => map += ((t._1, t._2)))
+    map
   }
 
 

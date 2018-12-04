@@ -243,6 +243,10 @@ public abstract class InsertMysqlServer {
                 String xDimname = xDimensions.get(j).getDimname();
                 // 取出数据
                 String value = map.get(xDimname);
+                // 当前数据不存在则插入0值
+                if (value == null) {
+                    value = "0";
+                }
                 Data data = new Data();
                 data.setLegendid(legend.getId());
                 data.setLegend(lengendDimname);
