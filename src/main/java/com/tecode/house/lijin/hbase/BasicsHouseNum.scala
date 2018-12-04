@@ -1,11 +1,9 @@
 package com.tecode.house.lijin.hbase
 
-import java.util
-
-import com.tecode.house.d01.bean.HBaseBean
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.lijin.service.impl.InsertBasicsRoomsNumServer
-import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
+import com.tecode.house.lijin.utils.ConfigUtil
+import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Result, Scan}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.{TableInputFormat, TableMapReduceUtil}
@@ -19,7 +17,7 @@ import org.apache.hadoop.hbase.util.Bytes
   * 基础-房间数
   */
 class BasicsHouseNum extends Analysis {
-  private val conf = new SparkConf().setAppName("BasicsHouseNum").setMaster("local[*]")
+  private val conf = new SparkConf().setAppName("BasicsHouseNum").setMaster(ConfigUtil.get("spark_master"))
   private val sc = new SparkContext(conf)
   private val hBaseConf = HBaseConfiguration.create
 
@@ -77,10 +75,10 @@ class BasicsHouseNum extends Analysis {
     )
 
     // 卧室数
-    val bedrmsRDD = hbaseRDD.map(_._1)
+    val bedrmsRDD = hbaseRDD.map(_._1).filter(_ > 0)
 
     // 房间数
-    val roomsRDD = hbaseRDD.map(_._2)
+    val roomsRDD = hbaseRDD.map(_._2).filter(_ > 0)
 
     import scala.collection.JavaConverters._
 
