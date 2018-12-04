@@ -98,7 +98,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.tecode.mysql.bean.Legend"  useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.tecode.mysql.bean.Legend" useGeneratedKeys="true" keyProperty="id">
     insert into legend (name, dimGroupName,
       diagramId)
     values ( #{name,jdbcType=VARCHAR}, #{dimgroupname,jdbcType=VARCHAR},

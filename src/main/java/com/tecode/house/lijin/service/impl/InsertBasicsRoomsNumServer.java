@@ -65,7 +65,7 @@ public class InsertBasicsRoomsNumServer extends InsertMysqlServer {
     @Override
     public void insert(Map<String, Map<String, String>> datas, int year) {
         // 报表表
-        Report report = getReport(year, "基础-房间数分析", "基础分析");
+        Report report = getReport(year, "基础-房间数分析", "基础分析", "http://166.166.0.13:8080/basics_rooms_num");
 //        System.out.println("报表：");
 //        System.out.println(report);
         // 图表表

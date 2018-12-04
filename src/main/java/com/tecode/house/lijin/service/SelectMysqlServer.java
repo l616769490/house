@@ -12,10 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 从数据库中查询数据
@@ -147,7 +144,7 @@ public abstract class SelectMysqlServer {
         dataExample.or().andXidEqualTo(xAxisId).andLegendidEqualTo(legendId);
 
         List<Data> dataList = mapper.selectByExample(dataExample);
-        Map<String, Map<String, String>> datum = new LinkedHashMap<>();
+        Map<String, Map<String, String>> datum = new HashMap<>();
         for (Data data : dataList) {
             // 图例维度
             String l = data.getLegend();
@@ -156,7 +153,7 @@ public abstract class SelectMysqlServer {
             if (datum.get(l) != null) {
                 datum.get(l).put(x, data.getValue());
             } else {
-                Map<String, String> map = new HashMap<>();
+                Map<String, String> map = new LinkedHashMap<>();
                 map.put(x, data.getValue());
                 datum.put(l, map);
             }

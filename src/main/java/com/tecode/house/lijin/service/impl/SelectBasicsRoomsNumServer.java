@@ -13,10 +13,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * @version ：2018/12/3 V1.0
  * @author : 李晋
+ * @version ：2018/12/3 V1.0
  */
 @Service("basicsRoomsNumServer")
 public class SelectBasicsRoomsNumServer extends SelectMysqlServer {
@@ -62,11 +63,13 @@ public class SelectBasicsRoomsNumServer extends SelectMysqlServer {
             Series<Integer> series = new Bar<Integer>().setName(legendItem);
             // 取出一组数据
             Map<String, String> xMap = datum.get(legendItem);
-            for (Map.Entry<String, String> data : xMap.entrySet()) {
+            Set<Map.Entry<String, String>> entries = xMap.entrySet();
+
+            for (Map.Entry<String, String> data : entries) {
                 series.addData(Integer.parseInt(data.getValue()));
                 if (b < xMap.size()) {
-                    x.addData(data.getValue());
-                    b ++;
+                    x.addData(data.getKey());
+                    b++;
                 }
             }
             legendOption.addData(legendItem);

@@ -13,6 +13,8 @@ public class Report {
 
     private Integer status;
 
+    private String url;
+
     public Integer getId() {
         return id;
     }
@@ -61,6 +63,14 @@ public class Report {
         this.status = status;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url == null ? null : url.trim();
+    }
+
     @Override
     public String toString() {
         return "Report{" +
@@ -70,6 +80,7 @@ public class Report {
                 ", year=" + year +
                 ", group='" + group + '\'' +
                 ", status=" + status +
+                ", url='" + url + '\'' +
                 '}';
     }
 }

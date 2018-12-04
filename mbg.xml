@@ -38,22 +38,22 @@
 
 
 		<!-- table指定每个表的生成策略 -->
-		<table tableName="data" domainObjectName="Data">
-		</table>
-		<table tableName="diagram" domainObjectName="Diagram">
-		</table>
-		<table tableName="dimension" domainObjectName="Dimension">
-		</table>
-		<table tableName="legend" domainObjectName="Legend">
-		</table>
+		<!--<table tableName="data" domainObjectName="Data">-->
+		<!--</table>-->
+		<!--<table tableName="diagram" domainObjectName="Diagram">-->
+		<!--</table>-->
+		<!--<table tableName="dimension" domainObjectName="Dimension">-->
+		<!--</table>-->
+		<!--<table tableName="legend" domainObjectName="Legend">-->
+		<!--</table>-->
 		<table tableName="report" domainObjectName="Report">
 		</table>
-		<table tableName="xaxis" domainObjectName="XAxis">
-		</table>
-		<table tableName="yaxis" domainObjectName="YAxis">
-		</table>
-		<table tableName="search" domainObjectName="Search">
-		</table>
+		<!--<table tableName="xaxis" domainObjectName="XAxis">-->
+		<!--</table>-->
+		<!--<table tableName="yaxis" domainObjectName="YAxis">-->
+		<!--</table>-->
+		<!--<table tableName="search" domainObjectName="Search">-->
+		<!--</table>-->
 
 
 

@@ -4,6 +4,7 @@ import java.util
 
 import com.tecode.house.d01.bean.HBaseBean
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.service.impl.InsertBasicsRoomsNumServer
 import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
 import org.apache.hadoop.hbase.client.{Result, Scan}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -25,7 +26,7 @@ class BasicsHouseNum extends Analysis {
   /**
     * 读取HBase数据
     *
-    * @param tableName HBase的表名
+    * @param tableName HBase的表名(带命名空间)
     * @return HBaseRDD
     */
   def readHBase(tableName: String): RDD[(ImmutableBytesWritable, Result)] = {
@@ -81,8 +82,11 @@ class BasicsHouseNum extends Analysis {
     // 房间数
     val roomsRDD = hbaseRDD.map(_._2)
 
-    val map = ("卧室数" -> getMap(bedrmsRDD), "房间数" -> getMap(roomsRDD))
-    println(map)
+    import scala.collection.JavaConverters._
+
+    val map = Map("卧室数" -> getMap(bedrmsRDD).asJava, "房间数" -> getMap(roomsRDD).asJava)
+
+    new InsertBasicsRoomsNumServer().insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
 
     true
   }

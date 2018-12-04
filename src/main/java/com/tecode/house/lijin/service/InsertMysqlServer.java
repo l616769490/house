@@ -60,9 +60,10 @@ public abstract class InsertMysqlServer {
      * @param year       年份
      * @param reportName 报表名
      * @param groupName  报表组
+     * @param url 请求地址
      * @return 报表
      */
-    protected Report getReport(int year, String reportName, String groupName) {
+    protected Report getReport(int year, String reportName, String groupName, String url) {
         ReportMapper reportMapper = session.getMapper(ReportMapper.class);
         Report report = reportMapper.selectByNameAndYear(reportName, year);
         if (report == null) {
@@ -70,6 +71,7 @@ public abstract class InsertMysqlServer {
             report.setCreate(System.currentTimeMillis());
             report.setGroup(groupName);
             report.setName(reportName);
+            report.setUrl(url);
             report.setStatus(0);
             report.setYear(year);
             // 写入报表数据
@@ -239,7 +241,7 @@ public abstract class InsertMysqlServer {
             // 对应的数据集
             Map<String, String> map = datas.get(lengendDimname);
 
-            for (int j = 0; j < map.size(); j++) {
+            for (int j = 0; j < xDimensions.size(); j++) {
                 String xDimname = xDimensions.get(j).getDimname();
                 // 取出数据
                 String value = map.get(xDimname);
