@@ -1,8 +1,10 @@
 package com.tecode.house.zhangzhou.service
 
+import com.tecode.house.d01.service.Analysis
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 /**
@@ -12,7 +14,7 @@ import org.apache.spark.{SparkConf, SparkContext}
   */
 case class TmpClass(city:String ,houseDuty:Double)
 
-class SparkService {
+class SparkService extends Analysis{
   val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
   val sc = new SparkContext(sparkConf)
   val spark = SparkSession.builder().config(sparkConf).getOrCreate()
@@ -39,9 +41,12 @@ class SparkService {
       classOf[org.apache.hadoop.hbase.client.Result])
     val houseCount= hbaseRDD.count()
     println("houseCount:"+houseCount)
-    val house = hbaseRDD.map(x => Bytes.toString(x._2.getValue(Bytes.toBytes("info"),
-                            Bytes.toBytes("VACANCY")))).map((_,1)).reduceByKey(_+_)
-                            .collect().foreach(println)
+    val value: RDD[(String, Int)] = hbaseRDD.map(x => Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("VACANCY")))).map((_, 1)).reduceByKey(_ + _)
+    val house = value
+
+  }
+  def setReport(rdd:RDD[(String, Int)]): Unit ={
+
   }
 
   /**
@@ -81,12 +86,24 @@ class SparkService {
     spark.stop()
 
   }
+
+  /**
+    * 数据分析接口
+    *
+    * @param tableName HBase数据库名字
+    * @return 成功/失败
+    */
+  override def analysis(tableName: String): Boolean = {
+
+    true
+  }
 }
 
 object SparkService{
   def main(args: Array[String]): Unit = {
     val ss = new SparkService
     ss.selectHouseDutyGroupByCity()
+    println("123ada")
   }
 }
 
