@@ -9,6 +9,15 @@ public class Data {
     private int xId;
     private int legendId;
     private String x;
+    private String legend;
+
+    public String getLegend() {
+        return legend;
+    }
+
+    public void setLegend(String legend) {
+        this.legend = legend;
+    }
 
     public void setId(int id) {
         this.id = id;

@@ -178,12 +178,15 @@ public class MysqlDaoImpl implements MysqlDao {
      */
     @Override
     public int putToTableData(Connection conn, Data data) throws SQLException {
-        String sql = "insert into data (value,xId,legendId) value(?,?,?)";
+        String sql = "insert into data (value,xId,legendId,x,legend) value(?,?,?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
 
         ps.setString(1,data.getValue());
         ps.setInt(2,data.getxId());
         ps.setInt(3,data.getLegendId());
+        ps.setString(4,data.getX());
+        ps.setString(5,data.getLegend());
+
 
         //执行
         int len = ps.executeUpdate();
