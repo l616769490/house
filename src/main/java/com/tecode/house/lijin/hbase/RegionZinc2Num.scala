@@ -1,6 +1,7 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.service.impl.InsertRegionZinc2NumServer
 import com.tecode.house.lijin.utils.ConfigUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
@@ -11,7 +12,6 @@ import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
-import scala.collection.mutable.ArrayBuffer
 
 /**
   * 按区域-收入统计
@@ -19,6 +19,7 @@ import scala.collection.mutable.ArrayBuffer
   * 成员：李晋
   */
 class RegionZinc2Num extends Analysis {
+  import scala.collection.JavaConverters._
 
   private val conf: SparkConf = new SparkConf().setAppName("RegionZinc2Num").setMaster(ConfigUtil.get("spark_master"))
   private val sc = new SparkContext(conf)
@@ -36,41 +37,10 @@ class RegionZinc2Num extends Analysis {
     // (地区, (地区收入平均值, 地区贫困线人数, 地区L30人数, 地区L50人数, 地区L80人数, 地区L80以上人数, 地区中位数之上人数))
     val region = getRegion(hBaseRDD)
 
-    region
+    val map = getMap(region)
+    new InsertRegionZinc2NumServer().insert(map,Integer.parseInt(tableName.split(":")(1)))
 
     true
-  }
-
-  /**
-    * 读取HBase数据
-    *
-    * @param tableName HBase的表名(带命名空间)
-    * @return HBaseRDD
-    */
-  def readHBase(tableName: String): RDD[(ImmutableBytesWritable, Result)] = {
-    hBaseConf.set(TableInputFormat.INPUT_TABLE, tableName)
-    val scan = new Scan()
-    scan.setCacheBlocks(false)
-    // 设置读取的列族
-    scan.addFamily(Bytes.toBytes("info"))
-    // 区域
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("REGION"))
-    // 家庭收入
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("ZINC2"))
-    // L30
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L30"))
-    // L50
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L50"))
-    // L50
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L80"))
-    // 贫困线
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("IPOV"))
-    // 中位数
-    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("LMED"))
-    // 将scan类转化成string类型  
-    val scan_str = TableMapReduceUtil.convertScanToString(scan)
-    hBaseConf.set(TableInputFormat.SCAN, scan_str)
-    sc.newAPIHadoopRDD(hBaseConf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
   }
 
   /**
@@ -79,15 +49,15 @@ class RegionZinc2Num extends Analysis {
     * @param arr 统计结果
     * @return 传递给存储接口的格式
     */
-  def getMap(arr: Array[(Int, (Int, Int, Int, Int, Int, Int, Int))]): Map[String, Map[String, String]] = {
+  def getMap(arr: Array[(Int, (Int, Int, Int, Int, Int, Int, Int))]): java.util.Map[String, java.util.Map[String, String]] = {
     val list1 = List("家庭平均收入", "贫困线","L30", "L50", "L80", "L80+", "中位数")
-
+    var map = Map[String, java.util.Map[String, String]]()
     for(a <- arr) {
-      val list2 = List(a._2._1,a._2._2,a._2._3,a._2._4,a._2._5,a._2._6,a._2._7)
-      val map = list1.zip(list2).toMap
-      map
+      val list2 = List(a._2._1 + "",a._2._2 + "",a._2._3 + "",a._2._4 + "",a._2._5 + "",a._2._6 + "",a._2._7 + "")
+      val m = list1.zip(list2).toMap.asJava
+      map += ((a._1 + "", m))
     }
-    null
+    map.asJava
   }
 
   /**
@@ -156,6 +126,38 @@ class RegionZinc2Num extends Analysis {
       // (地区, (地区收入平均值, 地区贫困线人数, 地区L30人数, 地区L50人数, 地区L80人数, 地区L80以上人数, 地区中位数之上人数))
       .map(t => (t._1, (t._2._1 / t._2._2, t._2._3, t._2._4, t._2._5, t._2._6, t._2._7, t._2._8)))
       .collect()
+  }
+
+  /**
+    * 读取HBase数据
+    *
+    * @param tableName HBase的表名(带命名空间)
+    * @return HBaseRDD
+    */
+  def readHBase(tableName: String): RDD[(ImmutableBytesWritable, Result)] = {
+    hBaseConf.set(TableInputFormat.INPUT_TABLE, tableName)
+    val scan = new Scan()
+    scan.setCacheBlocks(false)
+    // 设置读取的列族
+    scan.addFamily(Bytes.toBytes("info"))
+    // 区域
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("REGION"))
+    // 家庭收入
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("ZINC2"))
+    // L30
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L30"))
+    // L50
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L50"))
+    // L50
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("L80"))
+    // 贫困线
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("IPOV"))
+    // 中位数
+    scan.addColumn(Bytes.toBytes("info"), Bytes.toBytes("LMED"))
+    // 将scan类转化成string类型  
+    val scan_str = TableMapReduceUtil.convertScanToString(scan)
+    hBaseConf.set(TableInputFormat.SCAN, scan_str)
+    sc.newAPIHadoopRDD(hBaseConf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
   }
 
 

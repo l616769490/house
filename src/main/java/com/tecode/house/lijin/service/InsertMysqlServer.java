@@ -298,8 +298,8 @@ public abstract class InsertMysqlServer {
         search.setDimgroupname(groupname);
         search.setReportid(id);
         mapper.insert(search);
-        System.out.println("搜索：");
-        System.out.println(search);
+//        System.out.println("搜索：");
+//        System.out.println(search);
     }
 
     /**

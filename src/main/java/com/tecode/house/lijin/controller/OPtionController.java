@@ -24,8 +24,7 @@ public class OPtionController {
     @ResponseBody
     @RequestMapping(value = "/basics_rooms_num", method = RequestMethod.POST)
     public Option basicsRoomsNum(Integer year) {
-        Option option = basicsRoomsNumServer.select(year, "基础-房间数分析");
-        return option;
+        return basicsRoomsNumServer.select(year, "基础-房间数分析");
     }
 
     @ResponseBody
@@ -33,4 +32,14 @@ public class OPtionController {
     public Table basicsRoomsNumTable(@RequestParam(required = false) TablePost tablePost) {
         return null;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/region_zinc2_num", method = RequestMethod.POST)
+    public Option regionZinc2Num(Integer year) {
+        return basicsRoomsNumServer.select(year, "按区域-家庭收入分析");
+    }
+
+
+
+
 }
