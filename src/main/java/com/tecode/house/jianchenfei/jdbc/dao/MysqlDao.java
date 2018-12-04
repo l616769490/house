@@ -3,6 +3,7 @@ package com.tecode.house.jianchenfei.jdbc.dao;
 import com.tecode.house.jianchenfei.jdbc.bean.Data;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public interface MysqlDao<T> {
@@ -30,10 +31,10 @@ public interface MysqlDao<T> {
 	
 	/**
 	 * 插入数据
-	 * @param data	插入的数据
+	 * @param o	插入的数据
 	 * @return	成功的条数
 	 */
-	int insert(Data data);
+	int insert(Object o);
 	
 	/**
 	 * 插入多条数据

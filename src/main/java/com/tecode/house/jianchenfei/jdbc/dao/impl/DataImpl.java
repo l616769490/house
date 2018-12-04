@@ -3,19 +3,16 @@ package com.tecode.house.jianchenfei.jdbc.dao.impl;
 import com.tecode.house.jianchenfei.jdbc.bean.Data;
 import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
-import scala.xml.dtd.SystemID;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Administrator on 2018/12/3.
  */
-public class DataDaoImpl implements MysqlDao<Data> {
+public class DataImpl implements MysqlDao<Data> {
 
     @Override
     public List<Data> findAll() {
@@ -89,7 +86,35 @@ public class DataDaoImpl implements MysqlDao<Data> {
     }
 
     @Override
-    public int insert(Data data) {
+    public int insert(Object o) {
+        Data data = (Data) o;
+        String sql = "INSERT INTO data(`value`,xid,legendid,x,legend) VALUES (?,?,?,?,?,?)";
+        // Connection conn = DBUtil.getConnection();
+        Connection conn = null;
+        PreparedStatement prepar = null;
+        try {
+            conn = ConnSource.getConnection();
+            prepar = conn.prepareStatement(sql);
+            prepar.setInt(1,data.getId());
+            prepar.setString(2,data.getValue());
+            prepar.setInt(3,data.getXid());
+            prepar.setInt(4,data.getLegendid());
+            prepar.setString(5,data.getX());
+            prepar .setString(6,data.getLegend());
+            return prepar.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (prepar != null) {
+                    prepar.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         return 0;
     }
 
@@ -114,7 +139,7 @@ public class DataDaoImpl implements MysqlDao<Data> {
     }
 
     public static void main(String[] args) {
-        DataDaoImpl d = new DataDaoImpl();
+        DataImpl d = new DataImpl();
         System.out.println(d.findAll());
     }
 }

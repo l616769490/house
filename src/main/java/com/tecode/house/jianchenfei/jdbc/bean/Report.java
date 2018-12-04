@@ -12,6 +12,17 @@ public class Report {
     private String group;
 
     private Integer status;
+    private String url;
+
+
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public Integer getId() {
         return id;
@@ -70,6 +81,7 @@ public class Report {
                 ", year=" + year +
                 ", group='" + group + '\'' +
                 ", status=" + status +
+                ", url='" + url + '\'' +
                 '}';
     }
 }
