@@ -305,13 +305,13 @@ public class MysqlDaoImpl {
     }
 
 
-    public String selectData(String sql){
-        String s ="";
+    public int selectData(String sql){
+        int s =0;
         try {
            Statement ps = conn.createStatement();
             ResultSet resultSet = ps.executeQuery(sql);
-            if (resultSet.next()){
-               s = resultSet.toString();
+            while (resultSet.next()){
+               s += (int)Double.parseDouble(resultSet.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
