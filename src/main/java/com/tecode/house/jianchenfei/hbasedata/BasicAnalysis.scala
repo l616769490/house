@@ -134,7 +134,7 @@ class BasicAnalysis extends Analysis {
       data.setLegend("家庭人数")
       data.setLegendid(LegendId)
       data.setXid(XAxisId)
-      data.setX("人数")
+      data.setX(elem._1)
       daoData.insert(data)
     }
 
