@@ -1,12 +1,13 @@
 package com.tecode.house.lijin.service
 
 import java.io.File
+import java.util
 
 import com.tecode.house.lijin.filter.{FilterBean, FilterFactory}
 import com.tecode.house.lijin.utils.ConfigUtil
 import com.tecode.table._
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.hbase.HBaseConfiguration
+import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.{Result, Scan}
 import org.apache.hadoop.hbase.filter.PageFilter
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -72,11 +73,18 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
     val thisPage = tablePost.getPage
     val year = tablePost.getYear
 
+    // 用于临时存储字段顺序
+    val filedMap = new util.HashMap[String, Integer]()
     val table = new Table()
     // 设置年
     table.setYear(year)
     // 设置表头
-    fields.foreach(t => table.addTop(t._2))
+    for (i <- 0 to fields.length) {
+      // 设置表头
+      table.addTop(fields(i)._2)
+      // 保存表头的顺序
+      filedMap.put(fields(i)._1, i)
+    }
 
     // 页码
     val page = new Page().setThisPage(thisPage)
@@ -88,19 +96,29 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
     }
     page.addData(thisPage)
     // 页码数加够5
-    for(i <- page.getData.size() to 5) {
+    for (i <- page.getData.size() to 5) {
       page.addData(thisPage + i)
     }
     table.setPage(page)
 
+    rdd.map(row => {
+      // 构建一个List
+      val list = new util.ArrayList[String](fields.length)
+      val r = new Row
+      for (cell <- row._2.rawCells()) {
+        // 列名
+        val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell))
+        // 值
+        val value = Bytes.toString(CellUtil.cloneValue(cell))
+        // 保存值
+        list.set(filedMap.get(qualifier), value)
+      }
+      r.setRow(list)
+      table.addData(r)
+    }
+    )
 
-
-    return new Table().setYear(2011)
-      .setPage(new Page().setThisPage(5).addData(2).addData(3).addData(4).addData(5).addData(6))
-      .addTop("数据1").addTop("数据2")
-      .addSearchs(new Search().setTitle("按地区").addValue("东部地区").addValue("西部地区"))
-      .addData(new Row().addRow("asa").addRow("sds")).addData(new Row().addRow("123").addRow("232"))
-      .addData(new Row().addRow("dfd").addRow("234"))
+    table
   }
 
   /**
@@ -181,10 +199,10 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
     scan.setCacheBlocks(false)
 
     // 获取缓存的前面一页的数据
-    val previousPage = getPreviousPage
+    //    val previousPage = getPreviousPage
     // 设置分页过滤器
-    val pageFilter = pageFilter(previousPage)
-    scan.setFilter(pageFilter)
+    //    val pageFilter = pageFilter(previousPage)
+    //    scan.setFilter(pageFilter)
 
     // 设置读取的列族
     scan.addFamily(Bytes.toBytes("info"))
@@ -200,7 +218,7 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
   /**
     * 从配置文件中获取字段信息
     *
-    * @return 字段信息
+    * @return 字段信息(列名， 别名)
     */
   def loadFields(): Array[(String, String)] = {
     // 获取根节点
@@ -231,6 +249,8 @@ object HBaseServer {
     val tablePost = new TablePost
     tablePost.setYear(2013)
     tablePost.setPage(5)
-    new HBaseServer(HBaseServer.getClass.getResource("/table/region-zinx2.xml").getPath, "按区域-家庭收入分析", tablePost).select()
+    val baseServer = new HBaseServer(HBaseServer.getClass.getResource("/table/region-zinx2.xml").getPath, "按区域-家庭收入分析", tablePost)
+    baseServer.select()
+    //    println(baseServer.loadFields().length)
   }
 }

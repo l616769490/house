@@ -13,6 +13,6 @@ import java.util.List;
 public class RangeFilter implements HBaseFilter {
     @Override
     public boolean filter(Result result, FilterBean filterBean, List<Search> searchs) {
-        return false;
+        return true;
     }
 }
