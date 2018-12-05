@@ -123,12 +123,12 @@ public class TestOption {
      */
     @ResponseBody
     @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
-    public Option testPie() {
+    public Option testPie(int x,int y) {
         Option option = new Option();
         // 标题
         Title title = new Title()
-                .setText("饼图")
-                .setSubtext("副标题");
+                .setText("空置状态饼图")
+                .setSubtext("统计房屋的空置状态");
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -139,42 +139,17 @@ public class TestOption {
         // 图例
         Legend legend = new Legend()
                 .setAlign(Align.left)
-                .addData("数据一").addData("数据二").addData("数据三").addData("数据四");
+                .addData("空置").addData("居住");
 
         // 数据
-        Series series1 = new Pie().setName("饼图")
-                .addData(new Pie.PieData<Integer>("数据一", 20))
-                .addData(new Pie.PieData<Integer>("数据二", 10))
-                .addData(new Pie.PieData<Integer>("数据三", 20))
-                .addData(new Pie.PieData<Integer>("数据四", 50));
+        Series series1 = new Pie().setName("房屋数量")
+                .addData(new Pie.PieData<Integer>("空置", x))
+                .addData(new Pie.PieData<Integer>("居住", y));
         ((Pie)series1).setCenter("30%", "30%").setRadius("10%");
 
-        // 数据
-        Series series2 = new Pie().setName("饼图")
-                .addData(new Pie.PieData<Integer>("数据一", 20))
-                .addData(new Pie.PieData<Integer>("数据二", 10))
-                .addData(new Pie.PieData<Integer>("数据三", 20))
-                .addData(new Pie.PieData<Integer>("数据四", 50));
-        ((Pie)series2).setCenter("30%", "60%").setRadius("10%");
-
-        // 数据
-        Series series3 = new Pie().setName("饼图")
-                .addData(new Pie.PieData<Integer>("数据一", 20))
-                .addData(new Pie.PieData<Integer>("数据二", 10))
-                .addData(new Pie.PieData<Integer>("数据三", 20))
-                .addData(new Pie.PieData<Integer>("数据四", 50));
-        ((Pie)series3).setCenter("70%", "30%").setRadius("10%");
-
-        // 数据
-        Series series4 = new Pie().setName("饼图")
-                .addData(new Pie.PieData<Integer>("数据一", 20))
-                .addData(new Pie.PieData<Integer>("数据二", 10))
-                .addData(new Pie.PieData<Integer>("数据三", 20))
-                .addData(new Pie.PieData<Integer>("数据四", 50));
-        ((Pie)series4).setCenter("70%", "60%").setRadius("10%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
-                .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4);
+                .addSeries(series1);
         return option;
     }
 }

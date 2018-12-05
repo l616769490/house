@@ -182,6 +182,26 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    public int insertIntoLegend(String name,String dimGroupName,int diagramId){
+        int id = -1;
+        try {
+            String sql = "insert into legend (`name`,`dimGroupName`,`diagramId`) values (?,?,?);";
+            PreparedStatement ps = conn.prepareStatement(sql,new String[]{"id"});
+            ps.setString(1,name);
+            ps.setString(2,dimGroupName);
+            ps.setInt(3,diagramId);
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if(generatedKeys.next()){
+                id = generatedKeys.getInt(1);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
+
     public int insertIntoXAxis(String name,int diagramId,String dimGroupName){
         int id = -1;
         try {
@@ -245,7 +265,7 @@ public class MysqlDaoImpl {
     public int insertIntoData(String value,int xId,int legendId,String x,String legend){
         int id = -1;
         try {
-            String sql = "insert into dimension (`value`,`xId`,`legendId`,`x`,`legend`) values (?,?,?,?,?);";
+            String sql = "insert into `data` (`value`,`xId`,`legendId`,`x`,`legend`) values (?,?,?,?,?);";
             PreparedStatement ps = conn.prepareStatement(sql,new String[]{"id"});
             ps.setString(1,value);
             ps.setInt(2,xId);
@@ -267,7 +287,7 @@ public class MysqlDaoImpl {
     public int insertIntoSearch(String name,String dimGroupName,int reportId){
         int id = -1;
         try {
-            String sql = "insert into dimension (`name`,`dimGroupName`,`reportId`) values (?,?,?);";
+            String sql = "insert into search (`name`,`dimGroupName`,`reportId`) values (?,?,?);";
             PreparedStatement ps = conn.prepareStatement(sql,new String[]{"id"});
             ps.setString(1,name);
             ps.setString(2,dimGroupName);
@@ -282,6 +302,22 @@ public class MysqlDaoImpl {
             e.printStackTrace();
         }
         return id;
+    }
+
+
+    public String selectData(String sql){
+        String s ="";
+        try {
+           Statement ps = conn.createStatement();
+            ResultSet resultSet = ps.executeQuery(sql);
+            if (resultSet.next()){
+               s = resultSet.toString();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
     public static void main(String[] args) {
         MysqlDaoImpl m = new MysqlDaoImpl();
