@@ -15,6 +15,10 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author zz
+ * HBase数据库的操作类
+ */
 public class HBaseDaoImpl implements HBaseDao {
     private Connection conn = HBaseUtil.setConn();
     private final String NS = "thads";
@@ -41,6 +45,11 @@ public class HBaseDaoImpl implements HBaseDao {
                                     "FMTCOST12RELFMRCAT","FMTCOSTMEDRELFMRCAT","FMTINCRELFMRCAT","FMTCOST06RELAMICAT",
                                     "FMTCOST08RELAMICAT","FMTCOST12RELAMICAT","FMTCOSTMEDRELAMICAT","FMTINCRELAMICAT",
                                     "FMTASSISTED","FMTBURDEN","FMTREGION","FMTSTATUS"};
+
+    /**
+     * 创建表
+     * @param tableName 表格名称
+     */
     @Override
     public void create(String tableName) {
         try {
@@ -59,6 +68,11 @@ public class HBaseDaoImpl implements HBaseDao {
         }
     }
 
+    /**
+     * 插入数据
+     * @param tableName 表明
+     * @param path 文件路径
+     */
     @Override
     public void insert(String tableName,String path) {
         try {

@@ -43,7 +43,7 @@ public class MysqlDaoImpl {
             ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
     //y轴（yAxis）
     private static String yAxis = "CREATE TABLE `yAxis` (\n" +
-            "  `id` int(11) NOT NULL,\n" +
+            "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
             "  `name` varchar(255) NOT NULL,\n" +
             "  `diagramId` int(11) NOT NULL,\n" +
             "  PRIMARY KEY (`id`),\n" +
@@ -74,6 +74,8 @@ public class MysqlDaoImpl {
             "  `value` varchar(50) NOT NULL,\n" +
             "  `xId` int(11) NOT NULL,\n" +
             "  `legendId` int(11) NOT NULL,\n" +
+            "  `x` varchar(50) NOT NULL,\n" +
+            "  `legend` varchar(50) NOT NULL,\n" +
             "  PRIMARY KEY (`id`),\n" +
             "  KEY `xid` (`xId`),\n" +
             "  KEY `legid` (`legendId`),\n" +
@@ -318,10 +320,5 @@ public class MysqlDaoImpl {
         }
 
         return s;
-    }
-    public static void main(String[] args) {
-        MysqlDaoImpl m = new MysqlDaoImpl();
-
-
     }
 }

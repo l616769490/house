@@ -31,10 +31,8 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row">
-        <div id="show" style="width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+    <div class="row" id="content">
 
-        </div>
 
     </div>
     <div class="row">
@@ -52,9 +50,18 @@
 <script type="text/javascript">
 
     // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('show'));
+
 
     function show(show_url) {
+       // showDiv.innerHTML="";
+      //  myChart = echarts.init(showDiv);
+        var htmlDiv ="<div id=\"show\" style=\"width: 800px;height: 600px\" class=\"col-lg-12 col-md-offset-2\">   </div>" ;
+
+        document.getElementById("content").innerHTML=htmlDiv;
+
+
+        var myChart = echarts.init(document.getElementById('show'));
+
         $.ajax({
             url: show_url,
             type: "POST",

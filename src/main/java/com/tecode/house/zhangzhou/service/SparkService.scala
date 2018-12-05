@@ -24,7 +24,6 @@ class SparkService extends Analysis{
   val sc = new SparkContext(sparkConf)
   val spark = SparkSession.builder().config(sparkConf).getOrCreate()
   var msconn:Connection =MySQLUitl.getConn
-
   val tableName = "thads:2013"
   val hbaseConf = HBaseConfiguration.create()
   //设置zooKeeper集群地址，也可以通过将hbase-site.xml导入classpath，但是建议在程序里这样设置
@@ -71,26 +70,19 @@ class SparkService extends Analysis{
       val rStatus: Int = 0
       val url: String = "http://166.166.2.111/vacancy"
       val reportId: Int = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
-
       //饼状图
       val dName = tableName
       val dText = "统计房屋的空置状态情况"
       val diagramId: Int = table.insertIntoDiagram(dName, 2, reportId, dText)
-
       //图例
-
       val legendId:Int = table.insertIntoLegend("空置状态图例","空置",diagramId)
-
       //插入X轴
       val xName: String = "空置状态"
       val xId: Int = table.insertIntoXAxis(xName, diagramId, "111")
-
       //插入Y轴
       val yId: Int = table.insertIntoYAxis("222", diagramId)
-
       //插入数据集表
       val ddId: Int = table.insertIntoDimension("basic", "空置状态", "VACANCY")
-
       //插入数据表
       for (elem <- mmap) {
         table.insertIntoData(elem._2.toString,xId,legendId,elem._1,"空置状态图例")
@@ -287,6 +279,32 @@ class SparkService extends Analysis{
     //将数据从数据库取出，在页面显示图形
 
     true
+  }
+
+
+  def selectData(): Map[String,Iterable[String]] ={
+    val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
+      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
+      classOf[org.apache.hadoop.hbase.client.Result])
+
+    val clumnRDD = hbaseRDD.map(x => (x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL")),
+      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3")),
+      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT")),
+      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1")),
+      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY")),
+      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED"))))
+
+    val mapRDD = clumnRDD.map{x => val tmp=x._5
+      if(tmp.equals("-6")){
+        ("居住",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
+      }else{
+        ("空置",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
+      }
+      }.groupByKey()
+      var mmap = Map[String,Iterable[String]]()
+    mapRDD.collect().foreach(mmap+=(_))
+    return mmap
+
   }
 }
 
