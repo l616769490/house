@@ -17,7 +17,7 @@ import org.apache.spark.{SparkConf, SparkContext}
   * 分析建筑结构类型
   *
   */
-object StructureType {
+/*object StructureType {
   def main(args: Array[String]): Unit = {
     println("读取数据中...")
     val stru = new StructureType()
@@ -29,7 +29,7 @@ object StructureType {
     stru.packageBean("2013", analy)
     println("导入完成")
   }
-}
+}*/
 
 
 class StructureType {
@@ -102,52 +102,52 @@ class StructureType {
     * @param tablename hbase表名
     */
   def packageBean(tablename: String, value: Array[(String, Int)]) = {
+
+
+    val dao: MysqlDao = new MysqlDaoImpl()
+    val conn = MySQLUtil.getConn()
+    //   //开启事务
+    //   conn.setAutoCommit(false)
+    //封装到report的bean
+    val report = new Report()
+    report.setName("类型")
+    report.setCreate(System.currentTimeMillis())
+
+    report.setYear(Integer.valueOf(tablename))
+
+    report.setGroup("基础分析")
+    report.setStatus(1)
+    report.setUrl("http://166.166.5.101:8080/basics_structuretype_num")
+    val reportId = dao.putToTableReport(conn, report)
+    println(reportId)
+    //柱状图封装bean
+    val digram = new Diagram()
+    digram.setName("建筑结构类型分布柱状图")
+    digram.setType(1)
+    digram.setReportId(reportId)
+    digram.setSubtext("统计建筑结构类型的分布情况统计")
+    val diagramId = dao.putToTableDiagram(conn, digram)
+    //封装x轴
+    val x = new Xaxis()
+    x.setName("结构类型")
+    x.setDiagramId(diagramId)
+    x.setDimGroupName("建筑结构类型")
+    val XaxisId = dao.putToTablexAxis(conn, x)
+    //封装y轴
+    val y = new Yaxis()
+    y.setName("数量")
+    y.setDiagramId(diagramId)
+    val yaxisId = dao.putToTableYaxis(conn, y)
+
+    //封装legendBean
+    val legend = new Legend()
+    legend.setName("建筑结构类型统计")
+    legend.setDimGroupName("建筑结构类型统计")
+    legend.setDiagramId(diagramId)
+    val legendId = dao.putToTableLegend(conn, legend)
+
+    //封装到databean
     val xvalue = for (elem <- value) {
-
-      val dao: MysqlDao = new MysqlDaoImpl()
-      val conn = MySQLUtil.getConn()
-      //   //开启事务
-      //   conn.setAutoCommit(false)
-      //封装到report的bean
-      val report = new Report()
-      report.setName("类型")
-      report.setCreate(System.currentTimeMillis())
-
-      report.setYear(Integer.valueOf(tablename))
-
-      report.setGroup("基础")
-      report.setStatus(1)
-      report.setUrl("/url")
-      val reportId = dao.putToTableReport(conn, report)
-      println(reportId)
-      //柱状图封装bean
-      val digram = new Diagram()
-      digram.setName("建筑结构类型分布柱状图")
-      digram.setType(1)
-      digram.setReportId(reportId)
-      digram.setSubtext("统计建筑结构类型的分布情况统计")
-      val diagramId = dao.putToTableDiagram(conn, digram)
-      //封装x轴
-      val x = new Xaxis()
-      x.setName("结构类型")
-      x.setDiagramId(diagramId)
-      x.setDimGroupName("建筑结构类型")
-      val XaxisId = dao.putToTablexAxis(conn, x)
-      //封装y轴
-      val y = new Yaxis()
-      y.setName("数量")
-      y.setDiagramId(diagramId)
-      val yaxisId = dao.putToTableYaxis(conn, y)
-
-      //封装legendBean
-      val legend = new Legend()
-      legend.setName("建筑结构类型统计")
-      legend.setDimGroupName("建筑结构类型统计")
-      legend.setDiagramId(diagramId)
-      val legendId = dao.putToTableLegend(conn, legend)
-
-      //封装到databean
-
       val xvalue = elem._1
       println(xvalue)
       val x1 = elem._2.toString
@@ -159,16 +159,15 @@ class StructureType {
       data.setLegend("建筑结构类型")
 
       dao.putToTableData(conn, data)
-
-      //封装searchBean
-      val search = new Search()
-      search.setName("建筑结构类型统计")
-      search.setDimGroupName("建筑结构类型")
-      search.setReportId(reportId)
-
-      dao.putToTablesearch(conn, search)
-
     }
+    //封装searchBean
+    val search = new Search()
+    search.setName("建筑结构类型统计")
+    search.setDimGroupName("建筑结构类型")
+    search.setReportId(reportId)
+
+    dao.putToTablesearch(conn, search)
+
 
   }
 
