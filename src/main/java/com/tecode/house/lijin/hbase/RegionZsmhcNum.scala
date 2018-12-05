@@ -40,8 +40,9 @@ class RegionZsmhcNum extends Analysis {
     val array = getRegion(hBaseRDD)
     val map = getMap(array)
 
-//    new InsertRegionZsmhcNumServer().insert(map, Integer.parseInt(tableName.split(":")(1)))
-    new InsertFromXml(ConfigUtil.get("mybatis-config2"), getClass.getResource("/report/region-zsmhc.xml").getPath()).insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
+    val conf = ConfigUtil.get("mybatis-config2")
+    val path = getClass.getResource("/report/region-zsmhc.xml").getPath
+    new InsertFromXml(conf, path).insert(map, Integer.parseInt(tableName.split(":")(1)))
     true
   }
 

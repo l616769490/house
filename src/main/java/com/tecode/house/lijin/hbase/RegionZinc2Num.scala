@@ -40,8 +40,10 @@ class RegionZinc2Num extends Analysis {
     val region = getRegion(hBaseRDD)
 
     val map = getMap(region)
-//    new InsertRegionZinc2NumServer().insert(map,Integer.parseInt(tableName.split(":")(1)))
-    new InsertFromXml(ConfigUtil.get("mybatis-config2"), getClass.getResource("/report/region-zinx2.xml").getPath()).insert(map.asJava, Integer.parseInt(tableName.split(":")(1)))
+
+    val path = this.getClass.getResource("/report/region-zinx2.xml").getPath
+    val conf = ConfigUtil.get("mybatis-config2")
+    new InsertFromXml(conf, path).insert(map, Integer.parseInt(tableName.split(":")(1)))
     true
   }
 

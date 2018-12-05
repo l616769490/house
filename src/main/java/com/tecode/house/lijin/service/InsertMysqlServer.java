@@ -219,14 +219,11 @@ public abstract class InsertMysqlServer {
      * @return 数据集
      */
     protected List<Data> getDatas(Report report, Map<String, Map<String, String>> datas, XAxis xAxis, Legend legend) {
-//        System.out.println("维度：");
         // x轴维度组
         List<Dimension> xDimensions = getDimensions(xAxis.getDimgroupname());
-//        System.out.println(xDimensions);
 
         // 图例维度组
         List<Dimension> legendDimensions = getDimensions(legend.getDimgroupname());
-//        System.out.println(legendDimensions);
 
 
         if (datas.size() != legendDimensions.size()) {
@@ -255,10 +252,11 @@ public abstract class InsertMysqlServer {
                 data.setX(xDimname);
                 data.setValue(value);
                 dataList.add(data);
-                if (j == 0) {
-                    insertSearch(report.getId(), legendDimensions.get(i).getDimname(), xDimensions.get(j).getGroupname());
-                }
+//                if (j == 0) {
+//                    insertSearch(report.getId(), legendDimensions.get(i).getDimname(), xDimensions.get(j).getGroupname());
+//                }
             }
+            insertSearch(report.getId(), legendDimensions.get(i).getDimname(), xDimensions.get(i).getGroupname());
         }
 
         return dataList;
@@ -287,18 +285,16 @@ public abstract class InsertMysqlServer {
      * 写入搜索
      *
      * @param id        报表ID
-     * @param dimname   搜索名（单个图例）
-     * @param groupname 搜索条件（该图例对应的x轴维度组）
+     * @param name   搜索名（单个图例）
+     * @param groupname 搜索条件（该图例对应的图例维度组）
      */
-    protected void insertSearch(Integer id, String dimname, String groupname) {
+    protected void insertSearch(Integer id, String name, String groupname) {
         SearchMapper mapper = session.getMapper(SearchMapper.class);
         Search search = new Search();
-        search.setName(dimname);
+        search.setName(name);
         search.setDimgroupname(groupname);
         search.setReportid(id);
         mapper.insert(search);
-//        System.out.println("搜索：");
-//        System.out.println(search);
     }
 
     /**

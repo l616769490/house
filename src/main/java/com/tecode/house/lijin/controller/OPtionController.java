@@ -28,20 +28,9 @@ public class OPtionController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/basic_rooms_num_table", method = RequestMethod.POST)
-    public Table basicsRoomsNumTable(@RequestParam(required = false) TablePost tablePost) {
-        return null;
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/region_zinc2_num", method = RequestMethod.POST)
     public Option regionZinc2Num(Integer year) {
         return basicsRoomsNumServer.select(year, "按区域-家庭收入分析");
-    }
-    @ResponseBody
-    @RequestMapping(value = "/region_zinc2_num_table", method = RequestMethod.POST)
-    public Table regionZinc2NumTable(@RequestParam(required = false) TablePost tablePost) {
-        return null;
     }
 
     @ResponseBody
@@ -49,12 +38,5 @@ public class OPtionController {
     public Option regionZsmhcNum(Integer year) {
         return basicsRoomsNumServer.select(year, "按区域-房产税分析");
     }
-    @ResponseBody
-    @RequestMapping(value = "/region_zsmhc_num_table", method = RequestMethod.POST)
-    public Table regionZsmhcNumTable(@RequestParam(required = false) TablePost tablePost) {
-        return null;
-    }
-
-
 
 }
