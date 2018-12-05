@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/3.
  */
-public class DiagramImpl implements MysqlDao{
+public class DiagramImpl implements MysqlDao<Diagram>{
     @Override
     public List findAll() {
         List<Diagram> list = new ArrayList<>();
@@ -79,16 +79,64 @@ public class DiagramImpl implements MysqlDao{
 
     @Override
     public List findByColums(String[] columns, String[] values) {
-        return null;
+        if (columns.length != columns.length) {
+            return null;
+        }
+        List<Diagram> list = new ArrayList<>();
+        Connection conn = null;
+        Statement stat = null;
+        ResultSet rs = null;
+        StringBuffer sql = new StringBuffer("SELECT * FROM diagram WHERE");
+        for (int i = 0; i < columns.length; i++) {
+            sql.append(" " + columns[i] + "=");
+            if (columns[i].toLowerCase().equals("id") || columns[i].toLowerCase().equals("reportid")
+                    || columns[i].toLowerCase().equals("type")) {
+                sql.append(values[i]);
+            } else if (columns[i].toLowerCase().equals("name") || columns[i].toLowerCase().equals("subtext")) {
+                sql.append("'" + values[i] + "'");
+            }
+            if (i != columns.length - 1) {
+                sql.append(" AND");
+            }
+        }
+        try {
+            conn = ConnSource.getConnection();
+            stat = conn.createStatement();
+            rs = stat.executeQuery(sql.toString());
+            Diagram diagram = null;
+            while ((diagram = getDiagram(rs)) != null) {
+                list.add(diagram);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+
+
     }
 
     @Override
-    public int insert(Object o) {
-        Diagram diagram = (Diagram) o;
-        Connection conn = null;
+    public int insert(Diagram diagram) {
+
+        Connection conn ;
         PreparedStatement prepar = null;
-        String diagramSql = "insert into diagram(name,`type`,reportId,subtext) values(?,?,?,?)";
+        int i= 0;
+        String sql = "insert into diagram(name,`type`,reportId,subtext) values(?,?,?,?)";
         try {
+            conn = ConnSource.getConnection();
+            prepar = conn.prepareStatement(sql);
             prepar.setString(1, diagram.getName());
             prepar.setInt(2, diagram.getType());
             prepar.setInt(3, diagram.getReportid());
@@ -98,6 +146,16 @@ public class DiagramImpl implements MysqlDao{
             e.printStackTrace();
         }
 
+        return i;
+    }
+
+    @Override
+    public int update(Diagram diagram) {
+        return 0;
+    }
+
+    @Override
+    public int delect(Diagram diagram) {
         return 0;
     }
 
@@ -106,18 +164,10 @@ public class DiagramImpl implements MysqlDao{
         return 0;
     }
 
-    @Override
-    public int update(Object o) {
-        return 0;
-    }
 
     @Override
     public int update(List list) {
         return 0;
     }
 
-    @Override
-    public int delect(Object o) {
-        return 0;
-    }
 }

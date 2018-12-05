@@ -23,7 +23,7 @@ public interface MysqlDao<T> {
 	
 	/**
 	 * 多条件查询
-	 * @param colums	查询项
+	 * @param columns	查询项
 	 * @param values	查询值
 	 * @return	查询到的数据
 	 */
@@ -31,10 +31,10 @@ public interface MysqlDao<T> {
 	
 	/**
 	 * 插入数据
-	 * @param o	插入的数据
+	 * @param t	插入的数据
 	 * @return	成功的条数
 	 */
-	int insert(Object o);
+	int insert(T t);
 	
 	/**
 	 * 插入多条数据
@@ -52,7 +52,7 @@ public interface MysqlDao<T> {
 	
 	/**
 	 * 更新多条数据
-	 * @param t		新对象
+	 * @param ts	新对象
 	 * @return	成功的条数
 	 */
 	int update(List<T> ts);

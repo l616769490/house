@@ -9,7 +9,7 @@ import com.tecode.house.jianchenfei.jdbc.dao.impl.ReportImpl;
  */
 public class Test {
     public static void main(String[] args) {
-        MysqlDao dao= new ReportImpl();
+
 
     }
 

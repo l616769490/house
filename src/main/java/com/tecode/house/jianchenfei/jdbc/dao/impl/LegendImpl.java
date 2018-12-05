@@ -2,6 +2,7 @@ package com.tecode.house.jianchenfei.jdbc.dao.impl;
 
 import com.tecode.house.jianchenfei.jdbc.bean.Data;
 import com.tecode.house.jianchenfei.jdbc.bean.Legend;
+import com.tecode.house.jianchenfei.jdbc.bean.Search;
 import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
 import scala.tools.cmd.gen.AnyVals;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/4.
  */
-public class LegendImpl implements MysqlDao{
+public class LegendImpl implements MysqlDao<Legend>{
     @Override
     public List findAll() {
         List<Legend> list = new ArrayList<>();
@@ -77,16 +78,62 @@ public class LegendImpl implements MysqlDao{
 
     @Override
     public List findByColums(String[] columns, String[] values) {
-        return null;
+        if (columns.length != columns.length) {
+            return null;
+        }
+        List<Legend> list = new ArrayList<>();
+        Connection conn = null;
+        Statement stat = null;
+        ResultSet rs = null;
+        StringBuffer sql = new StringBuffer("SELECT * FROM legend WHERE");
+        for (int i = 0; i < columns.length; i++) {
+            sql.append(" " + columns[i] + "=");
+            if (columns[i].toLowerCase().equals("id") || columns[i].toLowerCase().equals("diagramid")) {
+                sql.append(values[i]);
+            } else if (columns[i].toLowerCase().equals("name") || columns[i].toLowerCase().equals("dimgroupname")) {
+                sql.append("'" + values[i] + "'");
+            }
+            if (i != columns.length - 1) {
+                sql.append(" AND");
+            }
+        }
+        try {
+            conn = ConnSource.getConnection();
+            stat = conn.createStatement();
+            rs = stat.executeQuery(sql.toString());
+            Legend legend = null;
+            while ((legend = getLegend(rs)) != null) {
+                list.add(legend);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stat != null) {
+                    stat.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+
+
     }
 
     @Override
-    public int insert(Object o) {
-        Legend legend = (Legend) o;
+    public int insert(Legend legend) {
         Connection conn = null;
         PreparedStatement prepar = null;
-        String legendSql = "insert into legend(name,dimgroupname,diagramid) values(?,?,?)";
+        int i = 0;
+        String sql = "insert into legend(name,dimgroupname,diagramid) values(?,?,?)";
         try {
+            conn = ConnSource.getConnection();
+            prepar = conn.prepareStatement(sql);
             prepar.setString(1, legend.getName());
             prepar.setString(2, legend.getDimgroupname());
             prepar.setInt(3, legend.getDiagramid());
@@ -95,6 +142,16 @@ public class LegendImpl implements MysqlDao{
             e.printStackTrace();
         }
 
+        return i;
+    }
+
+    @Override
+    public int update(Legend legend) {
+        return 0;
+    }
+
+    @Override
+    public int delect(Legend legend) {
         return 0;
     }
 
@@ -103,18 +160,11 @@ public class LegendImpl implements MysqlDao{
         return 0;
     }
 
-    @Override
-    public int update(Object o) {
-        return 0;
-    }
 
     @Override
     public int update(List list) {
         return 0;
     }
 
-    @Override
-    public int delect(Object o) {
-        return 0;
-    }
+
 }
