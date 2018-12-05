@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.test;
 
 import com.tecode.table.TablePost;
 import com.tecode.table.Table;

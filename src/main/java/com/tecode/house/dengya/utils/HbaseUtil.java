@@ -123,6 +123,41 @@ public static  boolean isTableExists(String tableName) throws IOException{
 
      }
 
+    /**
+     * Hbase查询数据
+     */
+    public static List<String> getAll(String tableName) throws IOException{
+        Configuration conf = HBaseConfiguration.create();
+        Connection conn = ConnectionFactory.createConnection(conf);
 
+        List<String> list = new ArrayList<>();
+        Table table = conn.getTable(TableName.valueOf(tableName));
+        //构建扫描器
+        Scan scan = new Scan();
+        //值扫描指定的列族
+        //scan.addFamily(family);
+
+        //使用扫描器，扫描一张表，返回一个ResultScanner对象，这个对象，应该存放的是已rowkey为键的多个记录
+        ResultScanner scanner = table.getScanner(scan);
+
+        for (Result result : scanner) {
+
+            Cell[] rawCells = result.rawCells();
+            for (Cell cell : rawCells) {
+                String s = Bytes.toString(CellUtil.cloneFamily(cell));
+                String s1 = Bytes.toString(CellUtil.cloneQualifier(cell));
+                String s2 = Bytes.toString(CellUtil.cloneValue(cell));
+                String s3 = Bytes.toString(CellUtil.cloneRow(cell));
+                if(s.equals(info)){
+                    list.add(s1+"_"+s2+"_"+s3);
+                }
+
+            }
+
+
+        }
+        return list;
     }
+
+}
 

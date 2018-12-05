@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.test;
 
 import com.tecode.pagelist.Group;
 import com.tecode.pagelist.PageList;

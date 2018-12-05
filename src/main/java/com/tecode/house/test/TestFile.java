@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.test;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;

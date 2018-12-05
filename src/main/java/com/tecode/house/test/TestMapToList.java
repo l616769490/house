@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
