@@ -2,7 +2,7 @@ package com.tecode.house.liuhao.server.impl
 
 import com.tecode.house.liuhao.bean._
 import com.tecode.house.liuhao.dao.MysqlDao
-import com.tecode.house.liuhao.dao.impl.MysqlDaoImpl
+import com.tecode.house.liuhao.dao.impl.PutMysqlDaoImpl
 import com.tecode.house.liuhao.utils.MySQLUtil
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -104,7 +104,7 @@ class StructureType {
   def packageBean(tablename: String, value: Array[(String, Int)]) = {
 
 
-    val dao: MysqlDao = new MysqlDaoImpl()
+    val dao: MysqlDao = new PutMysqlDaoImpl()
     val conn = MySQLUtil.getConn()
     //   //开启事务
     //   conn.setAutoCommit(false)
@@ -149,7 +149,6 @@ class StructureType {
     //封装到databean
     val xvalue = for (elem <- value) {
       val xvalue = elem._1
-      println(xvalue)
       val x1 = elem._2.toString
       val data = new Data()
       data.setValue(x1)

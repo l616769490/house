@@ -12,7 +12,7 @@ import java.sql.SQLException;
 /**
  * Created by Administrator on 2018/12/4.
  */
-public class MysqlDaoImpl implements MysqlDao {
+public class PutMysqlDaoImpl implements MysqlDao {
     /**
      *
      * @param conn

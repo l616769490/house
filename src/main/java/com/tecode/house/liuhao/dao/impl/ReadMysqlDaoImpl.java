@@ -1,26 +1,22 @@
-package com.tecode.house.liuhao.server.impl;
-
-
-
+package com.tecode.house.liuhao.dao.impl;
 
 
 import com.tecode.house.liuhao.bean.Xaxis;
+import com.tecode.house.liuhao.dao.ReadMyqslDao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2018/12/5.
  */
-public class ReadMysql {
+public class ReadMysqlDaoImpl implements ReadMyqslDao{
 
-    public List readMysql(Connection conn)  {
+    public List ReadTableData(Connection conn) {
         Statement statement = null;
 
         List<String> list  = new ArrayList<>();
@@ -45,5 +41,6 @@ public class ReadMysql {
             e.printStackTrace();
         }
         return list;
+
     }
 }

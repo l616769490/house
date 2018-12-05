@@ -1,8 +1,6 @@
 package com.tecode.house.liuhao.test;
 
-import com.tecode.house.liuhao.server.impl.ReadMysql;
-import com.tecode.house.liuhao.utils.DataToHbase;
-import com.tecode.house.liuhao.utils.HBaseUtil;
+import com.tecode.house.liuhao.dao.impl.ReadMysqlDaoImpl;
 import com.tecode.house.liuhao.utils.MySQLUtil;
 
 import java.io.IOException;
@@ -15,10 +13,10 @@ import java.sql.SQLException;
 public class TestDataToHbase {
     public static void main(String[] args) throws IOException {
 
-        try {
-            ReadMysql read = new ReadMysql();
+       /* try {
+            ReadMysqlDaoImpl read = new ReadMysqlDaoImpl();
             Connection conn = MySQLUtil.getConn();
-            read.readMysql(conn);
+            read.ReadTableData(conn);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -26,8 +24,8 @@ public class TestDataToHbase {
         }
 
 
-/* DataToHbase t = new DataToHbase();
-        t.readFile();*/
-
+ DataToHbase t = new DataToHbase();
+        t.readFile();
+*/
     }
 }
