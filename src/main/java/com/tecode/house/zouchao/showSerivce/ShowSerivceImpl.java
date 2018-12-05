@@ -23,24 +23,31 @@ public class ShowSerivceImpl implements ShowSerivce {
     private Connection conn;
 
     @Override
-    public List<Data> getData(String year, String reportName) {
+    public List<Data> getData(String year, String reportName, int type) {
         List<Data> byTableDimension = new ArrayList<>();
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
+            //获取报表ID
             int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            //根据报表ID获取图标
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
+            //获取传入图标类型的图标ID
             int diagramId = -1;
             for (Diagram diagram : diagrams) {
                 //System.out.println(diagram);
-                if (diagram.getType() == 2) {
+                //
+                if (diagram.getType() == type) {
                     diagramId = diagram.getId();
                 }
             }
+            //获取X轴对象
             Xaxis x = dao.getByTableXaxis(conn, diagramId);
+            //获取数据集对象
             List<Legend> legends = dao.getByTableLegend(conn, diagramId);
             for (Legend legend : legends) {
                 int id = legend.getId();
+                //根据获取的数据集ID及x轴ID获取Data对象
                 List<Data> datas = dao.getByTableData(conn, id, x.getId());
                 //System.out.println("s:  "+datas.size());
                 byTableDimension.addAll(datas);
@@ -163,7 +170,6 @@ public class ShowSerivceImpl implements ShowSerivce {
             option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y1).addyAxis(y2);
             int count = 0;
             for (String s : set) {
-
                 Series<Integer> series1 = new Line<Integer>().setName(s);
                 series1.setyAxisIndex(count);
                 count++;
@@ -181,13 +187,12 @@ public class ShowSerivceImpl implements ShowSerivce {
                 }
                 option.addSeries(series1);
             }
-
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            //关闭连接
             MySQLUtil.close(conn);
         }
         return option;

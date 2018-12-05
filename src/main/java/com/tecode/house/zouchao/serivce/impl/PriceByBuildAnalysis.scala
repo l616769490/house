@@ -97,12 +97,25 @@ class PriceByBuildAnalysis extends Analysis {
     //    val l = rdd.map(_._2).count()
     //    将具体的建成年份转换成建成年份区间
     val result: RDD[(String, Double)] = rdd.map(x => {
-      if (x._1 < 2000) {
-        ("1900-2000", x._2)
-      } else if (x._1 < 2010) {
-        ("2000-2010", x._2)
+      /*
+      124, '建筑年份', '1900-1940', 'BUILD');
+125, '建筑年份', '1940-1960', 'BUILD');
+126, '建筑年份', '1960-1980', 'BUILD');
+127, '建筑年份', '1980-2000', 'BUILD');
+128, '建筑年份', '2000+', 'BUILD');
+
+
+       */
+      if (x._1 < 1940) {
+        ("1900-1940", x._2)
+      } else if (x._1 < 1960) {
+        ("1940-1960", x._2)
+      } else if (x._1 < 1980) {
+        ("1960-1980", x._2)
+      } else if (x._1 < 2000) {
+        ("1980-2000", x._2)
       } else {
-        ("2010-2018", x._2)
+        ("2000+", x._2)
       }
     })
     //按建成年份区间分组
@@ -118,7 +131,13 @@ class PriceByBuildAnalysis extends Analysis {
     v
   }
 
-
+  /**
+    * 封装数据，将数据插入MySQL数据库
+    *
+    * @param tableName 表名
+    * @param rentList  租金分析结果
+    * @param valueList 价格分析结果
+    */
   def packageDate(tableName: String, rentList: List[(String, Double)], valueList: List[(String, Double)]) = {
     var conn: Connection = null;
     val dao: MySQLDao = new MySQLDaoImpl()
@@ -153,7 +172,7 @@ class PriceByBuildAnalysis extends Analysis {
       val lineXaxis: Xaxis = new Xaxis()
       lineXaxis.setName("年份区间")
       lineXaxis.setDiagramId(lineDiagramId)
-      lineXaxis.setDimGroupName("建成年份")
+      lineXaxis.setDimGroupName("建筑年份")
 
       val lineXaxisId: Int = dao.putInTableXaxis(conn, lineXaxis)
 
@@ -192,7 +211,7 @@ class PriceByBuildAnalysis extends Analysis {
 
       //    插入搜索表
       //建成年份区间搜索
-      val yearYearch = new Search("建成年份区间搜索", "建成年份", reportId)
+      val yearYearch = new Search("建成年份区间搜索", "建筑年份", reportId)
       dao.putInTableSearch(conn, yearYearch)
       //     城市规模搜索
       val cityYearch = new Search("城市规模搜索", "城市规模", reportId)

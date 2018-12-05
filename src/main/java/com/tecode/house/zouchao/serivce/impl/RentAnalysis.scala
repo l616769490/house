@@ -58,9 +58,9 @@ class RentAnalysis extends Analysis {
     val count: Long = rentsRDD.count()
     val sum: Double = rentsRDD.sum()
     val avg: Double = sum / count
-    //    println("max: " + max)
-    ////    println("min: " + min)
-    ////    println("avg: " + avg)
+//        println("max: " + max)
+    //    println("min: " + min)
+    //    println("avg: " + avg)
     ////    value.collect().foreach(println)
     //    将int类型封装为Integer类型，并将RDD变成List
     val buffer = value.map(x => (x._1, {
@@ -105,7 +105,7 @@ class RentAnalysis extends Analysis {
   }
 
   /**
-    *
+    *封装数据，将数据插入MySQL数据库
     * @param rent      分析结果
     * @param tableName HBase表名
     */
@@ -251,7 +251,7 @@ legendId	int		图例id	非空
       lineAvgLegend.setDimGroupName("平均值")
       val lineAvgLegendId = dao.putInTableLegend(conn, lineAvgLegend)
       //    插入数据表
-      val lineAvgData = new Data(rent.getMin.toString, lineXaxisId, lineAvgLegendId, "平均值", "平均值")
+      val lineAvgData = new Data(rent.getAvg.toString, lineXaxisId, lineAvgLegendId, "平均值", "平均值")
       dao.putInTableData(conn, lineAvgData)
 
 

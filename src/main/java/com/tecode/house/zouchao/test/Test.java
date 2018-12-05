@@ -1,6 +1,7 @@
 package com.tecode.house.zouchao.test;
 
 import com.tecode.house.zouchao.bean.*;
+import com.tecode.house.zouchao.controller.TableController;
 import com.tecode.house.zouchao.dao.impl.MySQLDaoImpl;
 import com.tecode.house.zouchao.hbase.FilleToHBase;
 import com.tecode.house.zouchao.serivce.impl.PriceByBuildAnalysis;
@@ -8,6 +9,10 @@ import com.tecode.house.zouchao.serivce.impl.RentAnalysis;
 import com.tecode.house.zouchao.serivce.impl.RoomsByBuildAnalysis;
 import com.tecode.house.zouchao.util.HBaseUtil;
 import com.tecode.house.zouchao.util.MySQLUtil;
+import com.tecode.table.Row;
+import com.tecode.table.Search;
+import com.tecode.table.Table;
+import com.tecode.table.TablePost;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -28,17 +33,17 @@ public class Test {
         //fth.readFile("D:\\thads2013n.csv","thads:2013");
 
         //分析租金数据
-        RentAnalysis rentAnalysis = new RentAnalysis();
-        rentAnalysis.analysis("thads:2011");
-
-
-        //分析价格
-        PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
-        System.out.println(rentByBuildAnalysis.analysis("thads:2011"));
-
-        //分析房间数
-        RoomsByBuildAnalysis roomsByBuildAnalysis = new RoomsByBuildAnalysis();
-        System.out.println(roomsByBuildAnalysis.analysis("thads:2011"));
+        //RentAnalysis rentAnalysis = new RentAnalysis();
+        //rentAnalysis.analysis("thads:2013");
+        //
+        //
+        ////分析价格
+        //PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
+        //System.out.println(rentByBuildAnalysis.analysis("thads:2013"));
+        //
+        ////分析房间数
+        //RoomsByBuildAnalysis roomsByBuildAnalysis = new RoomsByBuildAnalysis();
+        //System.out.println(roomsByBuildAnalysis.analysis("thads:2013"));
 
         //try {
         //    Connection conn = MySQLUtil.getConn();
@@ -139,6 +144,30 @@ legendId	int		图例id	非空
         //}
 
 
+        TableController t = new TableController();
+        TablePost tp = new TablePost();
+        tp.setPage(3);
+        tp.setYear(2013);
+        Search se = new Search();
+        se.setTitle("公平市场租金区间");
+        List<String> va = new ArrayList<>();
+        va.add("3000+");
+        se.setValues(va);
+        List<Search> ls = new ArrayList<>();
+        ls.add(se);
+        tp.setSearches(ls);
+        Table table = t.rentTable(tp);
+        System.out.println("year:   "+table.getYear());
+        System.out.println("this:   "+table.getPage().getThisPage());
+        System.out.println("page:   "+table.getPage().getData().toString());
+        for (Search search : table.getSearch()) {
+            System.out.println("search: "+search.getValues().toString());
+        }
+        System.out.println("top:    "+table.getTop().toString());
+
+        for (Row datum : table.getData()) {
+            System.out.println("data:   "+datum.getRow().toString());
+        }
 
 
     }
