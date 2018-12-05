@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface Create {
-     void initNamespace() throws IOException;
-     void init(String TABLENAME, String INFO, String COST, String FMT) throws IOException;
-    List<Put> readData(String TABLENAME, String path) throws IOException;
+//     void initNamespace() throws IOException;
+//     void init(String TABLENAME, String INFO, String COST, String FMT) throws IOException;
+//    List<Put> readData(String TABLENAME, String path) throws IOException;
 
 
 
