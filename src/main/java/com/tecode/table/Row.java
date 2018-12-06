@@ -1,12 +1,13 @@
 package com.tecode.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 一行数据
  */
-public class Row {
+public class Row implements Serializable {
     private List<String> row = new ArrayList<>();
 
     public List<String> getRow() {

@@ -2,13 +2,14 @@ package com.tecode.table;
 
 import javafx.scene.control.Tab;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 用于接收表请求数据
  */
-public class TablePost {
+public class TablePost implements Serializable {
     /**
      * 年份
      */

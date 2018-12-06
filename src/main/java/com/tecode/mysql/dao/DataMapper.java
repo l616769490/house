@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface DataMapper {
+
     long countByExample(DataExample example);
 
     int deleteByExample(DataExample example);

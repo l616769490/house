@@ -1,12 +1,13 @@
 package com.tecode.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 分页信息
  */
-public class Page {
+public class Page implements Serializable {
     private Integer thisPage;
     private List<Integer> data = new ArrayList<>();
 

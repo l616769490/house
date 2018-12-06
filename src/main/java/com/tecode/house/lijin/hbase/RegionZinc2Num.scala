@@ -1,7 +1,7 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
-import com.tecode.house.lijin.service.impl.{InsertFromXml, InsertRegionZinc2NumServer}
+import com.tecode.house.lijin.service.impl.{InsertFromXml}
 import com.tecode.house.lijin.utils.ConfigUtil
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}

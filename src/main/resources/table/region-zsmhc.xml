@@ -16,5 +16,7 @@
         <type>range</type>
         <!-- 对哪个字段进行匹配 -->
         <field>ZSMHC</field>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
     </search>
 </tables>

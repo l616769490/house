@@ -44,7 +44,8 @@
             </button>
             <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/region_zsmhc_num')">按区域-房产税分析</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
-            <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
+            <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="show('/test-tp')">表格传输测试</button>
+            <button id="btn-6" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
         </div>
     </div>
 </div>
@@ -69,9 +70,11 @@
 
     function getTable() {
         $.ajax({
-            url: "/test-table",
+            url: "/test-table2",
             type: "POST",
-            data: '{"year":2011,"page":5,"searches":[{"title":"按城市等级","values":["一线城市"]},{"title":"按收入范围","values":["0-10000"]}]}',
+            dataType : "json",
+            contentType: 'application/json',
+            data: JSON.stringify({'year':2013,'page':2,'searches':[{'title':'房间数','values':['1']},{'title':'卧室数','values':['1']}]}),
             success: function (result) {
                 alert(result);
             }

@@ -19,6 +19,8 @@
         <type>field</type>
         <!-- 对哪个字段进行字段匹配 -->
         <field>ZINC2</field>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
         <items>
             <item name="IPOV">
                 <max>IPOV</max>

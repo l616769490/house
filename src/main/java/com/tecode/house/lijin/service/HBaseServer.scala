@@ -22,13 +22,16 @@ import scala.collection.mutable.ArrayBuffer
 
 /**
   * 从HBase中读取详细数据
-  * 版本：2018/12/5 V1.0
-  * 成员：李晋
+  *
+  * @param path       配置文件地址
+  * @param reportName 报表名
+  * @param tablePost  前端传过来的搜索条件
   */
 class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
 
   import scala.collection.JavaConverters._
 
+  private val pageNum = Integer.parseInt(ConfigUtil.get("page_number"))
   private val conf: SparkConf = new SparkConf().setAppName("HBaseServer").setMaster(ConfigUtil.get("spark_master"))
   private val sc = new SparkContext(conf)
   private val hBaseConf: Configuration = HBaseConfiguration.create()
@@ -41,97 +44,117 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
     * @return 查询结果
     */
   def select(): Table = {
-    val searches = tablePost.getSearches
-
     // 读取字段
     val fields = loadFields()
 
     // 获得HBaseRDD
     val hBaseRDD = readHBase(fields)
 
-    // 获取搜索条件
-    val filterBean: FilterBean = loadFilter()
-
-    // 获取过滤器
-    val filter = FilterFactory.getFilter(filterBean.getType)
-
-    // 过滤数据
-    val rdd = hBaseRDD.filter(row => filter.filter(row._2, filterBean, searches))
-
-    getTable(rdd, fields)
+    // 获取需要的数据
+    getTable(hBaseRDD, fields)
   }
 
   /**
     * 获取Table
     *
-    * @param rdd    清洗后的数据流
-    * @param fields Table显示的字段值
-    * @return
+    * @param hBaseRDD 清洗后的数据流
+    * @param fields   Table显示的字段值
+    * @return Table
     */
-  def getTable(rdd: RDD[(ImmutableBytesWritable, Result)], fields: Array[(String, String)]): Table = {
+  def getTable(hBaseRDD: RDD[(ImmutableBytesWritable, Result)], fields: Array[(String, String)]): Table = {
 
     val thisPage = tablePost.getPage
+    val searches = tablePost.getSearches
     val year = tablePost.getYear
+    val fieldsNum = fields.length
 
-    // 用于临时存储字段顺序
-    val filedMap = new util.HashMap[String, Integer]()
     val table = new Table()
     // 设置年
     table.setYear(year)
+
+    // 用于临时存储字段顺序
+    var filedMap = Map[String, Int]()
     // 设置表头
-    for (i <- 0 to fields.length) {
+    for (i <- 0 until fieldsNum) {
       // 设置表头
       table.addTop(fields(i)._2)
       // 保存表头的顺序
-      filedMap.put(fields(i)._1, i)
+      filedMap += ((fields(i)._1, i))
     }
 
     // 页码
     val page = new Page().setThisPage(thisPage)
     // 当前页码前面加两页
-    for (i <- 1 to 2) {
-      if (thisPage - i > 0) {
-        page.addData(thisPage - i)
+    for (i <- -2 to -1) {
+      if (thisPage + i > 0) {
+        page.addData(thisPage + i)
       }
     }
-    page.addData(thisPage)
     // 页码数加够5
-    for (i <- page.getData.size() to 5) {
+    for (i <- 0 to (4 - page.getData.size())) {
       page.addData(thisPage + i)
     }
     table.setPage(page)
 
-    rdd.map(row => {
-      // 构建一个List
-      val list = new util.ArrayList[String](fields.length)
-      val r = new Row
+    // 计算当前页最后一条数据是第几条
+    val thisPageLastNum = pageNum * thisPage
+
+    // 缓存页码最后一页
+    val allPageLastNum = pageNum * page.getData.get(page.getData.size() - 1)
+
+    // 获取搜索条件
+    val filterBean: FilterBean = loadFilter(fields)
+
+    // 获取过滤器
+    val filter = FilterFactory.getFilter(filterBean.getType)
+
+    val list = hBaseRDD.map(row => {
+      var map = Map[String, String]()
       for (cell <- row._2.rawCells()) {
         // 列名
         val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell))
         // 值
         val value = Bytes.toString(CellUtil.cloneValue(cell))
-        // 保存值
-        list.set(filedMap.get(qualifier), value)
+        map += ((qualifier, value))
       }
-      r.setRow(list)
-      table.addData(r)
+      map
     }
-    )
+    ).filter(map => filter.filter(map.asJava, filterBean, searches)).take(allPageLastNum)
+      .map(m => {
+        val arr = new ArrayBuffer[String]
+        for (i <- 0 until fieldsNum) {
+          arr += m(fields(i)._1)
+        }
+        arr.toList.asJava
+      }).toList
 
+    // 插入数据到table
+    for (i <- 0 until pageNum) {
+      val row = new Row()
+      row.setRow(list(thisPageLastNum - i))
+      table.addData(row)
+    }
     table
   }
+
 
   /**
     * 从配置文件中读取搜索条件
     *
+    * @param fields 字段对照表
     * @return FilterBean
     */
-  def loadFilter(): FilterBean = {
+  def loadFilter(fields: Array[(String, String)]): FilterBean = {
     val filterBean = new FilterBean()
     val search = document.getRootElement.element("search")
 
     val searchType = search.element("type").getText
     filterBean.setType(searchType)
+    val rule = search.element("rule").getText
+    filterBean.setRule(rule)
+
+    // 保存字段对照表
+    fields.foreach(t => filterBean.addColumn(t._2, t._1))
 
     val fieldElement = search.element("field")
     if (fieldElement != null) {
@@ -183,6 +206,7 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
 
     null
   }
+
 
   /**
     * 读取HBase数据
@@ -248,9 +272,10 @@ object HBaseServer {
   def main(args: Array[String]): Unit = {
     val tablePost = new TablePost
     tablePost.setYear(2013)
-    tablePost.setPage(5)
+    tablePost.setPage(2)
     val baseServer = new HBaseServer(HBaseServer.getClass.getResource("/table/region-zinx2.xml").getPath, "按区域-家庭收入分析", tablePost)
-    baseServer.select()
-    //    println(baseServer.loadFields().length)
+    val table = baseServer.select()
+    println(table)
+//    println(baseServer.loadFields())
   }
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import sun.text.resources.cldr.ii.FormatData_ii;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.Map;
  * 成员：李晋
  */
 public abstract class InsertMysqlServer {
+
     /**
      * 数据源
      */
@@ -59,7 +61,7 @@ public abstract class InsertMysqlServer {
      * @param year       年份
      * @param reportName 报表名
      * @param groupName  报表组
-     * @param url 请求地址
+     * @param url        请求地址
      * @return 报表
      */
     protected Report getReport(int year, String reportName, String groupName, String url) {
@@ -285,7 +287,7 @@ public abstract class InsertMysqlServer {
      * 写入搜索
      *
      * @param id        报表ID
-     * @param name   搜索名（单个图例）
+     * @param name      搜索名（单个图例）
      * @param groupname 搜索条件（该图例对应的图例维度组）
      */
     protected void insertSearch(Integer id, String name, String groupname) {

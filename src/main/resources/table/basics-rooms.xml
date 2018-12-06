@@ -14,5 +14,7 @@
         <!-- 匹配类型 -->
         <!-- equals : 等值匹配-->
         <type>equals</type>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
     </search>
 </tables>

@@ -1,12 +1,13 @@
 package com.tecode.table;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 搜索值
  */
-public class Search {
+public class Search implements Serializable {
     /**
      * 搜索条件，如：按地区
      */

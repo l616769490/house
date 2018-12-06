@@ -1,5 +1,7 @@
 package com.tecode.mysql.bean;
 
+import com.tecode.mysql.dao.XAxisMapper;
+
 public class Data {
     private Integer id;
 
