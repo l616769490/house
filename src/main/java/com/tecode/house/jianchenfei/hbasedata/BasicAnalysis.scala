@@ -39,7 +39,7 @@ class BasicAnalysis extends Analysis {
     /**
       * 获取家庭人数数据
       */
-      var map:Map[String,Int] = Map()
+
 
     val PERRDD = hBaseRDD.map { case (_, result) => {
       //获取行键
@@ -91,7 +91,7 @@ class BasicAnalysis extends Analysis {
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
     report.setGroup("基础分析")
     report.setStatus(1)
-    report.setUrl("http://166.166.0.13//per")
+    report.setUrl("http://166.166.0.14//per")
     val reportId: Int = dao.insert(report)
 
     // 插入图表表

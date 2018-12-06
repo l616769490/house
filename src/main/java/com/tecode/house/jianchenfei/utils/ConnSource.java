@@ -31,13 +31,16 @@ public class ConnSource {
 			init();
 		}
 		// 通过dataSource对象分配一条链接
+
+
 		return dataSource.getConnection();
+
 	}
 
 	/**
 	 * 初始化连接池
 	 */
-	private static void init() {
+	private static void init()  {
 		Properties dbprops = new Properties();
 		try {
 			// 加载配置文件
@@ -83,6 +86,9 @@ public class ConnSource {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+
 		}
+
 	}
+
 }

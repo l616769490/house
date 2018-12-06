@@ -50,7 +50,8 @@ class Get_Single_Region extends Analysis{
       } else {
         (x._1, (0, 1))
       }
-    }).reduceByKey((x1, x2) => (x1._1 + x2._1, x1._2 + x2._2)).foreach(println)
+    }).reduceByKey((x1, x2) => (x1._1 + x2._1, x1._2 + x2._2))
+
     sc.stop()
     true
   }

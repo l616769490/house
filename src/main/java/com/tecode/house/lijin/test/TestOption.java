@@ -80,8 +80,8 @@ public class TestOption {
         Option option = new Option();
         // 标题
         Title title = new Title()
-                .setText("柱状图")
-                .setSubtext("副标题");
+                .setText("房产税")
+                .setSubtext("按年份统计");
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -92,31 +92,74 @@ public class TestOption {
         // 图例
         Legend legend = new Legend()
                 .setAlign(Align.left)
-                .addData("测试一").addData("测试二").addData("测试三").addData("测试四");
+                .addData("0-500").addData("500-1000").addData("1000-1500").addData("1500-2000").addData("2000-2500")
+                .addData("2500-3000").addData("3000-3500").addData("3500+");
 
         // X轴
         Axis x = new Axis()
                 .setType(AxisType.category)
-                .addData("2013").addData("2014").addData("2015").addData("2016").addData("2017");
+                .addData("1900-2000").addData("2000-2010").addData("2010-2018");
         // Y轴
         Axis y = new Axis()
                 .setType(AxisType.value);
 
         // 数据
-        Series<Integer> series1 = new Bar<Integer>()
-                .setName("测试一")
-                .addData(10).addData(12).addData(17).addData(15).addData(13);
-        Series<Integer> series2 = new Bar<Integer>()
-                .setName("测试二")
-                .addData(15).addData(11).addData(13).addData(16).addData(12);
-        Series<Integer> series3 = new Bar<Integer>()
-                .setName("测试三")
-                .addData(17).addData(11).addData(12).addData(11).addData(10);
-        Series<Integer> series4 = new Bar<Integer>()
-                .setName("测试四")
-                .addData(15).addData(13).addData(11).addData(13).addData(11);
+        DataImpl mysqlDao = new DataImpl();
+        String v1 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "0-500"}).get(0).getValue();
+        String v2 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "500-1000"}).get(0).getValue();
+        String v3 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "1000-1500"}).get(0).getValue();
+        String v4 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "1500-2000"}).get(0).getValue();
+        String v5 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "2000-2500"}).get(0).getValue();
+        String v6 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "2500-3000"}).get(0).getValue();
+        String v7 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "3000-3500"}).get(0).getValue();
+        String v8 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "3500+"}).get(0).getValue();
+        String v9 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "0-500"}).get(0).getValue();
+        String v10 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "500-1000"}).get(0).getValue();
+        String v11 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1000-1500"}).get(0).getValue();
+        String v12 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1500-2000"}).get(0).getValue();
+        String v13 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "2000-2500"}).get(0).getValue();
+        String v14 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "2500-3000"}).get(0).getValue();
+        String v15 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3000-3500"}).get(0).getValue();
+        String v16 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3500+"}).get(0).getValue();
+        String v17 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "0-500"}).get(0).getValue();
+        String v18 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "500-1000"}).get(0).getValue();
+        String v19 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1000-1500"}).get(0).getValue();
+        String v20 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1500-2000"}).get(0).getValue();
+        String v21 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "2000-2500"}).get(0).getValue();
+        String v22 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "2500-3000"}).get(0).getValue();
+        String v23 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3000-3500"}).get(0).getValue();
+        String v24 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3500+"}).get(0).getValue();
+
+
+        Series<String> series1 = new Bar<String>()
+                .setName("0-500")
+                .addData(v1).addData(v9).addData(v17);
+        Series<String> series2 = new Bar<String>()
+                .setName("500-1000")
+                .addData(v2).addData(v10).addData(v18);
+        Series<String> series3 = new Bar<String>()
+                .setName("1000-1500")
+                .addData(v3).addData(v11).addData(v19);
+        Series<String> series4 = new Bar<String>()
+                .setName("1500-2000")
+                .addData(v4).addData(v12).addData(v20);
+        Series<String> series5 = new Bar<String>()
+                .setName("2000-2500")
+                .addData(v5).addData(v13).addData(v21);
+        Series<String> series6 = new Bar<String>()
+                .setName("2500-3000")
+                .addData(v6).addData(v14).addData(v22);
+        Series<String> series7 = new Bar<String>()
+                .setName("3000-3500")
+                .addData(v7).addData(v15).addData(v23);
+        Series<String> series8 = new Bar<String>()
+                .setName("3500+")
+                .addData(v8).addData(v16).addData(v24);
+
+
         option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y)
-                .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4);
+                 .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4)
+                .addSeries(series5).addSeries(series6).addSeries(series7).addSeries(series8);
         return option;
     }
 
@@ -166,13 +209,13 @@ public class TestOption {
 
         // 数据
         Series series1 = new Pie().setName("家庭人数")
-                .addData(new Pie.PieData<Double>("1人", Double.parseDouble(v1) / sum * 100))
-                .addData(new Pie.PieData<Double>("2人", Double.parseDouble(v2) / sum* 100))
-                .addData(new Pie.PieData<Double>("3人", Double.parseDouble(v3) / sum* 100))
-                .addData(new Pie.PieData<Double>("4人", Double.parseDouble(v4) / sum* 100))
-                .addData(new Pie.PieData<Double>("5人", Double.parseDouble(v5) / sum* 100))
-                .addData(new Pie.PieData<Double>("6人", Double.parseDouble(v6) / sum* 100))
-                .addData(new Pie.PieData<Double>("6+人", Double.parseDouble(v7) / sum* 100));
+                .addData(new Pie.PieData<Double>("1人", Double.parseDouble(v1) / sum))
+                .addData(new Pie.PieData<Double>("2人", Double.parseDouble(v2) / sum))
+                .addData(new Pie.PieData<Double>("3人", Double.parseDouble(v3) / sum))
+                .addData(new Pie.PieData<Double>("4人", Double.parseDouble(v4) / sum))
+                .addData(new Pie.PieData<Double>("5人", Double.parseDouble(v5) / sum))
+                .addData(new Pie.PieData<Double>("6人", Double.parseDouble(v6) / sum))
+                .addData(new Pie.PieData<Double>("6+人", Double.parseDouble(v7) / sum));
         ((Pie)series1).setCenter("50%", "50%").setRadius("50%");
 
         // 数据
