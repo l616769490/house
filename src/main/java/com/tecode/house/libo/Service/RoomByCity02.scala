@@ -34,6 +34,8 @@ object RoomByCity02 {
 }
 
 case class Rooms(city:Int ,room:Int,bedrom:Int)
+
+
 class RoomByCity02 extends Analysis {
 
   val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
@@ -56,18 +58,20 @@ class RoomByCity02 extends Analysis {
     * 自住\租赁
     */
   def selfOrRent(tableName: String): Unit = {
+    //获得Mysql的链接
     var msconn: sql.Connection = DBUtil.getConn
-    import scala.collection.JavaConverters._
+    //定义一个Map   将查询的结果存入该Map  传入setIntoMysqlTable中
     var selfOrRentMap = Map[String, Int]()
+
 
     val value: RDD[(String, Int)] = hbaseRDD.map(x => {
       (Bytes.toString(x._2.getValue("info".getBytes(), "OWNRENT".getBytes())))
     }).map(x => {
       (x, 1)
     }).reduceByKey(_ + _)
-    //value.collect().foreach(println)
+    //收集结果  封装进Map
     value.collect().foreach(selfOrRentMap += (_))
-//    //导入mysql
+   //调用传入MySQLde 方法
     setIntoMysqlTable(selfOrRentMap, tableName)
   }
 
@@ -75,18 +79,19 @@ class RoomByCity02 extends Analysis {
     * 插入mysql
     */
   def setIntoMysqlTable(tenureMap: Map[String, Int], tableName: String): Unit = {
-    var msconn: sql.Connection = DBUtil.getConn
+    val msconn1: sql.Connection = DBUtil.getConn
     val table = new MysqlDaoImpl
     try {
-
+      //定义下面方法要返回的变量    下方用于判断
       var reportId = 0;
       var diagramId = 0;
       var legendId = 0;
       var xId = 0;
       var yId = 0;
 
+      //开启事物
+      msconn1.setAutoCommit(false)
 
-      msconn.setAutoCommit(false)
       //插入report表
       val rName: String = "住房自住、租赁分析"
       val rtime: Long = System.currentTimeMillis()
@@ -116,29 +121,27 @@ class RoomByCity02 extends Analysis {
       //插入数据集表
       val ddId: Int = table.insertIntoDimension("basic", "自住、租赁状态", "TENURE")
 
-      //数据表
+      //数据表   tenureMap：Map
       for (elem <- tenureMap) {
         table.insertIntoData(elem._2.toString,xId,legendId,elem._1,"自住、租赁图例")
       }
+      //判断是否插入成功
       if(reportId>0&& diagramId>0&& legendId>0&& xId>0&& yId>0) {
-        msconn.commit();
+        msconn1.commit();
         return true;
       }
     } catch {
       case e: Exception => {
-        println("=====b=====")
         //回滚事务
         try {
-          msconn.rollback();
+          msconn1.rollback();
         } catch {
-
           case e1: SQLException => e1.printStackTrace()
-            println("faild");
         }
         e.printStackTrace();
       }
     } finally {
-      DBUtil.close(msconn);
+      DBUtil.close(msconn1);
     }
   }
 
@@ -147,18 +150,12 @@ class RoomByCity02 extends Analysis {
     */
 
   def RoomAndBedRom(tableName: String): Unit = {
+    //MySQL链接
     var msconn: sql.Connection = DBUtil.getConn
-    //val tableName = "2013"
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, tableName)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
-    //获取数据
-    val hBaseRDD: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
-      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
-      classOf[org.apache.hadoop.hbase.client.Result])
+
     var RoomAndBedRom = Map[String, String]()
     import spark.implicits._
-    val value = hBaseRDD.map { x => {
+    val value = hbaseRDD.map { x => {
       (Bytes.toString(x._2.getValue("info".getBytes(), "METRO3".getBytes())).toInt, (
         Bytes.toString(x._2.getValue("info".getBytes(), "ROOMS".getBytes())).toInt,
         Bytes.toString(x._2.getValue("info".getBytes(), "BEDRMS".getBytes())).toInt)

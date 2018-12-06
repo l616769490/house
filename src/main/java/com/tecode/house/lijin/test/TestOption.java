@@ -241,9 +241,9 @@ public class TestOption {
         String sql1 = "select value from data where x='1' and legend = '自住、租赁图例'";
         String sql2 = "select value from data where x != '1' and legend = '自住、租赁图例'";
         int v1 = mysqlDao.selectData(sql1);
-        System.out.println("feikong:"+v1);
+        //System.out.println("feikong:"+v1);
         int v2 = mysqlDao.selectData(sql2);
-        System.out.println("kongzhi:"+v2);
+        //System.out.println("kongzhi:"+v2);
         Series series1 = new Pie().setName("房屋数量")
                 .addData(new Pie.PieData<Integer>("自住",v1))
                 .addData(new Pie.PieData<Integer>("租赁", v2));
