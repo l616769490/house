@@ -76,7 +76,6 @@ public class TestOption {
     @ResponseBody
     @RequestMapping(value = "/test-bar", method = RequestMethod.POST)
     public Option testBar(String year) {
-        System.out.println(year);
         Option option = new Option();
         // 标题
         Title title = new Title()

@@ -39,6 +39,7 @@ public class DataImpl implements MysqlDao<Data> {
                 }
                 if (stat != null) {
                     stat.close();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -125,6 +126,7 @@ public class DataImpl implements MysqlDao<Data> {
                 }
                 if (stat != null) {
                     stat.close();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
