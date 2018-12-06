@@ -1,9 +1,6 @@
 package com.tecode.house.zouchao.dao
 
 import java.util
-import java.util.List
-
-import com.tecode.table.Row
 
 trait HBaseDao {
   /**
@@ -46,6 +43,26 @@ trait HBaseDao {
   def getForValue(tableName: String, build: String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
 
   /**
+    * 按建成年份统计价格过滤查询数据(只过滤建成年份区间)
+    *
+    * @param tableName 表名
+    * @param build     建成年份区间条件
+    * @param page      查询页码
+    * @return
+    */
+  def getForValueByBuild(tableName: String, build: String, page: Int): (Int, util.List[util.ArrayList[String]])
+
+  /**
+    * 按建成年份统计价格过滤查询数据(只过滤城市规模)
+    *
+    * @param tableName 表名
+    * @param build     城市规模条件
+    * @param page      查询页码
+    * @return
+    */
+  def getForValueByCity(tableName: String, build: String, page: Int): (Int, util.List[util.ArrayList[String]])
+
+  /**
     * 按建成年份统计房屋数量过滤查询数据
     *
     * @param tableName 表名
@@ -55,6 +72,24 @@ trait HBaseDao {
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
   def getForRom(tableName: String, build: String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
+
+  /**
+    * 按建成年份统计房屋数量过滤查询数据(只过滤建成年份)
+    *
+    * @param tableName 表名
+    * @param build     建成年份区间条件
+    * @param page      查询页码
+    */
+  def getForRomByBuild(tableName: String, build: String, page: Int): (Int, util.List[util.ArrayList[String]])
+
+  /**
+    * 按建成年份统计房屋数量过滤查询数据(只过滤城市规模)
+    *
+    * @param tableName 表名
+    * @param city      城市规模
+    * @param page      查询页码
+    */
+  def getForRomByCity(tableName: String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
 
   /**
     * 按建成年份统计房屋数量查询所有数据

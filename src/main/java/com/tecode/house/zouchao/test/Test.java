@@ -147,16 +147,24 @@ legendId	int		图例id	非空
         TableController t = new TableController();
         TablePost tp = new TablePost();
         tp.setPage(3);
-        tp.setYear(2013);
-        Search se = new Search();
-        se.setTitle("公平市场租金区间");
+        tp.setYear(2011);
+        //构建    建成年份Search对象
+        Search se1 = new Search();
+        se1.setTitle("建成年份");
         List<String> va = new ArrayList<>();
-        va.add("3000+");
-        se.setValues(va);
+        va.add("1900-1940");
+        se1.setValues(va);
+        //构建    城市规模Search对象
+        Search se2 = new Search();
+        se2.setTitle("城市规模");
+        List<String> va1 = new ArrayList<>();
+        va1.add("五线城市");
+        se2.setValues(va1);
         List<Search> ls = new ArrayList<>();
-        ls.add(se);
+        //ls.add(se1);
+        ls.add(se2);
         tp.setSearches(ls);
-        Table table = t.rentTable(tp);
+        Table table = t.PriceByBuild(tp);
         System.out.println("year:   "+table.getYear());
         System.out.println("this:   "+table.getPage().getThisPage());
         System.out.println("page:   "+table.getPage().getData().toString());

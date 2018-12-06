@@ -21,7 +21,6 @@ import java.util.List;
 @Controller
 public class OptionController {
     private ShowSerivceImpl showSerivce = new ShowSerivceImpl();
-    private MySQLDaoImpl dao = new MySQLDaoImpl();
 
     @ResponseBody
     @RequestMapping(value = "/rent", method = RequestMethod.POST)
@@ -67,13 +66,13 @@ public class OptionController {
             String str = data.getX();
             if (str.equals("最大值")) {
                 Max = data.getValue();
-                System.out.println("Max:    " + Max);
+                //System.out.println("Max:    " + Max);
             } else if (str.equals("最小值")) {
                 Min = data.getValue();
-                System.out.println("Min:    " + Min);
+                //System.out.println("Min:    " + Min);
             } else if (str.equals("平均值")) {
                 Avg = data.getValue();
-                System.out.println("AVG:    " + Avg);
+                //System.out.println("AVG:    " + Avg);
             }
         }
         // X轴
