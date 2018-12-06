@@ -64,6 +64,7 @@ class StructureType {
       }
       value
     })
+
     rdd1
   }
 
@@ -166,7 +167,7 @@ class StructureType {
     search.setReportId(reportId)
 
     dao.putToTablesearch(conn, search)
-
+    MySQLUtil.close(conn);
 
   }
 

@@ -15,23 +15,6 @@ import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable.ArrayBuffer
 
-object Tax {
-  def main(args: Array[String]): Unit = {
-    val tax = new Tax()
-    println("开始读取数据...")
-    val read: RDD[(Int, Double, Double, Double)] = tax.readTax("2013")
-    //    read.collect().foreach(println)
-    println("读取数据完成，开始分析...")
-    val analy: ArrayBuffer[(String, Int)] = tax.analyTax(read)
-    //    for (elem <- analy) {
-    //      println("aaaaa"+elem)
-    //    }
-    println("分析完成，开始插入...")
-    tax.packageTaxBean("2013", analy)
-    println("插入完成！")
-  }
-}
-
 class Tax {
   /**
     * 读取和base中的数据
@@ -98,11 +81,10 @@ class Tax {
       }
     })
     val collect: Array[(String, Int)] = map.collect()
-//    for (elem <- collect) {
-//      array +=elem
-//
-//    }
-    array.foreach(println)
+    for (elem <- collect) {
+      array +=elem
+   }
+
     val map1: RDD[(String, Int)] = Utilityfee.map(x => {
       if (x._1 == 1) {
         ("一线城市水电费用平均值", x._2);
@@ -119,7 +101,6 @@ class Tax {
     val collect1: Array[(String, Int)] = map1.collect()
     for (elem <- collect1) {
       array +=elem
-
     }
     /*//各个城市规模下的其他费用的总和
     val others = home.combineByKey(v => (v, 1), (c: (Double, Int), v1) => (c._1 + v1, c._2 + 1), (c1: (Double, Int), c2: (Double, Int)) => (c1._1 + c2._1, c1._2 + c2._2))
@@ -196,9 +177,9 @@ class Tax {
       var x1 = elem._1
       var xvalue = elem._2.toString
       val data = new Data()
-      data.setValue(x1)
+      data.setValue(xvalue)
       data.setLegendId(legendId)
-      data.setX(xvalue)
+      data.setX(x1)
       data.setxId(XaxisId)
       data.setLegend("城市规模")
 //      println(data.getX + ":" + data.getValue)
@@ -212,6 +193,7 @@ class Tax {
     search.setReportId(reportId)
 
     dao.putToTablesearch(conn, search)
+    MySQLUtil.close(conn)
 
   }
 

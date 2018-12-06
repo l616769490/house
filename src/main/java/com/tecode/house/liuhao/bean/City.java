@@ -4,139 +4,139 @@ package com.tecode.house.liuhao.bean;
  * Created by Administrator on 2018/12/5.
  */
 public class City {
-    private double oneHomeCost;
-    private double twoHomeCost;
-    private double threeHomeCost;
-    private double fourHomeCost;
-    private double fiveHomeCost;
-    private double oneUtityFee;
-    private double twoUtityFee;
-    private double threeUtityFee;
-    private double fourUtityFee;
-    private double fiveUtityFee;
-    private double oneOtherCost;
-    private double twoOtherCost;
-    private double threeOtherCost;
-    private double fourOtherCost;
-    private double fiveOtherCost;
+    private int oneHomeCost;
+    private int twoHomeCost;
+    private int threeHomeCost;
+    private int fourHomeCost;
+    private int fiveHomeCost;
+    private int oneUtityFee;
+    private int twoUtityFee;
+    private int threeUtityFee;
+    private int fourUtityFee;
+    private int fiveUtityFee;
+    private int oneOtherCost;
+    private int twoOtherCost;
+    private int threeOtherCost;
+    private int fourOtherCost;
+    private int fiveOtherCost;
 
-    public void setOneHomeCost(double oneHomeCost) {
+    public void setOneHomeCost(int oneHomeCost) {
         this.oneHomeCost = oneHomeCost;
     }
 
-    public void setTwoHomeCost(double twoHomeCost) {
+    public void setTwoHomeCost(int twoHomeCost) {
         this.twoHomeCost = twoHomeCost;
     }
 
-    public void setThreeHomeCost(double threeHomeCost) {
+    public void setThreeHomeCost(int threeHomeCost) {
         this.threeHomeCost = threeHomeCost;
     }
 
-    public void setFourHomeCost(double fourHomeCost) {
+    public void setFourHomeCost(int fourHomeCost) {
         this.fourHomeCost = fourHomeCost;
     }
 
-    public void setFiveHomeCost(double fiveHomeCost) {
+    public void setFiveHomeCost(int fiveHomeCost) {
         this.fiveHomeCost = fiveHomeCost;
     }
 
-    public void setOneUtityFee(double oneUtityFee) {
+    public void setOneUtityFee(int oneUtityFee) {
         this.oneUtityFee = oneUtityFee;
     }
 
-    public void setTwoUtityFee(double twoUtityFee) {
+    public void setTwoUtityFee(int twoUtityFee) {
         this.twoUtityFee = twoUtityFee;
     }
 
-    public void setThreeUtityFee(double threeUtityFee) {
+    public void setThreeUtityFee(int threeUtityFee) {
         this.threeUtityFee = threeUtityFee;
     }
 
-    public void setFourUtityFee(double fourUtityFee) {
+    public void setFourUtityFee(int fourUtityFee) {
         this.fourUtityFee = fourUtityFee;
     }
 
-    public void setFiveUtityFee(double fiveUtityFee) {
+    public void setFiveUtityFee(int fiveUtityFee) {
         this.fiveUtityFee = fiveUtityFee;
     }
 
-    public void setOneOtherCost(double oneOtherCost) {
+    public void setOneOtherCost(int oneOtherCost) {
         this.oneOtherCost = oneOtherCost;
     }
 
-    public void setTwoOtherCost(double twoOtherCost) {
+    public void setTwoOtherCost(int twoOtherCost) {
         this.twoOtherCost = twoOtherCost;
     }
 
-    public void setThreeOtherCost(double threeOtherCost) {
+    public void setThreeOtherCost(int threeOtherCost) {
         this.threeOtherCost = threeOtherCost;
     }
 
-    public void setFourOtherCost(double fourOtherCost) {
+    public void setFourOtherCost(int fourOtherCost) {
         this.fourOtherCost = fourOtherCost;
     }
 
-    public void setFiveOtherCost(double fiveOtherCost) {
+    public void setFiveOtherCost(int fiveOtherCost) {
         this.fiveOtherCost = fiveOtherCost;
     }
 
-    public double getOneHomeCost() {
+    public int getOneHomeCost() {
         return oneHomeCost;
     }
 
-    public double getTwoHomeCost() {
+    public int getTwoHomeCost() {
         return twoHomeCost;
     }
 
-    public double getThreeHomeCost() {
+    public int getThreeHomeCost() {
         return threeHomeCost;
     }
 
-    public double getFourHomeCost() {
+    public int getFourHomeCost() {
         return fourHomeCost;
     }
 
-    public double getFiveHomeCost() {
+    public int getFiveHomeCost() {
         return fiveHomeCost;
     }
 
-    public double getOneUtityFee() {
+    public int getOneUtityFee() {
         return oneUtityFee;
     }
 
-    public double getTwoUtityFee() {
+    public int getTwoUtityFee() {
         return twoUtityFee;
     }
 
-    public double getThreeUtityFee() {
+    public int getThreeUtityFee() {
         return threeUtityFee;
     }
 
-    public double getFourUtityFee() {
+    public int getFourUtityFee() {
         return fourUtityFee;
     }
 
-    public double getFiveUtityFee() {
+    public int getFiveUtityFee() {
         return fiveUtityFee;
     }
 
-    public double getOneOtherCost() {
+    public int getOneOtherCost() {
         return oneOtherCost;
     }
 
-    public double getTwoOtherCost() {
+    public int getTwoOtherCost() {
         return twoOtherCost;
     }
 
-    public double getThreeOtherCost() {
+    public int getThreeOtherCost() {
         return threeOtherCost;
     }
 
-    public double getFourOtherCost() {
+    public int getFourOtherCost() {
         return fourOtherCost;
     }
 
-    public double getFiveOtherCost() {
+    public int getFiveOtherCost() {
         return fiveOtherCost;
     }
 }
