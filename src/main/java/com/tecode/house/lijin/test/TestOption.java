@@ -102,11 +102,11 @@ public class TestOption {
 
         // 数据
         MysqlDaoImpl mysqlDao = new MysqlDaoImpl();
-        String sql1 = "select value from data where x='1' and legend = '建筑总数'";
-        String sql2 = "select value from data where x='2' and legend = '建筑总数'";
-        String sql3 = "select value from data where x='3' and legend = '建筑总数'";
-        String sql4 = "select value from data where x='4' and legend = '建筑总数'";
-        String sql5 = "select value from data where x='5' and legend = '建筑总数'";
+        String sql1 = "select value from data where x='1' and legend = '其他建筑'";
+        String sql2 = "select value from data where x='2' and legend = '其他建筑'";
+        String sql3 = "select value from data where x='3' and legend = '其他建筑'";
+        String sql4 = "select value from data where x='4' and legend = '其他建筑'";
+        String sql5 = "select value from data where x='5' and legend = '其他建筑'";
         String sql6 = "select value from data where x='1' and legend = '独栋建筑'";
         String sql7 = "select value from data where x='2' and legend = '独栋建筑'";
         String sql8 = "select value from data where x='3' and legend = '独栋建筑'";
@@ -173,21 +173,21 @@ public class TestOption {
 
         // 数据
         MysqlDaoImpl mysqlDao = new MysqlDaoImpl();
-        String sql1 = "select value from data where x='1' and legend = '最高房产税'";
-        String sql2 = "select value from data where x='2' and legend = '最高房产税'";
-        String sql3 = "select value from data where x='3' and legend = '最高房产税'";
-        String sql4 = "select value from data where x='4' and legend = '最高房产税'";
-        String sql5 = "select value from data where x='5' and legend = '最高房产税'";
-        String sql6 = "select value from data where x='1' and legend = '最低房产税'";
-        String sql7 = "select value from data where x='2' and legend = '最低房产税'";
-        String sql8 = "select value from data where x='3' and legend = '最低房产税'";
-        String sql9 = "select value from data where x='4' and legend = '最低房产税'";
-        String sql10 = "select value from data where x='5' and legend = '最低房产税'";
-        String sql11 = "select value from data where x='1' and legend = '平均房产税'";
-        String sql12 = "select value from data where x='2' and legend = '平均房产税'";
-        String sql13 = "select value from data where x='3' and legend = '平均房产税'";
-        String sql14 = "select value from data where x='4' and legend = '平均房产税'";
-        String sql15 = "select value from data where x='5' and legend = '平均房产税'";
+        String sql1 = "select value from data where x='1' and legend = 'max'";
+        String sql2 = "select value from data where x='2' and legend = 'max'";
+        String sql3 = "select value from data where x='3' and legend = 'max'";
+        String sql4 = "select value from data where x='4' and legend = 'max'";
+        String sql5 = "select value from data where x='5' and legend = 'max'";
+        String sql6 = "select value from data where x='1' and legend = 'min'";
+        String sql7 = "select value from data where x='2' and legend = 'min'";
+        String sql8 = "select value from data where x='3' and legend = 'min'";
+        String sql9 = "select value from data where x='4' and legend = 'min'";
+        String sql10 = "select value from data where x='5' and legend = 'min'";
+        String sql11 = "select value from data where x='1' and legend = 'avg'";
+        String sql12 = "select value from data where x='2' and legend = 'avg'";
+        String sql13 = "select value from data where x='3' and legend = 'avg'";
+        String sql14 = "select value from data where x='4' and legend = 'avg'";
+        String sql15 = "select value from data where x='5' and legend = 'avg'";
         int v1 = mysqlDao.selectData(sql1);
         int v2 = mysqlDao.selectData(sql2);
         int v3 = mysqlDao.selectData(sql3);

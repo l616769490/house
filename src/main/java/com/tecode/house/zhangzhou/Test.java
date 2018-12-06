@@ -23,7 +23,7 @@ public class Test {
         //hBaseDao.create("thads:2011");
         Long end = System.currentTimeMillis();
         System.out.println("导入成功。");
-        System.out.println("花费时间："+(end-begin)/1000);*/
+        System.out.println("花费时间："+(end-begin)/1000);
         Table table = new Table();
         Page page = new Page();
         page.setThisPage(5);
@@ -55,7 +55,7 @@ public class Test {
         table.getData().subList(0,10).forEach(e-> System.out.println(e));
 
 
-
+*/
 
     }
 }

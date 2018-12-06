@@ -2,6 +2,10 @@ package com.tecode.house.zhangzhou.mysqlDao.impl;
 
 import java.sql.*;
 
+/**
+ * @author zhangzhou
+ * 操作mysql表的类
+ */
 public class MysqlDaoImpl {
     private static Connection conn;
     private static String driver = "com.mysql.jdbc.Driver";
@@ -96,9 +100,9 @@ public class MysqlDaoImpl {
         try {
             Class.forName(driver);
             conn= DriverManager.getConnection(url,user,password);
-            if(conn.isClosed()){
+           /* if(conn.isClosed()){
                 System.out.println("Success to connect Database");
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -125,18 +129,62 @@ public class MysqlDaoImpl {
      * 创建表
      * @param sql：建表的sql语句
      */
-    public void createTable(String sql){
+    private boolean createTable(String sql){
         try {
             System.out.println("正在创建表....");
             Statement st = conn.createStatement();
             st.execute(sql);
             st.close();
             System.out.println("创建成功。。");
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
+    /**
+     * 在mysql中创建所有的8个表
+     *
+     * @return true：创建成功 false：创建失败
+     */
+    public static boolean createMysqlTables(){
+        MysqlDaoImpl md = new MysqlDaoImpl();
+        try {
+            conn.setAutoCommit(false);
+            boolean bl1 = md.createTable(report);
+            boolean bl2 = md.createTable(diagram);
+            boolean bl3 = md.createTable(xAxis);
+            boolean bl4 = md.createTable(yAxis);
+            boolean bl5 = md.createTable(dimension);
+            boolean bl6 = md.createTable(legend);
+            boolean bl7 = md.createTable(data);
+            boolean bl8 = md.createTable(search);
+            if(bl1 && bl2 && bl3 && bl4 && bl5 && bl6 && bl7 && bl8){
+                conn.commit();
+                return true;
+            }
+        } catch (SQLException e) {
+            try {
+                conn.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 向report表中插入数据
+     * @param name：报表名
+     * @param create：创建时间戳
+     * @param year：表格年份
+     * @param group：所属分组名
+     * @param status：状态
+     * @param url：url地址
+     * @return 返回reportId
+     */
     public int insertIntoReport(String name,long create,int year,String group,int status,String url){
         int id = 0;
         PreparedStatement ps= null;
@@ -162,6 +210,14 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向diagram表中插入数据
+     * @param name：图表名
+     * @param type：图表类型
+     * @param reprotId：报表Id
+     * @param subtext：描述
+     * @return 返回diagramId
+     */
     public int insertIntoDiagram(String name,int type,int reprotId,String subtext){
         int id = -1;
         try {
@@ -184,6 +240,13 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向legend（图例）表中插入数据
+     * @param name：图例名称
+     * @param dimGroupName：维度组名字（对应维度表的维度组名）
+     * @param diagramId：图表Id
+     * @return 返回legendId
+     */
     public int insertIntoLegend(String name,String dimGroupName,int diagramId){
         int id = -1;
         try {
@@ -204,6 +267,13 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向xAxis（x轴）表中插入数据
+     * @param name：x轴显示的名字
+     * @param diagramId：图表Id
+     * @param dimGroupName：维度组名字（对应维度表的维度组名）
+     * @return xId
+     */
     public int insertIntoXAxis(String name,int diagramId,String dimGroupName){
         int id = -1;
         try {
@@ -224,7 +294,12 @@ public class MysqlDaoImpl {
         return id;
     }
 
-
+    /**
+     * 向yAxis（y轴）表中插入数据
+     * @param name：y轴显示的名字
+     * @param diagramId：图表Id
+     * @return yId
+     */
     public int insertIntoYAxis(String name,int diagramId){
         int id = -1;
         try {
@@ -244,6 +319,13 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向dimension（维度）表中插入数据
+     * @param groupName：维度组名字
+     * @param dimName：维度名
+     * @param dimNameEN：维度组对应英文名
+     * @return dimensionId
+     */
     public int insertIntoDimension(String groupName,String dimName,String dimNameEN){
         int id = -1;
         try {
@@ -264,6 +346,15 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向data（数据）表中插入数据
+     * @param value：数据值
+     * @param xId：x轴Id
+     * @param legendId：图例Id
+     * @param x：x轴具体维度（存维度名非维度组名）
+     * @param legend：图例具体维度（存维度名非维度组名）
+     * @return dataId
+     */
     public int insertIntoData(String value,int xId,int legendId,String x,String legend){
         int id = -1;
         try {
@@ -286,6 +377,13 @@ public class MysqlDaoImpl {
         return id;
     }
 
+    /**
+     * 向search（搜索）表中插入数据
+     * @param name：搜索的名字
+     * @param dimGroupName：维度组名字（对应维度表的维度组名）
+     * @param reportId：报表Id
+     * @return searchId
+     */
     public int insertIntoSearch(String name,String dimGroupName,int reportId){
         int id = -1;
         try {
@@ -306,7 +404,11 @@ public class MysqlDaoImpl {
         return id;
     }
 
-
+    /**
+     * 搜索mysql表中的数据
+     * @param sql：sql语句
+     * @return 搜索得到数据的和
+     */
     public int selectData(String sql){
         int s =0;
         try {
