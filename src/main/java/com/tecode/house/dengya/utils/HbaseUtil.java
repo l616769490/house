@@ -3,6 +3,8 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import scala.Tuple2;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -126,38 +128,60 @@ public static  boolean isTableExists(String tableName) throws IOException{
     /**
      * Hbase查询数据
      */
-    public static List<String> getAll(String tableName) throws IOException{
+    public static List<List<String[]>> getAll(String tableName) throws IOException{
         Configuration conf = HBaseConfiguration.create();
         Connection conn = ConnectionFactory.createConnection(conf);
+        List<List<String[]>>  lists = new ArrayList<>();
+        List<String[]> list = new ArrayList<>();
 
-        List<String> list = new ArrayList<>();
         Table table = conn.getTable(TableName.valueOf(tableName));
         //构建扫描器
         Scan scan = new Scan();
         //值扫描指定的列族
-        //scan.addFamily(family);
+        scan.addFamily(Bytes.toBytes("info"));
 
         //使用扫描器，扫描一张表，返回一个ResultScanner对象，这个对象，应该存放的是已rowkey为键的多个记录
         ResultScanner scanner = table.getScanner(scan);
-
+        //房屋编号
+        String CONTROL = null;
+        //城市等级
+        String METRO3 = null;
+        //建成年份
+        String BUILT = null;
+        //建筑单元书
+        String NUNITS = null;
         for (Result result : scanner) {
 
             Cell[] rawCells = result.rawCells();
             for (Cell cell : rawCells) {
-                String s = Bytes.toString(CellUtil.cloneFamily(cell));
                 String s1 = Bytes.toString(CellUtil.cloneQualifier(cell));
                 String s2 = Bytes.toString(CellUtil.cloneValue(cell));
                 String s3 = Bytes.toString(CellUtil.cloneRow(cell));
-                if(s.equals(info)){
-                    list.add(s1+"_"+s2+"_"+s3);
+
+                String[] rowKey = s3.split("_");
+                CONTROL = rowKey[1];
+                if(s1.equals("METRO3")){
+                    METRO3 = s2;
+                }
+                if(s1.equals("BUILT")){
+                    BUILT = s2;
+                }
+                if(s1.equals("NUNITS")){
+                    NUNITS = s2;
                 }
 
             }
+            list.add(new String[]{CONTROL,METRO3, BUILT, NUNITS});
 
 
+
+            lists.add(list);
         }
-        return list;
+
+        return lists;
     }
+
+
 
 }
 
