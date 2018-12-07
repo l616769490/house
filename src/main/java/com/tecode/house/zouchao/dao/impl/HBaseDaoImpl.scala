@@ -109,16 +109,11 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(BEDRMS)
       list
     })
-
-    val list: List[util.ArrayList[String]] = rowRDD.collect().toList
+    val list: List[util.ArrayList[String]] = rowRDD.take(page*100).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
     val count = java.size()
-    var rows: util.List[util.ArrayList[String]] = null;
-    if (page * 10 > count) {
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
-    }
+    var rows: util.List[util.ArrayList[String]] = java.subList(count - 10, count);
+
     sc.stop()
     (count, rows)
   }
@@ -193,7 +188,8 @@ class HBaseDaoImpl extends HBaseDao {
       list
     })
     //    将RDD转换为List
-    val list: List[util.ArrayList[String]] = rowRDD.collect().toList
+    val list: List[util.ArrayList[String]] = rowRDD.take(page*10).toList
+
     //    将scala的List转换为java的List
     val java: util.List[util.ArrayList[String]] = list.asJava
     var rows: util.List[util.ArrayList[String]] = null;
@@ -265,7 +261,8 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(PER)
       list
     })
-    val list: List[util.ArrayList[String]] = rowRDD.collect().toList
+
+    val list: List[util.ArrayList[String]] = rowRDD.take(page*10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
     val count = java.size()
     var rows: util.List[util.ArrayList[String]] = null;

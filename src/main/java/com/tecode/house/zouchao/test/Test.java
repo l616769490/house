@@ -34,16 +34,16 @@ public class Test {
 
         //分析租金数据
         //RentAnalysis rentAnalysis = new RentAnalysis();
-        //rentAnalysis.analysis("thads:2013");
+        //rentAnalysis.analysis("thads:2011");
         //
         //
         ////分析价格
         //PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
-        //System.out.println(rentByBuildAnalysis.analysis("thads:2013"));
+        //System.out.println(rentByBuildAnalysis.analysis("thads:2011"));
         //
         ////分析房间数
         //RoomsByBuildAnalysis roomsByBuildAnalysis = new RoomsByBuildAnalysis();
-        //System.out.println(roomsByBuildAnalysis.analysis("thads:2013"));
+        //System.out.println(roomsByBuildAnalysis.analysis("thads:2011"));
 
         //try {
         //    Connection conn = MySQLUtil.getConn();
