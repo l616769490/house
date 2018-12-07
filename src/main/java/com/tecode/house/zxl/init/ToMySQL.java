@@ -1,6 +1,6 @@
-package com.tecode.zxl.init;
+package com.tecode.house.zxl.init;
 
-import com.tecode.zxl.until.DBUtil;
+import com.tecode.house.zxl.until.DBUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;

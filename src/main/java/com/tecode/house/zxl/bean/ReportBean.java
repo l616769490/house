@@ -1,8 +1,7 @@
-package com.tecode.zxl.bean;
+package com.tecode.house.zxl.bean;
 
 import scala.math.BigInt;
 
-import javax.naming.ldap.Control;
 import java.util.Objects;
 
 public class ReportBean {

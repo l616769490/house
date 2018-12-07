@@ -1,7 +1,7 @@
-package com.tecode.zxl.dao.impl;
+package com.tecode.house.zxl.dao.impl;
 
-import com.tecode.zxl.bean.ReportBean;
-import com.tecode.zxl.dao.HbaseDao;
+import com.tecode.house.zxl.bean.ReportBean;
+import com.tecode.house.zxl.dao.HbaseDao;
 import org.apache.hadoop.conf.Configuration;
 
 import org.apache.hadoop.hbase.HBaseConfiguration;

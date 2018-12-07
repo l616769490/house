@@ -1,4 +1,4 @@
-package com.tecode.zxl.init;
+package com.tecode.house.zxl.init;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;

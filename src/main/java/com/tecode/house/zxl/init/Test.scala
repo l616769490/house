@@ -1,6 +1,6 @@
-package com.tecode.zxl.init
+package com.tecode.house.zxl.init
 
-import com.tecode.zxl.init.t.{conf, hbaseRDD, sc}
+import com.tecode.house.zxl.init.t.{conf, hbaseRDD, sc}
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
