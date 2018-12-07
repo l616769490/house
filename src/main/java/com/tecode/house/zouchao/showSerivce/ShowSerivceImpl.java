@@ -64,32 +64,6 @@ public class ShowSerivceImpl implements ShowSerivce {
         return byTableDimension;
     }
 
-    @Override
-    public Xaxis getX(String year, String reportName, String group) {
-        Xaxis x = null;
-        try {
-            int yea = Integer.parseInt(year);
-            conn = MySQLUtil.getConn();
-            int reportId = dao.getByTableReport(conn, reportName, yea, group).getId();
-            List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
-            int diagramId = -1;
-            for (Diagram diagram : diagrams) {
-                //System.out.println(diagram);
-                if (diagram.getType() == 0) {
-                    diagramId = diagram.getId();
-                }
-            }
-            x = dao.getByTableXaxis(conn, diagramId);
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            MySQLUtil.close(conn);
-        }
-        return x;
-    }
 
     @Override
     public Option select(String year, String reportName, String group) {

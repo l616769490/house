@@ -137,105 +137,9 @@ class HBaseDaoImpl extends HBaseDao {
     //    获取数据
     val valuess: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(hconf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val v: RDD[Result] = valuess.map(x => x._2)
-    //根据建成年份及城市等级将Result转换为（年份区间，城市等级，Result）的RDD
-    val vvv: RDD[(String, String, Result)] = v.map(x => {
-      val cells: Array[Cell] = x.rawCells();
-      var build: Int = 0;
-      var city: Int = 0;
-      for (elem <- cells) {
-        val name: String = Bytes.toString(CellUtil.cloneQualifier(elem));
-        val value: String = Bytes.toString(CellUtil.cloneValue(elem));
-        if (name.equals("BUILT")) {
-          build = Integer.parseInt(value)
-        }
-        if (name.equals("METRO3")) {
-          city = Integer.parseInt(value)
-        }
-      }
-      //      将具体的建成年份及城市规模数据替换为（年份区间，城市等级，Result）的元祖
-      if (build < 1940) {
-        if (city == 1) {
-          ("1900-1940", "1", x)
-        } else if (city == 2) {
-          ("1900-1940", "2", x)
-        } else if (city == 3) {
-          ("1900-1940", "3", x)
-        } else if (city == 4) {
-          ("1900-1940", "4", x)
-        } else {
-          ("1900-1940", "5", x)
-        }
-      } else if (build < 1960) {
-        if (city == 1) {
-          ("1940-1960", "1", x)
-        } else if (city == 2) {
-          ("1940-1960", "2", x)
-        } else if (city == 3) {
-          ("1940-1960", "3", x)
-        } else if (city == 4) {
-          ("1940-1960", "4", x)
-        } else {
-          ("1940-1960", "5", x)
-        }
+    //    调用过滤方法，获取符合传入条件的数据
+    val result: RDD[Result] = fiter(v, builds, citys);
 
-      } else if (build < 1980) {
-        if (city == 1) {
-          ("1960-1980", "1", x)
-        } else if (city == 2) {
-          ("1960-1980", "2", x)
-        } else if (city == 3) {
-          ("1960-1980", "3", x)
-        } else if (city == 4) {
-          ("1960-1980", "4", x)
-        } else {
-          ("1960-1980", "5", x)
-        }
-      } else if (build < 2000) {
-        if (city == 1) {
-          ("1980-2000", "1", x)
-        } else if (city == 2) {
-          ("1980-2000", "2", x)
-        } else if (city == 3) {
-          ("1980-2000", "3", x)
-        } else if (city == 4) {
-          ("1980-2000", "4", x)
-        } else {
-          ("1980-2000", "5", x)
-        }
-      } else {
-        if (city == 1) {
-          ("2000+", "1", x)
-        } else if (city == 2) {
-          ("2000+", "2", x)
-        } else if (city == 3) {
-          ("2000+", "3", x)
-        } else if (city == 4) {
-          ("2000+", "4", x)
-        } else {
-          ("2000+", "5", x)
-        }
-      }
-    })
-    //    过滤符合传入条件的Result数据
-    val result: RDD[Result] = vvv.filter({
-      case (x: String, y: String, z: Result) => {
-        //        判断搜索条件为一个还是两个或者没有搜索条件
-        //        两个搜索条件
-        if (builds != null && citys != null) {
-          x.equals(builds) && y.equals(citys)
-          //        一个搜索条件
-        } else if (builds != null && citys == null) {
-          x.equals(builds)
-          //        一个搜索条件
-        } else if (builds == null && citys != null) {
-          y.equals(citys)
-          //          没有搜索条件
-        } else {
-          true
-        }
-      }
-      //        将（建成年份区间，城市规模，Result）的元祖的RDD转换为Result的RDD
-    }).map(_._3)
     //    取出Result结果中的需要的列的值
     val rowRDD: RDD[util.ArrayList[String]] = result.map(x => {
       val cells: Array[Cell] = x.rawCells()
@@ -316,14 +220,78 @@ class HBaseDaoImpl extends HBaseDao {
     hconf.set(TableInputFormat.INPUT_TABLE, tableName)
     //    配置读取的列族
     hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
-
     //    获取数据
     val valuess: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(hconf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
-
     val v: RDD[Result] = valuess.map(x => x._2)
+    //    调用过滤方法
+    val result = fiter(v, builds, citys)
+    //    取出Result结果中的所需列的值
+    val rowRDD: RDD[util.ArrayList[String]] = result.map(x => {
+      val cells: Array[Cell] = x.rawCells()
+      var BUILT: String = null;
+      var ROOMS: String = null;
+      var BEDRMS: String = null;
+      var METRO3: String = null;
+      var REGION: String = null;
+      var PER: String = null;
+      val list = new util.ArrayList[String]()
+      for (elem <- cells) {
+        val str: String = Bytes.toString(CellUtil.cloneQualifier(elem))
+        val value = Bytes.toString(CellUtil.cloneValue(elem))
+        if (str.equals("BUILT")) {
+          BUILT = value
+        }
+        if (str.equals("ROOMS")) {
+          ROOMS = value
+        }
+        if (str.equals("BEDRMS")) {
+          BEDRMS = value
+        }
+        if (str.equals("METRO3")) {
+          METRO3 = value
+        }
+        if (str.equals("REGION")) {
+          REGION = value
+        }
+        if (str.equals("PER")) {
+          PER = value
+        }
+      }
+      list.add(BUILT)
+      list.add(ROOMS)
+      list.add(BEDRMS)
+      list.add(METRO3)
+      list.add(REGION)
+      list.add(PER)
+      list
+    })
+    val list: List[util.ArrayList[String]] = rowRDD.collect().toList
+    val java: util.List[util.ArrayList[String]] = list.asJava
+    val count = java.size()
+    var rows: util.List[util.ArrayList[String]] = null;
+    if (page * 10 > count) {
+      rows = java.subList((page - 1) * 10, count)
+    } else {
+      rows = java.subList((page - 1) * 10, page * 10)
+    }
+    sc.stop()
+    (count, rows)
+  }
+
+
+  /**
+    * 过滤符合搜索条件的数据
+    *
+    * @param v      待过滤的RDD
+    * @param builds 建成年份过滤条件
+    * @param citys  城市规模过滤条件
+    * @return 符合条件的RDD
+    */
+  def fiter(v: RDD[Result], builds: String, citys: String): RDD[Result] = {
     //根据建成年份及城市等级将Result转换为（年份区间，城市等级，Result）的RDD
     val vvv: RDD[(String, String, Result)] = v.map(x => {
       val cells: Array[Cell] = x.rawCells();
+      //      获取BUILT与METRO3两列的值
       var build: Int = 0;
       var city: Int = 0;
       for (elem <- cells) {
@@ -361,7 +329,6 @@ class HBaseDaoImpl extends HBaseDao {
         } else {
           ("1940-1960", "5", x)
         }
-
       } else if (build < 1980) {
         if (city == 1) {
           ("1960-1980", "1", x)
@@ -418,60 +385,8 @@ class HBaseDaoImpl extends HBaseDao {
           true
         }
       }
+      //        将（建成年份区间，城市规模，Result）的元祖的RDD转换为Result的RDD
     }).map(_._3)
-
-    //    取出Result结果中的所需列的值
-    val rowRDD: RDD[util.ArrayList[String]] = result.map(x => {
-      val cells: Array[Cell] = x.rawCells()
-
-      var BUILT: String = null;
-      var ROOMS: String = null;
-      var BEDRMS: String = null;
-      var METRO3: String = null;
-      var REGION: String = null;
-      var PER: String = null;
-      val list = new util.ArrayList[String]()
-      for (elem <- cells) {
-        val str: String = Bytes.toString(CellUtil.cloneQualifier(elem))
-        val value = Bytes.toString(CellUtil.cloneValue(elem))
-        if (str.equals("BUILT")) {
-          BUILT = value
-        }
-        if (str.equals("ROOMS")) {
-          ROOMS = value
-        }
-        if (str.equals("BEDRMS")) {
-          BEDRMS = value
-        }
-        if (str.equals("METRO3")) {
-          METRO3 = value
-        }
-        if (str.equals("REGION")) {
-          REGION = value
-        }
-        if (str.equals("PER")) {
-          PER = value
-        }
-      }
-
-      list.add(BUILT)
-      list.add(ROOMS)
-      list.add(BEDRMS)
-      list.add(METRO3)
-      list.add(REGION)
-      list.add(PER)
-      list
-    })
-    val list: List[util.ArrayList[String]] = rowRDD.collect().toList
-    val java: util.List[util.ArrayList[String]] = list.asJava
-    val count = java.size()
-    var rows: util.List[util.ArrayList[String]] = null;
-    if (page * 10 > count) {
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
-    }
-    sc.stop()
-    (count, rows)
+    result
   }
 }
