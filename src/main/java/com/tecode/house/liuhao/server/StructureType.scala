@@ -1,5 +1,6 @@
-package com.tecode.house.liuhao.server.impl
+package com.tecode.house.liuhao.server
 
+import com.tecode.house.d01.service.Analysis
 import com.tecode.house.liuhao.bean._
 import com.tecode.house.liuhao.dao.MysqlDao
 import com.tecode.house.liuhao.dao.impl.PutMysqlDaoImpl
@@ -32,7 +33,27 @@ import org.apache.spark.{SparkConf, SparkContext}
 }*/
 
 
-class StructureType {
+class StructureType extends Analysis {
+
+  /**
+    * 数据分析接口
+    *
+    * @param tableName HBase数据库名字
+    * @return 成功/失败
+    */
+  override def analysis(tableName: String): Boolean = {
+
+    println("开始读取建筑结构类型数据...")
+    val stru = new StructureType()
+    val read2 = stru.read("2013", "STRUCTURETYPE")
+    println("数据读取完成，开始分析...")
+    val analy2 = stru.analyStructureType(read2)
+
+    println("分析完成，开始导入建筑结构类型的分析结果...")
+    stru.packageBean("2013", analy2)
+    println("导入完成，完成阶段二")
+    true
+  }
 
   /**
     * 读取hbase中数据
@@ -170,5 +191,6 @@ class StructureType {
     MySQLUtil.close(conn);
 
   }
+
 
 }

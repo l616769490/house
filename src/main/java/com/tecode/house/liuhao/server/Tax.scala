@@ -1,6 +1,6 @@
-package com.tecode.house.liuhao.server.impl
+package com.tecode.house.liuhao.server
 
-
+import com.tecode.house.d01.service.Analysis
 import com.tecode.house.liuhao.bean._
 import com.tecode.house.liuhao.dao.MysqlDao
 import com.tecode.house.liuhao.dao.impl.PutMysqlDaoImpl
@@ -15,7 +15,25 @@ import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable.ArrayBuffer
 
-class Tax {
+class Tax extends Analysis{
+  /**
+    * 数据分析接口
+    *
+    * @param tableName HBase数据库名字
+    * @return 成功/失败
+    */
+  override def analysis(tableName: String): Boolean = {
+     val tax = new Tax()
+    println("读取税务相关数据...")
+    val read: RDD[(Int, Double, Double, Double)] = tax.readTax("2013")
+    //    read.collect().foreach(println)
+    println("读取数据完成，开始分析税务相关的数据...")
+    val analy: ArrayBuffer[(String, Int)] = tax.analyTax(read)
+    println("分析完成，开始插入...")
+    tax.packageTaxBean("2013", analy)
+    println("插入完成")
+    true
+  }
   /**
     * 读取和base中的数据
     *

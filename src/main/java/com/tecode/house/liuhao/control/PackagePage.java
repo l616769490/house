@@ -1,4 +1,4 @@
-package com.tecode.house.liuhao.control.table;
+package com.tecode.house.liuhao.control;
 
 import com.tecode.pagelist.Group;
 import com.tecode.pagelist.PageList;

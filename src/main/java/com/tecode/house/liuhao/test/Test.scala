@@ -1,6 +1,5 @@
 package com.tecode.house.liuhao.test
 
-import com.tecode.house.liuhao.server.impl.{StructureType, Tax}
 import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable.ArrayBuffer
