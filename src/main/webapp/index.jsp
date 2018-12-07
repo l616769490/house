@@ -32,16 +32,34 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div id="show" style="width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+        <div id="show1" style="display:none;width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+
+        </div>
+        <div id="show2" style="display:none; width: 800px;height: 600px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show3" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+        <div id="show4" style="display:none;  width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show5" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+        <div id="show6" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
 
         </div>
 
     </div>
     <div class="row">
         <div id="btns" class="col-lg-6 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="show('/test-line')">折线图</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/test-bar')">柱状图</button>
-            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/test-pie')">饼状图</button>
+
+            <button id="btn-1" class="btn btn-success col-md-offset-1" onclick="show('/per')">家庭人数图</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/rate')">年份房产税图</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/single')">区域独栋比例图</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
             <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
         </div>
@@ -50,18 +68,103 @@
 
 
 <script type="text/javascript">
+        //家庭人数
+        $("#btn-1").click(function(){
+            $("#show1").show();
+            $("#show2").hide();
+            $("#show3").hide();
+            $("#show4").hide();
+            $("#show5").hide();
+            $("#show6").hide();
+
+        });
+    //年份_房产税
+    $("#btn-2").click(function(){
+        $("#show2").show();
+        $("#show1").hide();
+        $("#show5").hide();
+        $("#show3").hide();
+        $("#show4").hide();
+        $("#show6").hide();
+
+    });
+
+
+    //区域_独栋比例
+    $("#btn-3").click(function(){
+        $("#show1").hide();
+        $("#show2").hide();
+        $("#show3").show();
+        $("#show4").show();
+        $("#show5").show();
+        $("#show6").show();
+
+    });
+
 
     // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('show'));
+        var myChart1 = echarts.init(document.getElementById('show1'));
+        var myChart2 = echarts.init(document.getElementById('show2'));
+        var myChart3 = echarts.init(document.getElementById('show3'));
+        var myChart4 = echarts.init(document.getElementById('show4'));
+        var myChart5 = echarts.init(document.getElementById('show5'));
+        var myChart6 = echarts.init(document.getElementById('show6'));
 
     function show(show_url) {
+        // 家庭人数
         $.ajax({
-            url: show_url,
+            url: "/per",
             type: "POST",
-            data:"year=2011",
+            data:"year=2013",
             success: function (result) {
                 // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(result);
+                myChart1.setOption(result);
+            }
+        });
+        // 年份_房产税
+        $.ajax({
+            url: "/rate",
+            type: "POST",
+            data:"year=2013",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart2.setOption(result);
+            }
+        });
+        $.ajax({
+            url: "/first",
+            type: "POST",
+            data:"year=2013",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart3.setOption(result);
+            }
+        });
+        $.ajax({
+            url: "/second",
+            type: "POST",
+            data:"year=2013",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart4.setOption(result);
+            }
+        });
+        $.ajax({
+            url: "/third",
+            type: "POST",
+            data:"year=2013",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart5.setOption(result);
+            }
+        });
+        $.ajax({
+            url: "/forth",
+            type: "POST",
+            data:"year=2013",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart6.setOption(result);
             }
         });
     };
