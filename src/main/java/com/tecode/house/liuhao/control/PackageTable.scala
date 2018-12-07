@@ -18,19 +18,6 @@ class PackageTable {
   @ResponseBody
   @RequestMapping(value = Array("/test-table"), method = Array(RequestMethod.POST))
   def tabletest(@RequestParam(required = false)tablepost:TablePost,tablename:String)={
-    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
-    val sc = new SparkContext(con)
-    val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
-    //读取hbase中数据并转换为rdd
-
-    val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
-      classOf[ImmutableBytesWritable],
-
-      classOf[Result]).map(x =>
-        x._2.getValue(Bytes.toBytes(""))
-
 
 
   }
