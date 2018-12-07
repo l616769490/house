@@ -16,9 +16,9 @@ public interface ShowSerivce {
      * @param type       图标类型
      * @return Data数据集
      */
-    public List<Data> getData(String year, String reportName, int type);
+    public List<Data> getData(String year, String reportName, int type,String group);
 
-    public Xaxis getX(String year, String reportName);
+    public Xaxis getX(String year, String reportName,String group);
 
     /**
      * 查询并将查询结果封装为Option对象
@@ -27,7 +27,7 @@ public interface ShowSerivce {
      * @param reportName 报表名
      * @return Option对象
      */
-    public Option select(String year, String reportName);
+    public Option select(String year, String reportName,String group);
 
 
 }

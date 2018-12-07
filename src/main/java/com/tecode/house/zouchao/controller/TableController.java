@@ -16,31 +16,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TableController {
 
 
+    private  TableSerivce tableSerivce = new TableSerivceImpl();
 
-    TableSerivce tableSerivce = new TableSerivceImpl();
     @ResponseBody
     @RequestMapping(value = "/rent_table", method = RequestMethod.POST)
     public Table rentTable(TablePost tablePost) {
-        if (tablePost.getSearches().isEmpty()) {
-            Table table = tableSerivce.getTableForRent(tablePost.getPage(), tablePost.getYear());
-            return table;
-        }
         return tableSerivce.getTableForRent(tablePost);
     }
 
     @ResponseBody
     @RequestMapping(value = "/priceByBuild_table", method = RequestMethod.POST)
-    public Table PriceByBuild(TablePost tablePost){
-        if (tablePost.getSearches().isEmpty()) {
-            Table table = tableSerivce.getTableForPrice(tablePost.getPage(), tablePost.getYear());
-            return table;
-        }
+    public Table PriceByBuild(TablePost tablePost) {
         return tableSerivce.getTableForPrice(tablePost);
     }
 
     @ResponseBody
     @RequestMapping(value = "/roomByBuild_table", method = RequestMethod.POST)
-    public Table RoomByBuild(TablePost tablePost){
+    public Table RoomByBuild(TablePost tablePost) {
         return tableSerivce.getTableForRoom(tablePost);
     }
 

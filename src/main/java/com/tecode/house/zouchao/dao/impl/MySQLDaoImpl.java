@@ -232,14 +232,15 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Report getByTableReport(Connection conn, String name, int year) throws SQLException {
+    public Report getByTableReport(Connection conn, String name, int year, String group) throws SQLException {
         Report report = null;
-        String sql = "select * from report where name = ? and year = ? ";
+        String sql = "select * from report where name = ? and year = ? and `group` = ? ";
         ps = conn.prepareStatement(sql);
         ps.setString(1, name);
         ps.setInt(2, year);
+        ps.setString(3, group);
         rs = ps.executeQuery();
-        if (rs.next()) {
+            if (rs.next()) {
             /*
              `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,

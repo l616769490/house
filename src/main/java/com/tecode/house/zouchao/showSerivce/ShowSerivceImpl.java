@@ -23,13 +23,13 @@ public class ShowSerivceImpl implements ShowSerivce {
     private Connection conn;
 
     @Override
-    public List<Data> getData(String year, String reportName, int type) {
+    public List<Data> getData(String year, String reportName, int type, String group) {
         List<Data> byTableDimension = new ArrayList<>();
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
             //获取报表ID
-            int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            int reportId = dao.getByTableReport(conn, reportName, yea, group).getId();
             //根据报表ID获取图标
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
             //获取传入图标类型的图标ID
@@ -65,12 +65,12 @@ public class ShowSerivceImpl implements ShowSerivce {
     }
 
     @Override
-    public Xaxis getX(String year, String reportName) {
+    public Xaxis getX(String year, String reportName, String group) {
         Xaxis x = null;
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
-            int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            int reportId = dao.getByTableReport(conn, reportName, yea, group).getId();
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
             int diagramId = -1;
             for (Diagram diagram : diagrams) {
@@ -92,13 +92,13 @@ public class ShowSerivceImpl implements ShowSerivce {
     }
 
     @Override
-    public Option select(String year, String reportName) {
+    public Option select(String year, String reportName, String group) {
         Option option = new Option();
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
             //获取report
-            Report report = dao.getByTableReport(conn, reportName, yea);
+            Report report = dao.getByTableReport(conn, reportName, yea, group);
             //获取diagrams表
             List<Diagram> diagrams = dao.getByTableDiagram(conn, report.getId());
             //获取xaxis表
