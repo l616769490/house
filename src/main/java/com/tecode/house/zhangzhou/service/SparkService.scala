@@ -338,7 +338,12 @@ class SparkService{
     }
   }
 
-
+  /**
+    * 在hbase中查询得到和空置状态相关的列
+    * @param tableName：查询的hbase的表名
+    * @param search：查询的选项
+    * @return：返回一个分组后的Map对象
+    */
   def selectVacancyTable(tableName:String,search:String): Map[String,Iterable[String]] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
@@ -373,6 +378,13 @@ class SparkService{
 
   }
 
+  /**
+    * 在hbase中查询得到和独栋建筑相关的列
+    * @param tableName：表名
+    * @param search：查询选项一
+    * @param search2：查询选项二
+    * @return：返回一个分组后的Map对象
+    */
   def selectSingleBuildTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
@@ -425,16 +437,68 @@ class SparkService{
     mapRDD.collect().foreach(mmap+=(_))
     spark.close()
     return mmap
-
   }
-}
 
-object SparkService{
-  def main(args: Array[String]): Unit = {
-    val ss = new SparkService
-   // ss.analysis("空置状态饼图")
+  /**
+    * 在hbase中查询房产税相关字段的列
+    * @param tableName：表名
+    * @param search：查询条件一
+    * @param search2：查询条件二
+    * @return 返回一个分组后的Map对象
+    */
+  def selectHouseDutyTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
+    val hbaseConf = HBaseConfiguration.create()
+    hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
+    val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
+      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
+      classOf[org.apache.hadoop.hbase.client.Result])
 
-    println("123ada")
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ZSMHC"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0)
+    if(search.equals("一线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("1"))
+    }
+    if(search.equals("二线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("2"))
+    }
+    if(search.equals("三线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("3"))
+    }
+    if(search.equals("四线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("4"))
+    }
+    if(search.equals("五线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("5"))
+    }
+    if(search2.equals("独栋")){
+      clumnRDD = clumnRDD.filter(_._4.equals("1"))
+    }
+    if(search2.equals("其他")){
+      clumnRDD = clumnRDD.filter(!_._4.equals("1"))
+    }
+
+    val mapRDD = clumnRDD.map{x => val tmp=x._2
+      if(tmp.equals("1")){
+        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("2")){
+        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("3")){
+        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("4")){
+        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else{
+        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }
+    }.groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    mapRDD.collect().foreach(mmap+=(_))
+    spark.close()
+    return mmap
   }
 }
 

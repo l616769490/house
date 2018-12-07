@@ -51,7 +51,9 @@ public class ShowTables {
     public  void showSingleBuildingTable(int year,int nowPage,String choice,String cho2) {
         Table table = new Table();
         Search search2 = new Search();
-        search2.setTitle("是否独栋").addValue(cho2);
+        if(!search2.getValues().contains(cho2)){
+            search2.setTitle("是否独栋").addValue(cho2);
+        }
         table.addSearchs(search2);
         table.setYear(year);
         table.addTop("CONTROL").addTop("METRO3").addTop("BUILT").addTop("STRUCTURETYPE").addTop("BEDRMS").addTop("ROOMS");
@@ -59,7 +61,39 @@ public class ShowTables {
         page.setThisPage(nowPage);
         SparkService sc = new SparkService();
         Search search = new Search();
-        search.setTitle("城市规模").setTitle("独栋");
+        search.setTitle("城市规模");
+        Map<String, Iterable<String>> dataMap = sc.selectSingleBuildTable("thads:"+year,choice,cho2);
+        showUtil(dataMap,table,page,search);
+        for (Search s : table.getSearch()) {
+            System.out.println(s.getTitle());
+        }
+        System.out.println("查询年份："+table.getYear());
+        System.out.println("当前页："+table.getPage().getThisPage());
+        System.out.println("所有页："+table.getPage().getData());
+        System.out.println(table.getTop());
+        table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
+    }
+    /**
+     * 显示房产税相关字段的表的方法
+     * @param year：年份
+     * @param nowPage：当前页
+     * @param choice：查询条件1
+     * @param cho2：查询条件2
+     */
+    public  void showHouseDutyTable(int year,int nowPage,String choice,String cho2) {
+        Table table = new Table();
+        Search search2 = new Search();
+        if(!search2.getValues().contains(cho2)){
+            search2.setTitle("是否独栋").addValue(cho2);
+        }
+        table.addSearchs(search2);
+        table.setYear(year);
+        table.addTop("CONTROL").addTop("METRO3").addTop("BUILT").addTop("STRUCTURETYPE").addTop("ZSMHC").addTop("ROOMS").addTop("VALUE");
+        Page page = new Page();
+        page.setThisPage(nowPage);
+        SparkService sc = new SparkService();
+        Search search = new Search();
+        search.setTitle("城市规模");
         Map<String, Iterable<String>> dataMap = sc.selectSingleBuildTable("thads:"+year,choice,cho2);
         showUtil(dataMap,table,page,search);
         for (Search s : table.getSearch()) {
@@ -72,7 +106,13 @@ public class ShowTables {
         table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
     }
 
-
+    /**
+     * 私有工具类，供本类中的其他方法调用
+     * @param dataMap：数据的Map
+     * @param table：表对象
+     * @param page：页对象
+     * @param search：搜索对象
+     */
     private void showUtil(Map<String, Iterable<String>> dataMap,Table table,Page page,Search search) {
         Iterator<Tuple2<String, Iterable<String>>> iterator = dataMap.iterator();
         while (iterator.hasNext()) {
@@ -98,10 +138,6 @@ public class ShowTables {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }
