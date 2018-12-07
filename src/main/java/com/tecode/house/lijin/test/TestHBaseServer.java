@@ -9,7 +9,6 @@ import org.apache.spark.sql.execution.SortPrefixUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**

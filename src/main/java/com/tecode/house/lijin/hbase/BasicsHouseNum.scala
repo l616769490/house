@@ -2,7 +2,7 @@ package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.lijin.service.impl.InsertFromXml
-import com.tecode.house.lijin.utils.ConfigUtil
+import com.tecode.house.lijin.utils.{ConfigUtil, SparkUtil}
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.{Result, Scan}
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -17,8 +17,7 @@ import org.apache.hadoop.hbase.util.Bytes
   * 基础-房间数
   */
 class BasicsHouseNum extends Analysis {
-  private val conf = new SparkConf().setAppName("BasicsHouseNum").setMaster(ConfigUtil.get("spark_master"))
-  private val sc = new SparkContext(conf)
+  private val sc = SparkUtil.getSparkContext
   private val hBaseConf = HBaseConfiguration.create
 
   /**

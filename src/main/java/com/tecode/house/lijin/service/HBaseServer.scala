@@ -5,7 +5,7 @@ import java.util
 import java.util.{ArrayList, List}
 
 import com.tecode.house.lijin.filter.{FilterBean, FilterFactory}
-import com.tecode.house.lijin.utils.ConfigUtil
+import com.tecode.house.lijin.utils.{ConfigUtil, SparkUtil}
 import com.tecode.table._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
@@ -33,8 +33,7 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
   import scala.collection.JavaConverters._
 
   private val pageNum = Integer.parseInt(ConfigUtil.get("page_number"))
-  private val conf: SparkConf = new SparkConf().setAppName("HBaseServer" + reportName).setMaster(ConfigUtil.get("spark_master"))
-  private val sc = new SparkContext(conf)
+  private val sc = SparkUtil.getSparkContext
   private val hBaseConf: Configuration = HBaseConfiguration.create()
   private val saxReader = new SAXReader
   private val document = saxReader.read(new File(path))

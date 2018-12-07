@@ -1,8 +1,8 @@
 package com.tecode.house.lijin.hbase
 
 import com.tecode.house.d01.service.Analysis
-import com.tecode.house.lijin.service.impl.{InsertFromXml}
-import com.tecode.house.lijin.utils.ConfigUtil
+import com.tecode.house.lijin.service.impl.InsertFromXml
+import com.tecode.house.lijin.utils.{ConfigUtil, SparkUtil}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.{CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.{Result, Scan}
@@ -23,8 +23,7 @@ import scala.collection.JavaConverters.getClass
 class RegionZinc2Num extends Analysis {
   import scala.collection.JavaConverters._
 
-  private val conf: SparkConf = new SparkConf().setAppName("RegionZinc2Num").setMaster(ConfigUtil.get("spark_master"))
-  private val sc = new SparkContext(conf)
+  private val sc = SparkUtil.getSparkContext
   private val hBaseConf: Configuration = HBaseConfiguration.create()
 
   /**
