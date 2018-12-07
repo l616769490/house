@@ -2,6 +2,7 @@ package com.tecode.house.dengya.service.impl;
 
 import com.tecode.house.dengya.bean.Page;
 import com.tecode.house.dengya.utils.HbaseUtil;
+import com.tecode.table.Search;
 import com.tecode.table.Table;
 import org.apache.hadoop.hbase.TableName;
 import scala.actors.threadpool.Arrays;

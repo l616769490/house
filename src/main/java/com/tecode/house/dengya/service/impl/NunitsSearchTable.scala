@@ -10,9 +10,11 @@ import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
+import scala.collection.JavaConverters._
+
 class NunitsSearchTable {
 
-    def read(tableName:String, sc: SparkContext):util.ArrayList[util.ArrayList[String]] ={
+    def read(tableName:String, sc: SparkContext,Sreach:String): (Int, util.List[util.ArrayList[String]])  ={
       val hconf = HBaseConfiguration.create()
       //    配置读取的表名
       hconf.set(TableInputFormat.INPUT_TABLE, tableName)
@@ -21,11 +23,10 @@ class NunitsSearchTable {
       //    获取数据
       val valuess: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(hconf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
 
-      val list: util.ArrayList[String] = new util.ArrayList[String]()
-      val lists: util.ArrayList[util.ArrayList[String]] = new util.ArrayList[util.ArrayList[String]]()
+
 
       val value: RDD[Result] = valuess.map(_._2)
-      value.map(x =>{
+      val valueRDD:RDD[util.ArrayList[String]] = value.map(x =>{
         //      遍历每个Result对象，获取数据
         val cells: Array[Cell] = x.rawCells()
         //房屋编号//房屋编号
@@ -37,6 +38,7 @@ class NunitsSearchTable {
         var BUILT:String = null
         //建筑单元书
         var NUNITS:String = null
+        val list = new util.ArrayList[String]();
         for (elem <- cells) {
           //        获取传入的列的值
          val str: String = Bytes.toString(CellUtil.cloneRow(elem))
@@ -54,9 +56,16 @@ class NunitsSearchTable {
         list.add(METRO3)
         list.add(BUILT)
         list.add(NUNITS)
-        lists.add(list)
+        list
       })
+      //将RDD装换成scala的list
+      val list: List[util.ArrayList[String]] = valueRDD.collect().toList
+      val java: util.List[util.ArrayList[String]] = list.asJava
+      val count = java.size();
+      val rows: util.List[util.ArrayList[String]] = null;
+      //判断是否为最后一页
+      if(page )
 
-      lists
+
     }
 }
