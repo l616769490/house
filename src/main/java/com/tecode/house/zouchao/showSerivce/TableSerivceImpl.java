@@ -18,8 +18,8 @@ import java.util.List;
 @Service
 public class TableSerivceImpl implements TableSerivce {
 
-   private HBaseDao hBaseDao = new HBaseDaoImpl();
-   private MySQLDao mySQLDao = new MySQLDaoImpl();
+    private HBaseDao hBaseDao = new HBaseDaoImpl();
+    private MySQLDao mySQLDao = new MySQLDaoImpl();
 
     @Override
     public Table getTableForRent(TablePost tablePost) {
@@ -69,20 +69,22 @@ public class TableSerivceImpl implements TableSerivce {
         p.setThisPage(tablePost.getPage());
         p.setData(list);
         table.setPage(p);
-        //构建Search对象
-        Search se = new Search();
-        se.setTitle("公平市场租金区间");
-        List<String> va = new ArrayList<>();
-        va.add("0-1000");
-        va.add("1000-1500");
-        va.add("1500-2000");
-        va.add("2000-2500");
-        va.add("2500-3000");
-        va.add("3000+");
-        se.setValues(va);
-        List<Search> ls = new ArrayList<>();
-        ls.add(se);
-        table.setSearch(ls);
+        ////构建Search对象
+        //Search se = new Search();
+        //se.setTitle("公平市场租金区间");
+        //List<String> va = new ArrayList<>();
+        //va.add("0-1000");
+        //va.add("1000-1500");
+        //va.add("1500-2000");
+        //va.add("2000-2500");
+        //va.add("2500-3000");
+        //va.add("3000+");
+        //se.setValues(va);
+        //List<Search> ls = new ArrayList<>();
+        //ls.add(se);
+
+        List<Search> search = getSearch(tablePost.getYear(), "公平市场租金", "基础分析");
+        table.setSearch(search);
         List<String> l = new ArrayList<>();
         l.add("公平市场租金");
         l.add("城市规模");

@@ -164,7 +164,7 @@ legendId	int		图例id	非空
         //ls.add(se1);
         //ls.add(se2);
         tp.setSearches(ls);
-        Table table = t.RoomByBuild(tp);
+        Table table = t.rentTable(tp);
         System.out.println("year:   "+table.getYear());
         System.out.println("this:   "+table.getPage().getThisPage());
         System.out.println("page:   "+table.getPage().getData().toString());
