@@ -3,11 +3,16 @@ package com.tecode.house.lijin.test;
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
 import com.tecode.echarts.enums.AxisType;
+import com.tecode.echarts.enums.Orient;
 import com.tecode.echarts.enums.Trigger;
+import com.tecode.house.lijun.showSerivce.impl.ShowServiceImpl;
+import com.tecode.house.zouchao.bean.Data;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Controller
 public class TestOption {
@@ -124,11 +129,13 @@ public class TestOption {
     @ResponseBody
     @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
     public Option testPie() {
+        ShowServiceImpl showService = new ShowServiceImpl();
         Option option = new Option();
         // 标题
         Title title = new Title()
                 .setText("饼图")
                 .setSubtext("副标题");
+
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -138,24 +145,46 @@ public class TestOption {
 
         // 图例
         Legend legend = new Legend()
-                .setAlign(Align.left)
-                .addData("数据一").addData("数据二").addData("数据三").addData("数据四");
+                .setAlign(Align.left).setOrient(Orient.vertical);
+                //.addData("数据一").addData("数据二").addData("数据三").addData("数据四")
+
 
         // 数据
-        Series series1 = new Pie().setName("饼图")
+
+        Series series = new Pie().setName("住房价格区间");
+        List<Data> dataList = showService.getData("2013", "住房价格");
+
+        for (Data data : dataList) {
+            legend.addData(data.getX()).addData(data.getX());
+            series.addData(new Pie.PieData<Integer>(data.getX(), Integer.valueOf(data.getValue())));
+        }
+        ((Pie)series).setCenter("30%", "30%").setRadius("40%");
+
+
+        Series series1 = new Pie().setName("住房价格区间");
+        List<Data> dataList1 = showService.getData("2013", "住房价格");
+        for (Data data : dataList1) {
+            legend.addData(data.getX()).addData(data.getX());
+            series.addData(new Pie.PieData<Integer>(data.getX(), Integer.valueOf(data.getValue())));
+        }
+        ((Pie)series1).setCenter("30%", "60%").setRadius("40%");
+
+       /* Series series1 = new Pie().setName("饼图")
                 .addData(new Pie.PieData<Integer>("数据一", 20))
                 .addData(new Pie.PieData<Integer>("数据二", 10))
                 .addData(new Pie.PieData<Integer>("数据三", 20))
                 .addData(new Pie.PieData<Integer>("数据四", 50));
-        ((Pie)series1).setCenter("30%", "30%").setRadius("10%");
+        ((Pie)series1).setCenter("30%", "30%").setRadius("10%");*/
+
+
 
         // 数据
-        Series series2 = new Pie().setName("饼图")
+      /*  Series series2 = new Pie().setName("饼图")
                 .addData(new Pie.PieData<Integer>("数据一", 20))
                 .addData(new Pie.PieData<Integer>("数据二", 10))
                 .addData(new Pie.PieData<Integer>("数据三", 20))
                 .addData(new Pie.PieData<Integer>("数据四", 50));
-        ((Pie)series2).setCenter("30%", "60%").setRadius("10%");
+        ((Pie)series2).setCenter("30%", "60%").setRadius("10%");*/
 
         // 数据
         Series series3 = new Pie().setName("饼图")
@@ -174,7 +203,7 @@ public class TestOption {
         ((Pie)series4).setCenter("70%", "60%").setRadius("10%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
-                .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4);
+                .addSeries(series).addSeries(series1).addSeries(series3).addSeries(series4);
         return option;
     }
 }

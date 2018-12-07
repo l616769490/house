@@ -8,6 +8,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
     <title>主页</title>
@@ -28,20 +29,56 @@
     <script src="${APP_PATH}/js/echarts.js">
 
     </script>
+    <style type="text/css">
+
+        .btn-3{
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div id="show" style="width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+
+
+        <div id="show1" style="display:none; width: 400px;height: 550px;float: left"  class="col-lg-12 col-md-offset-2">
+
 
         </div>
 
+        <div id="show2" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show3" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+        <div id="show4" style="display:none;  width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show5" style="display:none; width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show6" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+        <div id="show7" style="display:none; width: 400px;height: 550px;float: left" class="col-lg-12 col-md-offset-2">
+
+        </div>
+
+
     </div>
+
+
     <div class="row">
         <div id="btns" class="col-lg-6 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="show('/rent')">房屋费用</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/priceByBuild')">价格统计</button>
-            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/roomByBuild')">家庭收入</button>
+            <button id="btn-1" class="btn btn-success col-md-offset-1" onclick="show('/cost')">房屋费用</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/income')">家庭收入</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/value')">价格统计</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
             <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
         </div>
@@ -50,21 +87,133 @@
 
 
 <script type="text/javascript">
+        //房屋费用
+    $("#btn-1").click(function(){
+        $("#show1").show();
+        $("#show2").show();
+        $("#show3").show();
+        $("#show4").show();
+        $("#show5").hide();
+        $("#show6").hide();
+        $("#show7").hide();
+    });
+    //家庭收入
+    $("#btn-2").click(function(){
+        $("#show5").show();
+        $("#show1").hide();
+        $("#show2").hide();
+        $("#show3").hide();
+        $("#show4").hide();
+        $("#show6").hide();
+        $("#show7").hide();
+    });
+
+
+    //价格同济
+    $("#btn-3").click(function(){
+        $("#show1").hide();
+        $("#show2").hide();
+        $("#show3").hide();
+        $("#show4").hide();
+        $("#show5").hide();
+        $("#show6").show();
+        $("#show7").show();
+    });
 
     // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(document.getElementById('show'));
+    var myChart1 = echarts.init(document.getElementById('show1'));
+    var myChart2 = echarts.init(document.getElementById('show2'));
+    var myChart3 = echarts.init(document.getElementById('show3'));
+    var myChart4 = echarts.init(document.getElementById('show4'));
+    var myChart5 = echarts.init(document.getElementById('show5'));
+    var myChart6 = echarts.init(document.getElementById('show6'));
+    var myChart7 = echarts.init(document.getElementById('show7'));
 
     function show(show_url) {
+
+        //1  房屋费
         $.ajax({
             url: show_url,
             type: "POST",
             data:"year=2011",
             success: function (result) {
                 // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(result);
+                myChart1.setOption(result);
             }
         });
+        //2  水电费用
+        $.ajax({
+
+            url: "/shuidian",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart2.setOption(result);
+            }
+        });
+        //3 其他费用
+        $.ajax({
+            url: "/other",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart3.setOption(result);
+            }
+        });
+
+        //4 房屋总费用
+        $.ajax({
+            url: "/total",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart4.setOption(result);
+            }
+        });
+        //5 家庭收入
+        $.ajax({
+            url: "/income",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart5.setOption(result);
+            }
+        });
+        //6 住房价格
+        $.ajax({
+            url: "/value",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart6.setOption(result);
+            }
+        });
+        //7 租金价格
+        $.ajax({
+            url: "/frm",
+            type: "POST",
+            data:"year=2011",
+            success: function (result) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart7.setOption(result);
+            }
+        });
+
+
     };
+
+
+
+
+
+
+
+
 
     function getTable() {
         $.ajax({
