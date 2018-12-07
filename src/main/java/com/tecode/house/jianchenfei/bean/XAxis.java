@@ -1,13 +1,13 @@
-package com.tecode.house.jianchenfei.jdbc.bean;
+package com.tecode.house.jianchenfei.bean;
 
-public class Search {
+public class XAxis {
     private Integer id;
 
     private String name;
 
-    private String dimgroupname;
+    private Integer diagramid;
 
-    private Integer reportid;
+    private String dimgroupname;
 
     public Integer getId() {
         return id;
@@ -25,6 +25,14 @@ public class Search {
         this.name = name == null ? null : name.trim();
     }
 
+    public Integer getDiagramid() {
+        return diagramid;
+    }
+
+    public void setDiagramid(Integer diagramid) {
+        this.diagramid = diagramid;
+    }
+
     public String getDimgroupname() {
         return dimgroupname;
     }
@@ -33,21 +41,13 @@ public class Search {
         this.dimgroupname = dimgroupname == null ? null : dimgroupname.trim();
     }
 
-    public Integer getReportid() {
-        return reportid;
-    }
-
-    public void setReportid(Integer reportid) {
-        this.reportid = reportid;
-    }
-
     @Override
     public String toString() {
-        return "Search{" +
+        return "XAxis{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", diagramid=" + diagramid +
                 ", dimgroupname='" + dimgroupname + '\'' +
-                ", reportid=" + reportid +
                 '}';
     }
 }

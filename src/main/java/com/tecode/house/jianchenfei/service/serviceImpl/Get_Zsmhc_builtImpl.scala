@@ -1,11 +1,11 @@
-package com.tecode.house.jianchenfei.hbasedata
+package com.tecode.house.jianchenfei.service.serviceImpl
 
-import java.sql.{Connection, PreparedStatement, ResultSet}
+import java.sql.Connection
 
-import com.tecode.house.d01.service.Analysis
-import com.tecode.house.jianchenfei.jdbc.bean._
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao
-import com.tecode.house.jianchenfei.jdbc.dao.impl._
+import com.tecode.house.jianchenfei.bean._
+import com.tecode.house.jianchenfei.dao.MysqlDao
+import com.tecode.house.jianchenfei.dao.impl._
+import com.tecode.house.jianchenfei.service
 import com.tecode.house.jianchenfei.utils.ConnSource
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
@@ -15,7 +15,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 /**
   * Created by Administrator on 2018/12/5.
   */
-class Get_Zsmhc_built extends Analysis {
+class Get_Zsmhc_built extends service.Analysis {
   /**
     * 数据分析接口
     *

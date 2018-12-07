@@ -3,15 +3,11 @@ package com.tecode.house.lijin.test;
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.*;
 import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
-import com.tecode.house.jianchenfei.jdbc.dao.impl.DataImpl;
-import com.tecode.house.jianchenfei.jdbc.dao.impl.ReportImpl;
+import com.tecode.house.jianchenfei.dao.impl.DataImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 @Controller
 public class TestOption {

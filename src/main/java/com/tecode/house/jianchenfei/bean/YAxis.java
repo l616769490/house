@@ -1,13 +1,11 @@
-package com.tecode.house.jianchenfei.jdbc.bean;
+package com.tecode.house.jianchenfei.bean;
 
-public class XAxis {
+public class YAxis {
     private Integer id;
 
     private String name;
 
     private Integer diagramid;
-
-    private String dimgroupname;
 
     public Integer getId() {
         return id;
@@ -33,21 +31,12 @@ public class XAxis {
         this.diagramid = diagramid;
     }
 
-    public String getDimgroupname() {
-        return dimgroupname;
-    }
-
-    public void setDimgroupname(String dimgroupname) {
-        this.dimgroupname = dimgroupname == null ? null : dimgroupname.trim();
-    }
-
     @Override
     public String toString() {
-        return "XAxis{" +
+        return "YAxis{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", diagramid=" + diagramid +
-                ", dimgroupname='" + dimgroupname + '\'' +
                 '}';
     }
 }

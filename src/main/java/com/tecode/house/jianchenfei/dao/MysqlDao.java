@@ -1,9 +1,8 @@
-package com.tecode.house.jianchenfei.jdbc.dao;
+package com.tecode.house.jianchenfei.dao;
 
 import com.tecode.house.jianchenfei.jdbc.bean.Data;
 
 import java.util.List;
-import java.util.Objects;
 
 
 public interface MysqlDao<T> {

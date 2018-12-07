@@ -1,9 +1,8 @@
-package com.tecode.house.jianchenfei.jdbc.dao.impl;
+package com.tecode.house.jianchenfei.dao.impl;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.bean.XAxis;
-import com.tecode.house.jianchenfei.jdbc.bean.YAxis;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
+
+import com.tecode.house.jianchenfei.bean.YAxis;
+import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
 
 import java.sql.*;

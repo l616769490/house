@@ -1,9 +1,10 @@
-package com.tecode.house.jianchenfei.jdbc.dao.impl;
+package com.tecode.house.jianchenfei.dao.impl;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.bean.XAxis;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
+
+import com.tecode.house.jianchenfei.bean.Legend;
+import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,22 +13,22 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/4.
  */
-public class XAxisImpl implements MysqlDao<XAxis> {
+public class LegendImpl implements MysqlDao<Legend>{
     @Override
     public List findAll() {
-        List<XAxis> list = new ArrayList<>();
+        List<Legend> list = new ArrayList<>();
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM XAxis ";
+        String sql = "SELECT * FROM Legend";
         try {
             conn = ConnSource.getConnection();
             stat = conn.createStatement();
             rs = stat.executeQuery(sql);
-            XAxis xAxis = null;
-            while ((xAxis = getXAxis(rs)) != null) {
-                list.add(xAxis);
+            Legend legend = null;
+            while ((legend = getLegend(rs)) != null) {
+                list.add(legend);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,21 +49,19 @@ public class XAxisImpl implements MysqlDao<XAxis> {
         return list;
     }
 
-    private XAxis getXAxis(ResultSet rs) {
+    private Legend getLegend(ResultSet rs) {
         try {
             if (rs.next()) {
-               int id = rs.getInt("id");
-               String name = rs.getString("name");
-               int diagramId = rs.getInt("diagramId");
-               String dimGroupName = rs.getString("dimGroupName");
+              String name = rs.getString("name");
+              String dimgroupname = rs.getString("dimgroupname");
+              int diagramid = rs.getInt("diagramid");
 
-               XAxis xAxis = new XAxis();
-               xAxis.setId(id);
-               xAxis.setName(name);
-               xAxis.setDiagramid(diagramId);
-               xAxis.setDimgroupname(dimGroupName);
+                Legend legend = new Legend();
+               legend.setName(name);
+               legend.setDimgroupname(dimgroupname);
+               legend.setDiagramid(diagramid);
 
-                return xAxis;
+                return legend;
             }
         } catch (SQLException e1) {
             e1.printStackTrace();
@@ -81,11 +80,11 @@ public class XAxisImpl implements MysqlDao<XAxis> {
         if (columns.length != columns.length) {
             return null;
         }
-        List<XAxis> list = new ArrayList<>();
+        List<Legend> list = new ArrayList<>();
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
-        StringBuffer sql = new StringBuffer("SELECT * FROM xAxis WHERE");
+        StringBuffer sql = new StringBuffer("SELECT * FROM legend WHERE");
         for (int i = 0; i < columns.length; i++) {
             sql.append(" " + columns[i] + "=");
             if (columns[i].toLowerCase().equals("id") || columns[i].toLowerCase().equals("diagramid")) {
@@ -101,9 +100,9 @@ public class XAxisImpl implements MysqlDao<XAxis> {
             conn = ConnSource.getConnection();
             stat = conn.createStatement();
             rs = stat.executeQuery(sql.toString());
-            XAxis xAxis = null;
-            while ((xAxis = getXAxis(rs)) != null) {
-                list.add(xAxis);
+            Legend legend = null;
+            while ((legend = getLegend(rs)) != null) {
+                list.add(legend);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,20 +121,21 @@ public class XAxisImpl implements MysqlDao<XAxis> {
 
         return list;
 
+
     }
 
     @Override
-    public int insert(XAxis xaxis) {
+    public int insert(Legend legend) {
         Connection conn = null;
         PreparedStatement prepar = null;
         int i = 0;
-        String sql = "insert into xaxis(name,diagramId,dimGroupName) values(?,?,?)";
+        String sql = "insert into legend(name,dimgroupname,diagramid) values(?,?,?)";
         try {
             conn = ConnSource.getConnection();
             prepar = conn.prepareStatement(sql);
-            prepar.setString(1, xaxis.getName());
-            prepar.setInt(2, xaxis.getDiagramid());
-            prepar.setString(3, xaxis.getDimgroupname());
+            prepar.setString(1, legend.getName());
+            prepar.setString(2, legend.getDimgroupname());
+            prepar.setInt(3, legend.getDiagramid());
             return prepar.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -145,12 +145,12 @@ public class XAxisImpl implements MysqlDao<XAxis> {
     }
 
     @Override
-    public int update(XAxis xAxis) {
+    public int update(Legend legend) {
         return 0;
     }
 
     @Override
-    public int delect(XAxis xAxis) {
+    public int delect(Legend legend) {
         return 0;
     }
 
@@ -158,6 +158,7 @@ public class XAxisImpl implements MysqlDao<XAxis> {
     public int insert(List list) {
         return 0;
     }
+
 
     @Override
     public int update(List list) {

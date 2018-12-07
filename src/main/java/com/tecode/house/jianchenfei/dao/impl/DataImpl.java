@@ -1,13 +1,13 @@
-package com.tecode.house.jianchenfei.jdbc.dao.impl;
+package com.tecode.house.jianchenfei.dao.impl;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
+
+import com.tecode.house.jianchenfei.bean.Data;
+import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by Administrator on 2018/12/3.

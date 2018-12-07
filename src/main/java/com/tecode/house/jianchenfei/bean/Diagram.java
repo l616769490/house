@@ -1,4 +1,4 @@
-package com.tecode.house.jianchenfei.jdbc.bean;
+package com.tecode.house.jianchenfei.bean;
 
 public class Diagram {
     private Integer id;

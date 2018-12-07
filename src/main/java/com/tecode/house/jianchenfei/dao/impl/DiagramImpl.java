@@ -1,8 +1,8 @@
-package com.tecode.house.jianchenfei.jdbc.dao.impl;
+package com.tecode.house.jianchenfei.dao.impl;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.bean.Diagram;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
+
+import com.tecode.house.jianchenfei.bean.Diagram;
+import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
 
 import java.sql.*;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/3.
  */
-public class DiagramImpl implements MysqlDao<Diagram>{
+public class DiagramImpl implements MysqlDao<Diagram> {
     @Override
     public List findAll() {
         List<Diagram> list = new ArrayList<>();

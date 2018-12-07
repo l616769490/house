@@ -1,11 +1,10 @@
-package com.tecode.house.jianchenfei.jdbc.dao.impl;
+package com.tecode.house.jianchenfei.dao.impl;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
-import com.tecode.house.jianchenfei.jdbc.bean.Legend;
-import com.tecode.house.jianchenfei.jdbc.bean.Search;
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao;
+
+import com.tecode.house.jianchenfei.bean.Dimension;
+import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;
-import scala.tools.cmd.gen.AnyVals;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,22 +13,22 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/4.
  */
-public class LegendImpl implements MysqlDao<Legend>{
+public class DimensionImpl implements MysqlDao<Dimension>{
     @Override
     public List findAll() {
-        List<Legend> list = new ArrayList<>();
+        List<Dimension> list = new ArrayList<>();
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM Legend";
+        String sql = "SELECT * FROM Dimension";
         try {
             conn = ConnSource.getConnection();
             stat = conn.createStatement();
             rs = stat.executeQuery(sql);
-            Legend legend = null;
-            while ((legend = getLegend(rs)) != null) {
-                list.add(legend);
+            Dimension dimension = null;
+            while ((dimension = getDimension(rs)) != null) {
+                list.add(dimension);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,26 +49,28 @@ public class LegendImpl implements MysqlDao<Legend>{
         return list;
     }
 
-    private Legend getLegend(ResultSet rs) {
+    private Dimension getDimension(ResultSet rs) {
         try {
             if (rs.next()) {
-              String name = rs.getString("name");
-              String dimgroupname = rs.getString("dimgroupname");
-              int diagramid = rs.getInt("diagramid");
+                int id = rs.getInt ("id");
+                String groupname = rs.getString("groupname");
+                String dimname= rs.getString("dimname");
+                String dimnameen = rs.getString("dimnameen");
 
-                Legend legend = new Legend();
-               legend.setName(name);
-               legend.setDimgroupname(dimgroupname);
-               legend.setDiagramid(diagramid);
 
-                return legend;
+                Dimension dimension = new Dimension();
+
+                dimension.setId(id);
+                dimension.setGroupname(groupname);
+                dimension.setDimname(dimname);
+                dimension.setDimnameen(dimnameen);
+                return dimension;
             }
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
         return null;
     }
-
 
     @Override
     public List findByColumn(String column, String value) {
@@ -81,16 +82,16 @@ public class LegendImpl implements MysqlDao<Legend>{
         if (columns.length != columns.length) {
             return null;
         }
-        List<Legend> list = new ArrayList<>();
+        List<Dimension> list = new ArrayList<>();
         Connection conn = null;
         Statement stat = null;
         ResultSet rs = null;
-        StringBuffer sql = new StringBuffer("SELECT * FROM legend WHERE");
+        StringBuffer sql = new StringBuffer("SELECT * FROM Dimension WHERE");
         for (int i = 0; i < columns.length; i++) {
             sql.append(" " + columns[i] + "=");
-            if (columns[i].toLowerCase().equals("id") || columns[i].toLowerCase().equals("diagramid")) {
+            if (columns[i].toLowerCase().equals("id") ) {
                 sql.append(values[i]);
-            } else if (columns[i].toLowerCase().equals("name") || columns[i].toLowerCase().equals("dimgroupname")) {
+            } else if (columns[i].toLowerCase().equals("groupname") || columns[i].toLowerCase().equals("dimname")||  columns[i].toLowerCase().equals("dimnameen")) {
                 sql.append("'" + values[i] + "'");
             }
             if (i != columns.length - 1) {
@@ -101,9 +102,9 @@ public class LegendImpl implements MysqlDao<Legend>{
             conn = ConnSource.getConnection();
             stat = conn.createStatement();
             rs = stat.executeQuery(sql.toString());
-            Legend legend = null;
-            while ((legend = getLegend(rs)) != null) {
-                list.add(legend);
+            Dimension dimension = null;
+            while ((dimension = getDimension(rs)) != null) {
+                list.add(dimension);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,21 +123,20 @@ public class LegendImpl implements MysqlDao<Legend>{
 
         return list;
 
-
     }
 
     @Override
-    public int insert(Legend legend) {
+    public int insert(Dimension dimension) {
         Connection conn = null;
         PreparedStatement prepar = null;
         int i = 0;
-        String sql = "insert into legend(name,dimgroupname,diagramid) values(?,?,?)";
+        String sql = "insert into dimension(groupName,dimName,dimNameEN) values(?,?,?)";
         try {
             conn = ConnSource.getConnection();
             prepar = conn.prepareStatement(sql);
-            prepar.setString(1, legend.getName());
-            prepar.setString(2, legend.getDimgroupname());
-            prepar.setInt(3, legend.getDiagramid());
+            prepar.setString(1, dimension.getGroupname());
+            prepar.setString(2, dimension.getDimname());
+            prepar.setString(3, dimension.getDimnameen());
             return prepar.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,12 +146,12 @@ public class LegendImpl implements MysqlDao<Legend>{
     }
 
     @Override
-    public int update(Legend legend) {
+    public int update(Dimension dimension) {
         return 0;
     }
 
     @Override
-    public int delect(Legend legend) {
+    public int delect(Dimension dimension) {
         return 0;
     }
 
@@ -159,6 +159,7 @@ public class LegendImpl implements MysqlDao<Legend>{
     public int insert(List list) {
         return 0;
     }
+
 
 
     @Override

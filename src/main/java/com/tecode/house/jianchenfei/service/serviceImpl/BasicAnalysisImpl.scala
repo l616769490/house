@@ -1,22 +1,23 @@
-package com.tecode.house.jianchenfei.hbasedata
+package com.tecode.house.jianchenfei.service.serviceImpl
 
-import java.sql.{Connection, PreparedStatement, ResultSet}
+import java.sql.Connection
 
-import com.tecode.house.d01.service.Analysis
-import com.tecode.house.jianchenfei.jdbc.bean._
-import com.tecode.house.jianchenfei.jdbc.dao.MysqlDao
-import com.tecode.house.jianchenfei.jdbc.dao.impl._
+import com.tecode.house.jianchenfei.bean._
+import com.tecode.house.jianchenfei.dao.MysqlDao
+import com.tecode.house.jianchenfei.dao.impl._
+import com.tecode.house.jianchenfei.service
 import com.tecode.house.jianchenfei.utils.ConnSource
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
-import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.rdd.RDD
+
 
 /**
   * Created by Administrator on 2018/12/3.
   */
-class BasicAnalysis extends Analysis {
+class BasicAnalysis extends service.Analysis {
 
   val conf = new SparkConf().setAppName("BasicAnalysis").setMaster("local[*]")
   val sc = new SparkContext(conf)
