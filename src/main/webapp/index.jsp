@@ -20,6 +20,7 @@
 
     <link href="${APP_PATH}/bootstrap-3.3.7-dist/css/bootstrap.min.css"
           rel="stylesheet"/>
+    <link href="${APP_PATH}/css/my.amin.css" rel="stylesheet"/>
     <script src="${APP_PATH}/bootstrap-3.3.7-dist/js/bootstrap.min.js">
 
     </script>
@@ -38,14 +39,17 @@
 
     </div>
     <div class="row">
-        <div id="btns" class="col-lg-8 col-md-offset-2">
+        <div id="btns1" class="col-lg-8 col-md-offset-2">
             <button id="btn-1" class="btn btn-success" onclick="show('/basics_rooms_num')">基础-房间数分析</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/region_zinc2_num')">按区域-家庭收入分析
+            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="show('/region_zinc2_num')">按区域-家庭收入分析
             </button>
-            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/region_zsmhc_num')">按区域-房产税分析</button>
-            <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
-            <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="show('/test-tp')">表格传输测试</button>
-            <button id="btn-6" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="show('/region_zsmhc_num')">按区域-房产税分析
+            </button>
+        </div>
+        <div id="btns2" class="col-lg-8 col-md-offset-2">
+            <button id="btn-4" class="btn btn-success" onclick="getTable()">表格测试</button>
+            <button id="btn-5" class="btn btn-success col-md-offset-2" onclick="show('/test-tp')">表格传输测试</button>
+            <button id="btn-6" class="btn btn-success col-md-offset-2" onclick="toFile()">文件上传</button>
         </div>
     </div>
 </div>
@@ -69,16 +73,7 @@
     };
 
     function getTable() {
-        $.ajax({
-            url: "/test-table2",
-            type: "POST",
-            dataType : "json",
-            contentType: 'application/json',
-            data: JSON.stringify({'year':2013,'page':2,'searches':[{'title':'房间数','values':['1']},{'title':'卧室数','values':['1']}]}),
-            success: function (result) {
-                alert(result);
-            }
-        });
+        window.location.href = "/table"
     };
 
     function toFile() {

@@ -2,6 +2,7 @@ package com.tecode.house.lijin.service
 
 import java.io.File
 import java.util
+import java.util.{ArrayList, List}
 
 import com.tecode.house.lijin.filter.{FilterBean, FilterFactory}
 import com.tecode.house.lijin.utils.ConfigUtil
@@ -32,7 +33,7 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
   import scala.collection.JavaConverters._
 
   private val pageNum = Integer.parseInt(ConfigUtil.get("page_number"))
-  private val conf: SparkConf = new SparkConf().setAppName("HBaseServer").setMaster(ConfigUtil.get("spark_master"))
+  private val conf: SparkConf = new SparkConf().setAppName("HBaseServer" + reportName).setMaster(ConfigUtil.get("spark_master"))
   private val sc = new SparkContext(conf)
   private val hBaseConf: Configuration = HBaseConfiguration.create()
   private val saxReader = new SAXReader
@@ -129,10 +130,13 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
       }).toList
 
     // 插入数据到table
-    for (i <- 0 until pageNum) {
-      val row = new Row()
-      row.setRow(list(thisPageLastNum - i))
-      table.addData(row)
+    for (i <- 1 to pageNum) {
+      val n = thisPageLastNum - i
+      if (n < list.size) {
+        val row = new Row()
+        row.setRow(list(n))
+        table.addData(row)
+      }
     }
     table
   }
@@ -158,8 +162,11 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
 
     val fieldElement = search.element("field")
     if (fieldElement != null) {
-      val field = fieldElement.getText
-      filterBean.setField(field)
+      val fieldValue = fieldElement.getText
+      filterBean.setField(fieldValue)
+
+      val groupValue = search.element("group").getText
+      filterBean.setGroupName(groupValue);
 
       val searchElement = search.element("items")
       if (searchElement != null) {
@@ -273,9 +280,9 @@ object HBaseServer {
     val tablePost = new TablePost
     tablePost.setYear(2013)
     tablePost.setPage(2)
-    val baseServer = new HBaseServer(HBaseServer.getClass.getResource("/table/region-zinx2.xml").getPath, "按区域-家庭收入分析", tablePost)
-    val table = baseServer.select()
-    println(table)
-//    println(baseServer.loadFields())
+    val baseServer = new HBaseServer(HBaseServer.getClass.getResource("/table/basics-rooms.xml").getPath, "基础-房间数分析", tablePost)
+    //    val table = baseServer.select()
+    //    println(table)
+    println(baseServer.loadFields())
   }
 }

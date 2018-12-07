@@ -21,6 +21,10 @@ public class FilterBean implements Serializable {
      */
     private String field;
     /**
+     * 数据分组字段
+     */
+    private String groupName;
+    /**
      * or 还是 and
      */
     private String rule;
@@ -33,6 +37,15 @@ public class FilterBean implements Serializable {
      * 中文-数据库列名  对照表
      */
     private Map<String, String> columns;
+
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     public String getType() {
         return type;
@@ -96,6 +109,7 @@ public class FilterBean implements Serializable {
         return "FilterBean{" +
                 "type='" + type + '\'' +
                 ", field='" + field + '\'' +
+                ", groupName='" + groupName + '\'' +
                 ", rule='" + rule + '\'' +
                 ", items=" + items +
                 ", columns=" + columns +

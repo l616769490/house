@@ -26,21 +26,23 @@ public class RangeFilter implements HBaseFilter {
         }
 
         for (Search search : searchs) {
-            // 取出搜索哪个字段
-            String title = search.getTitle();
-            // 取出搜索值
-            List<String> values = search.getValues();
-            // 查找搜索的字段对应数据库中的列名
-            String hBaseColumn = filterBean.getColumns().get(title);
-            // 找出数据库中查出来的搜索列对应的值
-            String value = map.get(hBaseColumn);
-            // 取出前端传过来的搜索值，搜索的时候该列表只有一个值
-            String field = search.getValues().get(0);
-            // 拆分范围
-            String[] ranges = field.split("-");
+            // 首先判断是否是该字段， 如：要搜索1区属于L30的， 先判断该条记录是不是1区，不是则跳到下一个搜索条件
+            String searchTitle = search.getTitle();
+            String hBaseTitle = map.get(filterBean.getGroupName());
+            if(!searchTitle.equals(hBaseTitle)) {
+                continue;
+            }
 
-            // 将数据库中的值转换为double
-            double hBaseValue = Double.parseDouble(value);
+            // 取出用于匹配的字段
+            String field = filterBean.getField();       // ZINC2
+            // 获得匹配值
+            double hBaseValue = Double.parseDouble(map.get(field));
+
+            // 取出搜索值
+            String searchValue = search.getValues().get(0);     // L30
+
+            // 拆分范围
+            String[] ranges = searchValue.split("-");
 
             // 临时记录本次比较结果用的
             boolean b1 = false;

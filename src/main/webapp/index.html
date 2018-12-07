@@ -1,11 +1,14 @@
 <html>
 <head>
     <title>主页</title>
+    <meta charset="UTF-8"> <!-- for HTML5 -->
 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="js/jquery-1.12.4.min.js">
 
     </script>
 
+    <link href="${APP_PATH}/css/my.amin.css" rel="stylesheet"/>
     <link href="bootstrap-3.3.7-dist/css/bootstrap.min.css"
           rel="stylesheet"/>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js">
@@ -20,51 +23,73 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-4 col-md-offset-4">
-            <form>
-                <div class="form-group" >
-                    <label for="year">文件所属年份</label>
-                    <input type="text" class="form-control" id="year" placeholder="2011">
-                </div>
-                <div class="form-group">
-                    <label for="file">选择文件</label>
-                    <input type="file" id="file">
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox"> 如果数据存在则覆盖
-                    </label>
-                </div>
-                <button class="btn btn-default" onclick="fileupload()">提交</button>
-            </form>
+        <div id="show" class="col-lg-8 col-md-offset-2">
+
+        </div>
+    </div>
+    <div class="row">
+        <div id="btns" class="col-lg-8 col-md-offset-2">
+            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-房间数分析</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="getTable2()">按区域-家庭收入分析</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="getTable3()">按区域-房产税分析</button>
         </div>
     </div>
 </div>
-
-
 <script>
-    function fileupload() {
-        var formData = new FormData($("#form")[0]);
+    function getTable1() {
         $.ajax({
-            url: '/upload',
-            type: 'post',
-            data: formData,
-            // 必须false才会自动加上正确的Content-Type
-            contentType: false,
-            // 必须false才会避开jQuery对 formdata 的默认处理
-            // XMLHttpRequest会对 formdata 进行正确的处理
-            processData: false,
-            success: function (data) {
-                alert(data);
-            },
-            error: function (data) {
-                alert(data);
-            },
-            cache: false,
-            async: true
+            url: "/basics_rooms_num_table",
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'year': 2013,
+                'page': 2,
+                'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
+            }),
+            success: function (result) {
+                showTable(result);
+            }
         });
-    }
+    };
 
+    function getTable2() {
+        $.ajax({
+            url: "/region_zinc2_num_table",
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'year': 2013,
+                'page': 2,
+                'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
+            }),
+            success: function (result) {
+                showTable(result);
+            }
+        });
+    };
+
+    function getTable3() {
+        $.ajax({
+            url: "/region_zsmhc_num_table",
+            type: "POST",
+            dataType: "json",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'year': 2013,
+                'page': 2,
+                'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
+            }),
+            success: function (result) {
+                showTable(result);
+            }
+        });
+    };
+
+    function showTable(result) {
+
+    };
 </script>
 
 </body>

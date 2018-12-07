@@ -16,6 +16,8 @@
         <type>range</type>
         <!-- 对哪个字段进行匹配 -->
         <field>ZSMHC</field>
+        <!-- 数据分组字段 -->
+        <group>REGION</group>
         <!-- 多个搜索字段之间是or还是and -->
         <rule>or</rule>
     </search>

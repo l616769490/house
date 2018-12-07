@@ -67,4 +67,10 @@ public class TestTable {
         tp.setSearches(searches);
         return tp;
     }
+
+    @RequestMapping(value = "/table")
+    public String upload() {
+        return "table";
+    }
+
 }
