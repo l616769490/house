@@ -15,8 +15,7 @@ import java.util.List;
  */
 public class DataToHbase {
 
-    public DataToHbase() {
-    }
+
 
     /**
      * 从文件中导入数据到HBase
@@ -26,7 +25,7 @@ public class DataToHbase {
     public static void fileToHbase(String path) {
 
         try {
-            long t1 = System.currentTimeMillis();
+
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line = br.readLine();
             // 取第一个做判断
@@ -80,8 +79,8 @@ public class DataToHbase {
                 HBaseUtil.addDatas("thads:2011", puts);
                 puts.clear();
             }
-            long t2 = System.currentTimeMillis();
-            System.out.println(t2 - t1);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,7 +111,7 @@ public class DataToHbase {
     }
 
     public static void main(String[] args) {
-        // HBaseUtil.createTable("thads:2011","info","cost","fmt");
+
 
         if (HBaseUtil.tableExists("thads:2011")) {
             HBaseUtil.deleteTable("thads:2011");

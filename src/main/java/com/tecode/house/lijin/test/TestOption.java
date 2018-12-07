@@ -74,7 +74,7 @@ public class TestOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/rate", method = RequestMethod.POST)
     public Option testBar(String year) {
         Option option = new Option();
         // 标题
@@ -113,6 +113,7 @@ public class TestOption {
         String v7 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "3000-3500"}).get(0).getValue();
         String v8 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"1900-2000", "3500+"}).get(0).getValue();
         String v9 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "0-500"}).get(0).getValue();
+
         String v10 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "500-1000"}).get(0).getValue();
         String v11 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1000-1500"}).get(0).getValue();
         String v12 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1500-2000"}).get(0).getValue();
@@ -120,6 +121,7 @@ public class TestOption {
         String v14 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "2500-3000"}).get(0).getValue();
         String v15 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3000-3500"}).get(0).getValue();
         String v16 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "3500+"}).get(0).getValue();
+
         String v17 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "0-500"}).get(0).getValue();
         String v18 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "500-1000"}).get(0).getValue();
         String v19 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2000-2010", "1000-1500"}).get(0).getValue();
@@ -168,7 +170,7 @@ public class TestOption {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
+    @RequestMapping(value = "/per", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题
@@ -239,5 +241,186 @@ public class TestOption {
     }
 
 
+    @ResponseBody
+    @RequestMapping(value = "/first", method = RequestMethod.POST)
+    public Option testPi() {
+        Option option = new Option();
+        // 标题
+        Title title = new Title()
+                .setText("独栋比例")
+                .setSubtext("第一区域");
+
+        // 提示框
+        Tooltip tooltip = new Tooltip()
+                .setTrigger(Trigger.item)
+                // {a}（系列名称），{b}（类目值），{c}（数值）
+                .setFormatter("{a}-{b} : {c} %");
+
+        // 图例
+        Legend legend = new Legend()
+                .setAlign(Align.right)
+                .addData("独栋").addData("非独栋");
+
+        // 数据
+
+        DataImpl mysqlDao = new DataImpl();
+
+        String  v1 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"1","独栋"}).get(0).getValue();
+
+        String v2 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"2","独栋"}).get(0).getValue();
+
+        String v3 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"3","独栋"}).get(0).getValue();
+
+        String v4 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"4","独栋"}).get(0).getValue();
+
+        String v5 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"1","非独栋"}).get(0).getValue();
+
+        String v6 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"2","非独栋"}).get(0).getValue();
+
+        String v7 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"3","非独栋"}).get(0).getValue();
+
+        String v8 = mysqlDao.findByColums(new String[]{"x","legend"},new String[]{"4","非独栋"}).get(0).getValue();
+
+        // 数据
+        Series series1 = new Pie().setName("第一区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v1) ))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v5) ));
+        ((Pie)series1).setCenter("50%", "50%").setRadius("50%");
+
+        // 数据
+        Series series2 = new Pie().setName("第二区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v2)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v6)));
+        ((Pie)series2).setCenter("70%", "30%").setRadius("10%");
+
+        // 数据
+        Series series3 = new Pie().setName("第三区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v3)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v7)));
+        ((Pie)series3).setCenter("70%", "30%").setRadius("10%");
+
+        // 数据
+        Series series4 = new Pie().setName("第四区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v4)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v8)));
+        ((Pie)series3).setCenter("70%", "30%").setRadius("10%");
+
+        option.setTitle(title).setTooltip(tooltip).setLegend(legend)
+                .addSeries(series1);
+        return option;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/second", method = RequestMethod.POST)
+    public Option testP() {
+        Option option = new Option();
+        // 标题
+        Title title = new Title()
+                .setText("独栋比例")
+                .setSubtext("第二区域");
+
+        // 提示框
+        Tooltip tooltip = new Tooltip()
+                .setTrigger(Trigger.item)
+                // {a}（系列名称），{b}（类目值），{c}（数值）
+                .setFormatter("{a}-{b} : {c} %");
+
+        // 图例
+        Legend legend = new Legend()
+                .setAlign(Align.right)
+                .addData("独栋").addData("非独栋");
+
+        // 数据
+
+        DataImpl mysqlDao = new DataImpl();
+        String v2 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2", "独栋"}).get(0).getValue();
+        String v6 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"2", "非独栋"}).get(0).getValue();
+
+        // 数据
+        Series series1 = new Pie().setName("第二区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v2)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v6)));
+        ((Pie) series1).setCenter("50%", "50%").setRadius("50%");
+        option.setTitle(title).setTooltip(tooltip).setLegend(legend)
+                .addSeries(series1);
+
+        return option;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/third", method = RequestMethod.POST)
+    public Option testPiee() {
+        Option option = new Option();
+        // 标题
+        Title title = new Title()
+                .setText("独栋比例")
+                .setSubtext("第三区域");
+
+        // 提示框
+        Tooltip tooltip = new Tooltip()
+                .setTrigger(Trigger.item)
+                // {a}（系列名称），{b}（类目值），{c}（数值）
+                .setFormatter("{a}-{b} : {c} %");
+
+        // 图例
+        Legend legend = new Legend()
+                .setAlign(Align.right)
+                .addData("独栋").addData("非独栋");
+
+        // 数据
+
+        DataImpl mysqlDao = new DataImpl();
+
+        String v3 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"3", "独栋"}).get(0).getValue();
+
+        String v7 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"3", "非独栋"}).get(0).getValue();
+
+
+        // 数据
+        Series series1 = new Pie().setName("第三区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v3)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v7)));
+        ((Pie) series1).setCenter("50%", "50%").setRadius("50%");
+        option.setTitle(title).setTooltip(tooltip).setLegend(legend)
+                .addSeries(series1);
+
+        return option;
+    }
+    @ResponseBody
+    @RequestMapping(value = "/forth", method = RequestMethod.POST)
+    public Option testPieee() {
+        Option option = new Option();
+        // 标题
+        Title title = new Title()
+                .setText("独栋比例")
+                .setSubtext("按区域分布");
+
+        // 提示框
+        Tooltip tooltip = new Tooltip()
+                .setTrigger(Trigger.item)
+                // {a}（系列名称），{b}（类目值），{c}（数值）
+                .setFormatter("{a}-{b} : {c} %");
+
+        // 图例
+        Legend legend = new Legend()
+                .setAlign(Align.right)
+                .addData("独栋").addData("非独栋");
+
+        // 数据
+
+        DataImpl mysqlDao = new DataImpl();
+
+        String v4 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"4", "独栋"}).get(0).getValue();
+
+        String v8 = mysqlDao.findByColums(new String[]{"x", "legend"}, new String[]{"4", "非独栋"}).get(0).getValue();
+
+        // 数据
+        Series series1 = new Pie().setName("第四区域")
+                .addData(new Pie.PieData<Double>("独栋", Double.parseDouble(v4)))
+                .addData(new Pie.PieData<Double>("非独栋", Double.parseDouble(v8)));
+        ((Pie) series1).setCenter("50%", "50%").setRadius("50%");
+        option.setTitle(title).setTooltip(tooltip).setLegend(legend)
+                .addSeries(series1);
+
+        return option;
+    }
 
 }
