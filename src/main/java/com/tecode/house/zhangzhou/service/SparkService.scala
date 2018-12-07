@@ -339,29 +339,91 @@ class SparkService{
   }
 
 
-  def selectData(tableName:String): Map[String,Iterable[String]] ={
+  def selectVacancyTable(tableName:String,search:String): Map[String,Iterable[String]] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    val clumnRDD = hbaseRDD.map(x => (x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED"))))
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+    if(search.equals("空置")){
+      clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
+    }
+    if(search.equals("居住")){
+      clumnRDD = clumnRDD.filter(_._5.equals("-6"))
+    }
 
     val mapRDD = clumnRDD.map{x => val tmp=x._5
       if(tmp.equals("-6")){
-        ("居住",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
+        ("居住",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"居住"+"_"+x._6)
       }else{
-        ("空置",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
+        ("空置",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"空置"+"_"+x._6)
       }
-      }.groupByKey()
-      var mmap = Map[String,Iterable[String]]()
+    }.groupByKey()
+    var mmap = Map[String,Iterable[String]]()
     mapRDD.collect().foreach(mmap+=(_))
+    spark.close()
+    return mmap
+
+  }
+
+  def selectSingleBuildTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
+    val hbaseConf = HBaseConfiguration.create()
+    hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
+    val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
+      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
+      classOf[org.apache.hadoop.hbase.client.Result])
+
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BEDRMS"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0)
+    if(search.equals("一线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("1"))
+    }
+    if(search.equals("二线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("2"))
+    }
+    if(search.equals("三线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("3"))
+    }
+    if(search.equals("四线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("4"))
+    }
+    if(search.equals("五线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("5"))
+    }
+    if(search2.equals("独栋")){
+      clumnRDD = clumnRDD.filter(_._4.equals("1"))
+    }
+    if(search2.equals("其他")){
+      clumnRDD = clumnRDD.filter(!_._4.equals("1"))
+    }
+
+    val mapRDD = clumnRDD.map{x => val tmp=x._2
+      if(tmp.equals("1")){
+        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("2")){
+        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("3")){
+        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("4")){
+        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else{
+        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }
+    }.groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    mapRDD.collect().foreach(mmap+=(_))
+    spark.close()
     return mmap
 
   }
