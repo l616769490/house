@@ -389,7 +389,7 @@ class SparkService{
     if(search.equals("居住")){
 
     }
-    val frame: DataFrame = spark.sql("selecet * from (select * from tmp where VACANCY = '-6') t limit "+(page-1)*10 + ","+page*10)
+    val frame: DataFrame = spark.sql("select * from (select * from tmp where VACANCY = '-6') t limit "+(page-1)*10 + ","+10+";")
     var vrdd = frame.rdd.map(x => ("居住",x.get(0)+"_"+x.get(1)+"_"+x.get(2)+"_"+x.get(3)+"_"+"居住"+"_"+x.get(5))).groupByKey()
     var mmap = Map[String,Iterable[String]]()
     vrdd.collect().foreach(mmap+=(_))
