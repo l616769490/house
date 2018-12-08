@@ -35,17 +35,17 @@ class RentAnalysis extends Analysis {
     //将具体的租金转换为租金区间并计数
     val rents: RDD[(String, Int)] = rentsRDD.map(x => {
       if (x < 1000) {
-        ("(0,1000)", 1)
+        ("0-1000", 1)
       } else if (x < 1500) {
-        ("(1000,1500)", 1)
+        ("1000-1500", 1)
       } else if (x < 2000) {
-        ("(1500,2000)", 1)
+        ("1500-2000", 1)
       } else if (x < 2500) {
-        ("(2000,2500)", 1)
+        ("2000-2500", 1)
       } else if (x < 3000) {
-        ("(2500,3000)", 1)
+        ("2500-3000", 1)
       } else {
-        ("(3000,)", 1)
+        ("3000+", 1)
       }
     })
     //    统计各租金区间的总数
@@ -58,9 +58,9 @@ class RentAnalysis extends Analysis {
     val count: Long = rentsRDD.count()
     val sum: Double = rentsRDD.sum()
     val avg: Double = sum / count
-    //    println("max: " + max)
-    ////    println("min: " + min)
-    ////    println("avg: " + avg)
+//        println("max: " + max)
+    //    println("min: " + min)
+    //    println("avg: " + avg)
     ////    value.collect().foreach(println)
     //    将int类型封装为Integer类型，并将RDD变成List
     val buffer = value.map(x => (x._1, {
@@ -105,7 +105,7 @@ class RentAnalysis extends Analysis {
   }
 
   /**
-    *
+    *封装数据，将数据插入MySQL数据库
     * @param rent      分析结果
     * @param tableName HBase表名
     */
@@ -121,7 +121,7 @@ class RentAnalysis extends Analysis {
       val report: Report = new Report()
       report.setName("公平市场租金")
       report.setCreate(System.currentTimeMillis())
-      report.setYear(Integer.valueOf(tableName.split(":")(1)))
+      report.setYear(Integer.valueOf(tableName))
       report.setGroup("基础分析")
       report.setStatus(1)
       report.setUrl("http://166.166.0.10/rent")
@@ -231,7 +231,7 @@ legendId	int		图例id	非空
       private var x: String = null
       private var legend: String = null
       */
-      val lineMaxData = new Data(rent.getMax.toString, lineXaxisId, lineMaxLegendId, "最大值", "最大值")
+      val lineMaxData = new Data("", lineXaxisId, lineMaxLegendId, "最大值", "最大值")
       dao.putInTableData(conn, lineMaxData)
       //      插入最小值
 
@@ -241,7 +241,7 @@ legendId	int		图例id	非空
       lineMinLegend.setDimGroupName("最小值")
       val lineMinLegendId = dao.putInTableLegend(conn, lineMinLegend)
       //    插入数据表
-      val lineMinData = new Data(rent.getMin.toString, lineXaxisId, lineMinLegendId, "最小值", "最小值")
+      val lineMinData = new Data("", lineXaxisId, lineMinLegendId, "最小值", "最小值")
       dao.putInTableData(conn, lineMinData)
       //      插入平均值
 
@@ -251,7 +251,7 @@ legendId	int		图例id	非空
       lineAvgLegend.setDimGroupName("平均值")
       val lineAvgLegendId = dao.putInTableLegend(conn, lineAvgLegend)
       //    插入数据表
-      val lineAvgData = new Data(rent.getMin.toString, lineXaxisId, lineAvgLegendId, "平均值", "平均值")
+      val lineAvgData = new Data("", lineXaxisId, lineAvgLegendId, "平均值", "平均值")
       dao.putInTableData(conn, lineAvgData)
 
 

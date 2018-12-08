@@ -21,4 +21,5 @@ trait HBaseScalaDao {
   def getAllByCreateYear(tableName: String, qualifiername: String): ArrayBuffer[(Int, Int)]
 
 
+
 }

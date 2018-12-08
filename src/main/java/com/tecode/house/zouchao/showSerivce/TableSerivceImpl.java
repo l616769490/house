@@ -17,7 +17,7 @@ public class TableSerivceImpl implements TableSerivce {
     @Override
     public Table getTableForRent(TablePost tablePost) {
         //构建HBAse表名
-        String tableName = "thads:" + tablePost.getYear().toString();
+        String tableName =  tablePost.getYear().toString();
         //获取搜索条件
         String filter = tablePost.getSearches().get(0).getValues().get(0);
         //获取要查询的页码
@@ -72,7 +72,7 @@ public class TableSerivceImpl implements TableSerivce {
 
     @Override
     public Table getTableForRent(Integer page, Integer year) {
-        String tableName = "thads:" + year.toString();
+        String tableName =  year.toString();
 
         Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getAllForRent(tableName, page);
         int i = (int) Rows._1;
@@ -124,7 +124,7 @@ public class TableSerivceImpl implements TableSerivce {
     @Override
     public Table getTableForPrice(TablePost tablePost) {
         //获取表名
-        String tableName = "thads:" + tablePost.getYear().toString();
+        String tableName =  tablePost.getYear().toString();
         //获取页码
         int page = tablePost.getPage();
 
@@ -212,7 +212,7 @@ public class TableSerivceImpl implements TableSerivce {
 
     @Override
     public Table getTableForPrice(Integer page, Integer year) {
-        String tableName = "thads:" + year.toString();
+        String tableName =  year.toString();
 
         Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getAllForValue(tableName, page);
         int i = (int) Rows._1;
@@ -276,7 +276,7 @@ public class TableSerivceImpl implements TableSerivce {
     @Override
     public Table getTableForRoom(TablePost tablePost) {
         //获取表名
-        String tableName = "thads:" + tablePost.getYear().toString();
+        String tableName =  tablePost.getYear().toString();
         //获取页码
         int page = tablePost.getPage();
 

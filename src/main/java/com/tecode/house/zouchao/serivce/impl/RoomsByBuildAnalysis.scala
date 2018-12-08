@@ -99,12 +99,16 @@ class RoomsByBuildAnalysis extends Analysis {
     //    println("总数：  " + d)
     //    将具体的建成年份转换成建成年份区间
     val result: RDD[(String, Int)] = rdd.map(x => {
-      if (x._1 < 2000) {
-        ("(1900,2000)", x._2)
-      } else if (x._1 < 2010) {
-        ("(2000,2010)", x._2)
+      if (x._1 < 1940) {
+        ("1900-1940", x._2)
+      } else if (x._1 < 1960) {
+        ("1940-1960", x._2)
+      } else if (x._1 < 1980) {
+        ("1960-1980", x._2)
+      } else if (x._1 < 2000) {
+        ("1980-2000", x._2)
       } else {
-        ("(2010,2018)", x._2)
+        ("2000+", x._2)
       }
     })
     //统计各建成年份区间的和
@@ -112,10 +116,13 @@ class RoomsByBuildAnalysis extends Analysis {
     value
   }
 
+
   /**
     * 将分析结果导入MySQL数据库
     *
-    * @param tableName HBase数据库表名
+    * @param tableName 表名
+    * @param roomsList 房屋数分析结果
+    * @param bedrmList 卧室数分析结果
     */
   def packageDate(tableName: String, roomsList: List[(String, Int)], bedrmList: List[(String, Int)]) = {
     var conn: Connection = null
@@ -128,7 +135,7 @@ class RoomsByBuildAnalysis extends Analysis {
       val report: Report = new Report()
       report.setName("房间数统计")
       report.setCreate(System.currentTimeMillis())
-      report.setYear(Integer.valueOf(tableName.split(":")(1)))
+      report.setYear(Integer.valueOf(tableName))
       report.setGroup("年份统计")
       report.setStatus(1)
       report.setUrl("http://166.166.0.10/roomsByBuild")
@@ -153,7 +160,7 @@ class RoomsByBuildAnalysis extends Analysis {
       val lineXaxis: Xaxis = new Xaxis()
       lineXaxis.setName("年份区间")
       lineXaxis.setDiagramId(lineDiagramId)
-      lineXaxis.setDimGroupName("建成年份")
+      lineXaxis.setDimGroupName("建筑年份")
 
       val lineXaxisId: Int = dao.putInTableXaxis(conn, lineXaxis)
 
@@ -195,7 +202,7 @@ class RoomsByBuildAnalysis extends Analysis {
 
       //    插入搜索表
       //建成年份区间搜索
-      val yearYearch = new Search("建成年份区间搜索", "建成年份", reportId)
+      val yearYearch = new Search("建成年份区间搜索", "建筑年份", reportId)
       dao.putInTableSearch(conn, yearYearch)
       //     城市规模搜索
       val cityYearch = new Search("城市规模搜索", "城市规模", reportId)

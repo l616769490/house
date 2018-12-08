@@ -23,24 +23,31 @@ public class ShowSerivceImpl implements ShowSerivce {
     private Connection conn;
 
     @Override
-    public List<Data> getData(String year, String reportName) {
+    public List<Data> getData(String year, String reportName, int type) {
         List<Data> byTableDimension = new ArrayList<>();
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
+            //获取报表ID
             int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            //根据报表ID获取图标
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
+            //获取传入图标类型的图标ID
             int diagramId = -1;
             for (Diagram diagram : diagrams) {
                 //System.out.println(diagram);
-                if (diagram.getType() == 2) {
+                //
+                if (diagram.getType() == type) {
                     diagramId = diagram.getId();
                 }
             }
+            //获取X轴对象
             Xaxis x = dao.getByTableXaxis(conn, diagramId);
+            //获取数据集对象
             List<Legend> legends = dao.getByTableLegend(conn, diagramId);
             for (Legend legend : legends) {
                 int id = legend.getId();
+                //根据获取的数据集ID及x轴ID获取Data对象
                 List<Data> datas = dao.getByTableData(conn, id, x.getId());
                 //System.out.println("s:  "+datas.size());
                 byTableDimension.addAll(datas);
@@ -111,8 +118,9 @@ public class ShowSerivceImpl implements ShowSerivce {
             //获取legend维度
             List<String> legendDimension = new ArrayList<>();
             for (Legend legend : legends) {
-                legendDimension  = dao.getByTableDimension(conn, legend.getDimGroupName());
+                legendDimension = dao.getByTableDimension(conn, legend.getDimGroupName());
             }
+
             //获取data表
             List<Data> data = new ArrayList<>();
             for (Legend legend : legends) {
@@ -123,7 +131,7 @@ public class ShowSerivceImpl implements ShowSerivce {
                 set.add(d.getLegend());
             }
             //封装Option对象
-
+            //System.out.println("size:   "+set.size());
 
             // 标题
             Title title = new Title()
@@ -132,7 +140,7 @@ public class ShowSerivceImpl implements ShowSerivce {
 
             // 提示框
             Tooltip tooltip = new Tooltip()
-                    .setTrigger(Trigger.axis)
+                    .setTrigger(Trigger.item)
                     // {a}（系列名称），{b}（类目值），{c}（数值）
                     .setFormatter("{a}-{b} : {c}");
 
@@ -152,37 +160,39 @@ public class ShowSerivceImpl implements ShowSerivce {
             }
 
             // Y轴
-            Axis y = new Axis()
+            Axis y1 = new Axis()
                     .setType(AxisType.value);
-
+            Axis y2 = new Axis()
+                    .setType(AxisType.value);
 
             // 数据
 
-            option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y);
+            option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y1).addyAxis(y2);
+            int count = 0;
             for (String s : set) {
-                System.out.println("s:  "+s);
-
+                Series<Integer> series1 = new Line<Integer>().setName(s);
+                series1.setyAxisIndex(count);
+                count++;
+                //System.out.println("s:  " + s);
                 for (String s1 : xDimension) {
-                    System.out.println("s1: "+s1);
+                    //System.out.println("s1: " + s1);
                     for (Data d : data) {
-                        System.out.println("=="+d);
-                        if (d.getLegend().equals(s) && d.getX().equals(s1)) {
-                            System.out.println(d);
-                            Series<Integer> series1 = new Line<Integer>().setName(s);
-                            series1.addData(Integer.parseInt(d.getValue()));
-                            option.addSeries(series1);
+                        //System.out.println("==" + d);
+                        if (s.equals(d.getLegend()) && s1.equals(d.getX())) {
+                            //System.out.println(d);
+                            int i = (int) Double.parseDouble(d.getValue());
+                            series1.addData(Integer.valueOf(i));
                         }
                     }
                 }
-
+                option.addSeries(series1);
             }
-
-
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            //关闭连接
             MySQLUtil.close(conn);
         }
         return option;
