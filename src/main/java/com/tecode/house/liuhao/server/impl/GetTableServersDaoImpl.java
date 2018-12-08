@@ -112,7 +112,10 @@ public class GetTableServersDaoImpl implements getTableServersDao {
 
         List<String> lz = new ArrayList<>();
         lz.add("建筑结构类型");
+        lz.add("城市等级");
+        lz.add("房屋费用");
         table.setTop(lz);
+
 
         List<Row> row = new ArrayList<>();
         for (ArrayList<String> rowdata : data._2()) {

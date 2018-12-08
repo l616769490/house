@@ -27,15 +27,19 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
     //读取hbase中数据并转换为rdd
     val listrow:RDD[util.ArrayList[String]] = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
       classOf[Result]).map(x=>{
       val list = new util.ArrayList[String]()
 
-      val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes(arr))))
-      list.add(value)
+      val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("STRUCTURETYPE"))),
+        (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3")))),
+          Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))))
+      list.add(value._1)
+      list.add(value._2)
+      list.add(value._3)
 
       list
     })
@@ -53,7 +57,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     }else{
       showdata = javalist.subList((page-1)*10,page*10)
     }
-
+    sc.stop()
     (size,showdata)
 
   }
@@ -117,7 +121,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     }else{
       showdata = javalist.subList((page-1)*10,page*10)
     }
-
+    sc.stop()
     (size,showdata)
 
   }

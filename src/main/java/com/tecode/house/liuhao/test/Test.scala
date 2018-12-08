@@ -17,7 +17,8 @@ import scala.collection.mutable.ArrayBuffer
 
 object Tax1 {
   def main(args: Array[String]): Unit = {
-
+   /*   val impl = new ReadHbaseDaoImpl
+    impl.readData("2013",6,"STRUCTURETYPE")*/
 
    /* val tax = new Tax()
     println("读取税务相关数据...")

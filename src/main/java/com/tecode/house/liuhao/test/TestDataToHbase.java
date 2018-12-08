@@ -1,22 +1,14 @@
 package com.tecode.house.liuhao.test;
 
 import com.tecode.house.liuhao.control.PackageTable;
-import com.tecode.house.liuhao.dao.impl.ReadMysqlDaoImpl;
-import com.tecode.house.liuhao.server.getTableServersDao;
-import com.tecode.house.liuhao.utils.MySQLUtil;
 import com.tecode.table.Row;
 import com.tecode.table.Search;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
-import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.Method.post;
 
 /**
  * Created by Administrator on 2018/11/28.
@@ -47,7 +39,9 @@ public class TestDataToHbase {
         for (Row datum : data) {
             System.out.println("data:"+datum.getRow().toString());
         }*/
-       /* PackageTable table = new PackageTable();
+
+
+        PackageTable table = new PackageTable();
         TablePost post = new TablePost();
         post.setPage(6);
         post.setYear(2013);
@@ -67,7 +61,7 @@ public class TestDataToHbase {
         System.out.println("top:"+cityTable.getTop());
         for (Row datum : data) {
             System.out.println("data:"+datum.getRow().toString());
-        }*/
+        }
 
 
        /* try {
