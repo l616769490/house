@@ -3,6 +3,7 @@ package com.tecode.house.libo.Service
 import java.sql
 import java.sql.{Connection, SQLException}
 
+import com.google.protobuf.SingleFieldBuilder
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.libo.dao.impl.MysqlDaoImpl
 import com.tecode.house.libo.util.DBUtil
@@ -29,7 +30,8 @@ object RoomByCity02 {
     //room. SingleBuildByYear("2013");
     //print("asdcvc".split(";")(0))
     //room.selfRentTable("2013","租赁")
-    room.roomsTable("2013","5","6")
+    //room.roomsTable("2013","5","6")
+    room.singleTable("2013","1999","否")
   }
 
 
@@ -472,8 +474,6 @@ class RoomByCity02 extends Analysis {
     }else{
       value = value
     }
-    //value.foreach(println)
-    //println("=====")
       value.map{x=>{
       (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
     }}.collect().foreach(roomsMap+=(_))
@@ -484,7 +484,52 @@ class RoomByCity02 extends Analysis {
   }
 
 
+  /**
+    *按建成年份：统计独栋比例
+    *   条件：年份区间    是否独栋
+    * CONTROL METRO3 BUILT STRUCTURETYPE
+    */
+  def singleTable(tableName:String,year:String,ifSingleBuild: String): Map[String,String] ={
+    var singleMap = Map[String,String]()
+    var values = hbaseRDD.map{x=>{
+      (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(),"METRO3".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(),"BUILT".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(),"STRUCTURETYPE".getBytes())))
+    }}
+    //年份判断
+    if(year.equals("1900-2000")){
+      values = values.filter(x=>{x._3.toInt>=1900&&x._3.toInt<=2000})
+    }else if(year.equals("2000-2010")){
+      values = values.filter(x=>{x._3.toInt>2000&&x._3.toInt<=2010})
+    }else if(year.equals("1900-2000")){
+      values = values.filter(x=>{x._3.toInt>2010&&x._3.toInt<=2018})
+    }else{
+      values = values
+    }
 
+    //独栋判断
+    if(ifSingleBuild.equals("是")){
+      values = values.filter(_._4.toInt==1)
+    }else if(ifSingleBuild.equals("否")){
+      values = values.filter(_._4.toInt==2)
+    }else{
+      values = values
+    }
+    //拼接成Map
+    val v=values.map(x=>{
+      if(x._4.toInt==1){
+        (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"是")
+      }else{
+        (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"否")
+      }
+    })
+    v.collect().foreach(singleMap+=(_))
+    for (elem <- singleMap) {
+      println(elem)
+    }
+    return singleMap
+  }
 
 
 
