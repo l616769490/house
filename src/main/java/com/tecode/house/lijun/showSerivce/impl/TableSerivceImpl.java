@@ -157,8 +157,8 @@ public class TableSerivceImpl implements TableSerivce {
         l.add("住房价格");
         l.add("户主年龄");
         l.add("房屋费");
-        l.add("城市规模");
         l.add("其他费用");
+        l.add("城市规模");
         l.add("租金");
         l.add("家庭收入");
         table.setTop(l);

@@ -1,6 +1,7 @@
 package com.tecode.house.lijun.test;
 
 import com.tecode.house.lijun.controller.TController;
+import com.tecode.house.lijun.serivce.impl.*;
 import com.tecode.table.Row;
 import com.tecode.table.Search;
 import com.tecode.table.Table;
@@ -21,7 +22,6 @@ public class Test1 {
         fth.readFile("D:\\thads2011.txt","thads:2011");
         fth.readFile("D:\\thads2013n.csv","thads:2013");*/
 
-/*
      //分析房屋费用
         ZSMHCAnalysis Analysis = new ZSMHCAnalysis();
         Analysis.analysis("2013");
@@ -51,7 +51,7 @@ public class Test1 {
 
         //住房租金
         PriceFRMAnalysis priceFRMAnalysis =new PriceFRMAnalysis();
-        priceFRMAnalysis.analysis("2013");*/
+        priceFRMAnalysis.analysis("2013");
 
 
         TController t = new TController();
@@ -62,16 +62,18 @@ public class Test1 {
         Search se1 = new Search();
         se1.setTitle("房屋费用");
         List<String> va = new ArrayList<>();
+        List<Search> ls = new ArrayList<>();
+
         va.add("1900-1940");
         se1.setValues(va);
-        List<Search> ls = new ArrayList<>();
+
         Search se2 = new Search();
         se2.addValue("");
         //ls.add(se1);
         ls.add(se2);
         tp.setSearches(ls);
-        Table table = t.cost(tp);
-        System.out.println("year:   "+table.getYear());
+        Table table = t.price(tp);
+      /*  System.out.println("year:   "+table.getYear());
         System.out.println("this:   "+table.getPage().getThisPage());
         System.out.println("page:   "+table.getPage().getData().toString());
         for (Search search : table.getSearch()) {
@@ -81,9 +83,29 @@ public class Test1 {
 
         for (Row datum : table.getData()) {
             System.out.println("data:   "+datum.getRow().toString());
+        }*/
+
+
+        for (Row row : table.getData()) {
+            for (String s : row.getRow()) {
+                System.out.print(s+"\t");
+            }
+            System.out.println();
         }
 
+        System.out.println(table.getPage().getData());
+        System.out.println(table.getPage().getThisPage());
 
+        for (Search search : table.getSearch()) {
+            System.out.println( search.getTitle());
+            System.out.println(search.getValues());
+        }
+
+        for (String s : table.getTop()) {
+            System.out.println(s);
+        }
+
+        System.out.println( table.getYear());
 
 
 

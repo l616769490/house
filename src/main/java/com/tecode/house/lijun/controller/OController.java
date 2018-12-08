@@ -22,11 +22,7 @@ import java.util.List;
 
 @Controller
 public class OController {
-    /**
-     * 饼图测试
-     *
-     * @return 饼图
-     */
+
     @ResponseBody
     @RequestMapping(value = "/cost", method = RequestMethod.POST)
     public Option testPie() throws SQLException, ClassNotFoundException {
