@@ -45,7 +45,7 @@ class Tax extends Analysis{
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
 
     //读取hbase中数据并转换为rdd
 
@@ -54,10 +54,10 @@ class Tax extends Analysis{
 
       classOf[Result]).map(x =>
 
-      (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))).toInt,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))).toDouble,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))).toDouble,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
+      (Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("METRO3"))).toInt,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("ZSMHC"))).toDouble,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("UTILITY"))).toDouble,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("OTHERCOST"))
         ).toDouble))
     //    hbaseRDD.collect().foreach(println)
     hbaseRDD

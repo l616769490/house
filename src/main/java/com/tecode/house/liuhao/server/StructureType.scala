@@ -55,7 +55,7 @@ class StructureType extends Analysis {
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     //conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
-    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
     //读取hbase中数据并转换为rdd
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],

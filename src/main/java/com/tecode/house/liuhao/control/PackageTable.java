@@ -22,6 +22,6 @@ public class PackageTable {
     @ResponseBody
     @RequestMapping(value = "/structureType_table", method = RequestMethod.POST)
     public Table getStructuceTypeTable(TablePost tablePost){
-        return tableserver.getCityTax(tablePost);
+        return tableserver.getStructureType(tablePost);
     }
 }

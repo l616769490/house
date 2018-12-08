@@ -2,8 +2,10 @@ package com.tecode.house.liuhao.test
 
 import java.util
 
+import com.tecode.house.liuhao.control.PackageTable
 import com.tecode.house.liuhao.dao.impl.ReadHbaseDaoImpl
 import com.tecode.house.liuhao.server.Tax
+import com.tecode.table.{Search, TablePost}
 import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable.ArrayBuffer
@@ -15,12 +17,9 @@ import scala.collection.mutable.ArrayBuffer
 
 object Tax1 {
   def main(args: Array[String]): Unit = {
-//    val impl = new ReadHbaseDaoImpl()
-//    val data: (Integer, util.List[util.ArrayList[String]]) = impl.readCityTaxData("2013",10,"一线城市")
-//    println(data._1)
 
-/*
-    val tax = new Tax()
+
+   /* val tax = new Tax()
     println("读取税务相关数据...")
     val read: RDD[(Int, Double, Double, Double)] = tax.readTax("2013")
       read.collect().foreach(println)

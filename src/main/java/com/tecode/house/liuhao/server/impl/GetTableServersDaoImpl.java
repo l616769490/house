@@ -36,7 +36,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         //封装页面列表
         int pa = i/10 +1;
         List<Integer> list = new ArrayList<>();
-        for (int j = 0; j < pa; j++) {
+        for (int j = 1; j <= pa; j++) {
             list.add(j);
         }
         Table table = new Table();
@@ -59,14 +59,12 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         s.setValues(l);
 
         List<String> lz = new ArrayList<>();
-        lz.add("公平市场租金");
         lz.add("城市规模");
-        lz.add("人口普查区域");
-        lz.add("建筑类型");
-        lz.add("房间数");
-        lz.add("卧室数");
+        lz.add("房屋费用");
+        lz.add("水电费用");
+        lz.add("其他费用");
         table.setTop(lz);
-
+        table.setPage(p);
         List<Row> row = new ArrayList<>();
         for (ArrayList<String> rowdata : data._2()) {
             Row r = new Row();
@@ -94,7 +92,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         //封装页面列表
         int pa = i/10 +1;
         List<Integer> list = new ArrayList<>();
-        for (int j = 0; j < pa; j++) {
+        for (int j = 1; j <= pa; j++) {
             list.add(j);
         }
         Table table = new Table();
@@ -104,7 +102,6 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         Page p = new Page();
         p.setThisPage(tablePost.getPage());
         p.setData(list);
-
         //构建search对象
         Search s = new Search();
         s.setTitle("美国建筑结构类型统计");
@@ -114,12 +111,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         s.setValues(l);
 
         List<String> lz = new ArrayList<>();
-        lz.add("公平市场租金");
-        lz.add("城市规模");
-        lz.add("人口普查区域");
-        lz.add("建筑类型");
-        lz.add("房间数");
-        lz.add("卧室数");
+        lz.add("建筑结构类型");
         table.setTop(lz);
 
         List<Row> row = new ArrayList<>();
@@ -129,6 +121,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
             row.add(r);
         }
         table.setData(row);
+        table.setPage(p);
         return table;
 
     }
