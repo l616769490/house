@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 基础-家庭人数 -->
+<tables>
+    <!-- 数据库中需要读哪些字段 -->
+<titles>
+    <title field="CONTROL" alias="编号"/>
+    <title field="METRO3" alias="城市等级"/>
+    <title field="ZINC2" alias="家庭收入"/>
+    <title field="ROOMS" alias="房间数"/>
+    <title field="REGION" alias="区域"/>
+    <title field="NUNITS" alias="是否独栋"/>
+</titles>
+    <search>
+        <!-- 匹配类型 -->
+        <!-- range : 范围匹配-->
+        <type>range</type>
+        <!-- 对哪个字段进行匹配 -->
+        <field>ZSMHC</field>
+        <!-- 数据分组字段 -->
+        <group>REGION</group>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
+    </search>
+        </tables>

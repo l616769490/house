@@ -123,6 +123,7 @@ public class ReportImpl implements MysqlDao<Report> {
                 }
                 if (stat != null) {
                     stat.close();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

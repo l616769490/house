@@ -1,6 +1,6 @@
 package com.tecode.house.jianchenfei.dao.impl;
 
-;
+
 import com.tecode.house.jianchenfei.bean.XAxis;
 import com.tecode.house.jianchenfei.dao.MysqlDao;
 import com.tecode.house.jianchenfei.utils.ConnSource;

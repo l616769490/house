@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 基础-家庭人数 -->
+<tables>
+    <!-- 数据库中需要读哪些字段 -->
+<titles>
+    <title field="CONTROL" alias="编号"/>
+    <title field="METRO3" alias="城市等级"/>
+    <title field="ZINC2" alias="家庭收入"/>
+    <title field="BUILT" alias="建成年份"/>
+    <title field="VALUE" alias="市场价"/>
+    <title field="ZSMHC" alias="房产税"/>
+</titles>
+        </tables>

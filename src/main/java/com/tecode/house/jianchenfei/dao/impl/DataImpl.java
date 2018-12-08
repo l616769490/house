@@ -113,9 +113,9 @@ public class DataImpl implements MysqlDao<Data> {
             conn = ConnSource.getConnection();
             stat = conn.createStatement();
             rs = stat.executeQuery(sql.toString());
-            Data emp = null;
-            while ((emp = getData(rs)) != null) {
-                list.add(emp);
+            Data data = null;
+            while ((data = getData(rs)) != null) {
+                list.add(data);
             }
         } catch (SQLException e) {
             e.printStackTrace();

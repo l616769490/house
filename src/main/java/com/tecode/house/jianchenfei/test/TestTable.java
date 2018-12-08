@@ -10,7 +10,7 @@ import com.tecode.table.TablePost;
  */
 public class TestTable {
 
-    private static final String path = TestTable.class.getResource("/basics-per.xml").getPath();
+    private static final String path = TestTable.class.getResource("/single_region.xml").getPath();
 
     public static void main(String[] args) {
         test1();
@@ -24,7 +24,7 @@ public class TestTable {
         tp.setPage(2);
         tp.setYear(2013);
 
-        Table table = new HBaseServer(path, "家庭人数统计", tp).select();
+        Table table = new HBaseServer(path, "独栋比例区域统计", tp).select();
         for (String top : table.getTop()) {
             System.out.print(top + "\t\t");
         }

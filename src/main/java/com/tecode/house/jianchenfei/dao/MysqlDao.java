@@ -1,6 +1,6 @@
 package com.tecode.house.jianchenfei.dao;
 
-import com.tecode.house.jianchenfei.jdbc.bean.Data;
+
 
 import java.util.List;
 

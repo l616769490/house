@@ -2,13 +2,10 @@ package com.tecode.house.jianchenfei.service
 
 import java.io.File
 
-import com.sun.jersey.server.impl.container.filter.FilterFactory
-import com.tecode.house.jianchenfei.bean.FilterBean
-import com.tecode.house.lijin.utils.ConfigUtil
+
 import com.tecode.table._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase.client.{Result, Scan}
-import org.apache.hadoop.hbase.filter.PageFilter
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.{TableInputFormat, TableMapReduceUtil}
 import org.apache.hadoop.hbase.util.Bytes
@@ -174,7 +171,7 @@ class HBaseServer(path: String, reportName: String, tablePost: TablePost) {
         if (field == null) {
           throw new NullPointerException("field 字段不能为空！")
         }
-        val alias = title.attribute("aliaws").getText
+        val alias = title.attribute("alias").getText
         if (alias == null) {
           array += ((field, field))
         } else {
