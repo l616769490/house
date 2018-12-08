@@ -27,7 +27,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
     //读取hbase中数据并转换为rdd
     val listrow:RDD[util.ArrayList[String]] = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
@@ -66,7 +66,8 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     * @return
     */
   override def readCityTaxData(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])= {
-    var citys = if(city.equals("一线城市")){
+    var citys =
+      if(city.equals("一线城市")){
       1
     }else if(city.equals("二线城市")){
       2
@@ -81,20 +82,20 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
     //读取hbase中数据并转换为rdd
 
     val listrow = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
       classOf[Result]).map(x =>{
       val list = new util.ArrayList[String]()
-      val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("METRO3"))),
+      val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
         ))
       if(value._1.equals(citys)){
-        print("======================")
+
         list.add(value._1)
         list.add(value._2)
         list.add(value._3)
@@ -103,7 +104,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
 
       list
     })
-
+    listrow.foreach(println)
     //将rdd转换成scala的list
     val scalalist: List[util.ArrayList[String]] = listrow.collect().toList
     //将scala的list转换成Javalist

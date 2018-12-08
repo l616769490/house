@@ -45,8 +45,8 @@ class Tax extends Analysis{
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
     conf.set(TableInputFormat.SCAN_COLUMNS, "info")
+
     //读取hbase中数据并转换为rdd
 
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
