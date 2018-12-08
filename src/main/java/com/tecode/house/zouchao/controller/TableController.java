@@ -7,10 +7,7 @@ import com.tecode.table.Table;
 import com.tecode.table.TablePost;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class TableController {
@@ -20,19 +17,20 @@ public class TableController {
 
     @ResponseBody
     @RequestMapping(value = "/rent_table", method = RequestMethod.POST)
-    public Table rentTable(TablePost tablePost) {
+    public Table rentTable(@RequestBody  TablePost tablePost) {
+
         return tableSerivce.getTableForRent(tablePost);
     }
 
     @ResponseBody
     @RequestMapping(value = "/priceByBuild_table", method = RequestMethod.POST)
-    public Table PriceByBuild(TablePost tablePost) {
+    public Table PriceByBuild(@RequestBody TablePost tablePost) {
         return tableSerivce.getTableForPrice(tablePost);
     }
 
     @ResponseBody
     @RequestMapping(value = "/roomByBuild_table", method = RequestMethod.POST)
-    public Table RoomByBuild(TablePost tablePost) {
+    public Table RoomByBuild(@RequestBody TablePost tablePost) {
         return tableSerivce.getTableForRoom(tablePost);
     }
 
