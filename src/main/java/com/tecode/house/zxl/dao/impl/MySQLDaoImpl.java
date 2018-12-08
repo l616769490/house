@@ -9,14 +9,14 @@ import scala.collection.Iterator;
 
 import java.sql.*;
 import java.util.HashMap;
-
+import java.util.Map;
 
 
 @Repository
 public class MySQLDaoImpl implements MySQLDao {
 
     @Override
-    public boolean into(String name,String reportType,String url,String x,String y,String tpye,Iterator<Tuple2<String, Object>> it,String scrip) {
+    public boolean into(String name,String reportType,String url,String x,String y,String tpye,Iterator<Tuple2<String, Object>> it,String scrip,String year) {
         Connection conn=null;
         ResultSet rs=null;
         PreparedStatement ps=null;
@@ -32,7 +32,7 @@ public class MySQLDaoImpl implements MySQLDao {
             conn.setAutoCommit(false);
 
             //写入report表
-            reportid=toReport(conn,ps,rs,name,reportType,url);
+            reportid=toReport(conn,ps,rs,name,reportType,url,year);
 
             //写入图表表
             digId=toDig(conn,ps,rs,reportid,tpye,scrip);
@@ -78,22 +78,97 @@ public class MySQLDaoImpl implements MySQLDao {
 
     @Override
     public java.util.Map<String, Integer> get() {
-        java.util.Map<String,Integer> map=new HashMap<>();
-        Connection conn=null;
-        PreparedStatement ps=null;
-        ResultSet rs=null;
-        try {
-            conn=DBUtil.getConn();
-            String sql="select d1.dimName,d.value from `data` d right join dimension d1 on d.legendId=d1.id";
-            ps= conn.prepareStatement(sql);
-            rs= ps.executeQuery();
+        Map<String,Integer> map=new HashMap<>();
+        Connection conn;
+        String driver="com.mysql.jdbc.Driver";
+        String url="jdbc:mysql://166.166.1.10/house";
+        String user="root";
+        String password="root";
+
+        try{
+            Class.forName(driver);
+            conn= DriverManager.getConnection(url,user,password);
+            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                map.put(rs.getString("dimName"),Integer.valueOf(rs.getString("value")));
+                String s=rs.getString("x");
+                if("市场价".equals(s)) {
+                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+                }
             }
-        } catch (SQLException e) {
+
+            conn.close();
+
+        }catch (Exception e){
             e.printStackTrace();
-        }finally {
-            DBUtil.colse(conn);
+
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> getIncome() {
+        Map<String,Integer> map=new HashMap<>();
+        Connection conn;
+        String driver="com.mysql.jdbc.Driver";
+        String url="jdbc:mysql://166.166.1.10/house";
+        String user="root";
+        String password="root";
+
+        try{
+            Class.forName(driver);
+            conn= DriverManager.getConnection(url,user,password);
+            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String s=rs.getString("x");
+                if("年收入".equals(s)) {
+                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+
+                }
+            }
+
+            conn.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> getPerson() {
+        Map<String,Integer> map=new HashMap<>();
+        Connection conn;
+        String driver="com.mysql.jdbc.Driver";
+        String url="jdbc:mysql://166.166.1.10/house";
+        String user="root";
+        String password="root";
+
+        try{
+            Class.forName(driver);
+            conn= DriverManager.getConnection(url,user,password);
+            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                String s=rs.getString("x");
+                if("家庭人数".equals(s)) {
+                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+
+                }
+            }
+
+            conn.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+
         }
 
         return map;
@@ -144,7 +219,7 @@ public class MySQLDaoImpl implements MySQLDao {
 
     }
 
-    private int toReport(Connection conn,PreparedStatement ps,ResultSet rs,String name,String reportType,String url){
+    private int toReport(Connection conn,PreparedStatement ps,ResultSet rs,String name,String reportType,String url,String year){
         String sql="insert into report value(?,?,?,?,?,?,?)";
             int reportid=0;
         try {
@@ -152,7 +227,7 @@ public class MySQLDaoImpl implements MySQLDao {
             ps.setInt(1,0);
             ps.setString(2,name);
             ps.setLong(3,System.currentTimeMillis());
-            ps.setInt(4,2013);
+            ps.setInt(4,Integer.valueOf(year));
             ps.setString(5,reportType);
             ps.setInt(6,0);
             ps.setString(7,url);

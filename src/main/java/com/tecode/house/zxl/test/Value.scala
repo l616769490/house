@@ -1,4 +1,4 @@
-package com.tecode.house.zxl.server.impl
+package com.tecode.house.zxl.test
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
@@ -28,7 +28,6 @@ class Value {
 
     val s2=s.map(i=>{
 
-
       if(i<500000){
         ("0-50万",1)
       }else if(i<1000000){
@@ -50,20 +49,13 @@ class Value {
     val sum=s.sum()
     val count=s.count()
     val avg=sum/count
-    println("最高房价"+max)
-    println("最低房价"+min)
-    println("总价"+sum)
-    println("计数"+count)
-    println("平均"+avg)
 
     s2.collect().foreach(x=>map+=((x._1,x._2)))
 
     map+=(("max",max))
     map+=(("min",min))
     map+=(("avg",avg.toInt))
-
     sc.stop()
-    println("获取数据完毕")
     return map
 
   }

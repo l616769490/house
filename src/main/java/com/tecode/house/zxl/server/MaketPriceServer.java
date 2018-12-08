@@ -7,11 +7,23 @@ import java.util.Map;
 
 public interface MaketPriceServer {
 
-    void getValue();
+    boolean intoMysql(String year);
 
-    Table getTable();
+    Table getValueTable(int year);
 
-    Table getTable(TablePost tablePost);
+    Table getValueTable(TablePost tablePost);
 
     Map<String,Integer> getMaket();
+
+    Table getPersonTable(int year);
+
+    Table getPersonTable(TablePost tablePost);
+
+    Table getIncomeTable(int year);
+
+    Table getIncomeTable(TablePost tablePost);
+
+    Map<String, Integer> getincome();
+
+    Map<String, Integer> getPerson();
 }

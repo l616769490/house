@@ -1,6 +1,6 @@
-package com.tecode.house.zxl.init;
+package com.tecode.house.zxl.test;
 
-import com.tecode.house.zxl.server.impl.GetPerson;
+import com.tecode.house.zxl.test.GetPerson;
 import com.tecode.table.*;
 import scala.Tuple2;
 import scala.Tuple3;

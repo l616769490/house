@@ -1,5 +1,4 @@
-package com.tecode.house.zxl.server.impl
-
+package com.tecode.house.zxl.test
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result

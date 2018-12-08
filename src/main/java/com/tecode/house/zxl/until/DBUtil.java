@@ -17,7 +17,7 @@ public class DBUtil {
 
     static {
         try {
-            pro.load(ClassLoader.getSystemResourceAsStream("db.properties"));
+            pro.load(DBUtil.class.getClassLoader().getSystemResourceAsStream("db.properties"));
             user=pro.getProperty("jdbc.user");
             url=pro.getProperty("jdbc.url");
             password=pro.getProperty("jdbc.password");
@@ -44,4 +44,8 @@ public class DBUtil {
         }
     }
 
+
+    public static void main(String[] args) throws SQLException {
+        System.out.println(getConn());
+    }
 }

@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.*;
 
 
@@ -26,7 +22,7 @@ public class MyGraf {
     MaketPriceServer mps=new ServerImpl();
 
     /**
-     * 柱状图测试
+     * 年收入
      *
      * @return 柱状图
      */
@@ -48,7 +44,9 @@ public class MyGraf {
 
 //        Map<String, Integer> income = sort(getIncome());
 
-        Map<String, Integer> income = getIncome();
+        //获取年收入
+        Map<String, Integer> income = mps.getincome();
+//        Map<String, Integer> income = getIncome();
 
         List<Integer> list1=new ArrayList<>();
         List<Integer> list2=new ArrayList<>();
@@ -86,10 +84,6 @@ public class MyGraf {
         Series<Integer> series3 = new Bar<Integer>();
         Series<Integer> series4 = new Bar<Integer>();
 
-
-
-
-
         Set<Map.Entry<String, Integer>> entries = income.entrySet();
         for (Map.Entry<String, Integer> entry : entries) {
             String key=entry.getKey();
@@ -97,9 +91,7 @@ public class MyGraf {
             String city=key.split("_")[0];
             int value=entry.getValue();
             if("10万以下".equals(cityIn)){
-
            set(list1,city,value);
-
             }else if("10万-30万".equals(cityIn)){
 
                 set(list2,city,value);
@@ -111,12 +103,7 @@ public class MyGraf {
             }else if("50万以上".equals(cityIn)){
 
                 set(list4,city,value);
-
             }
-
-
-
-
 
         }
 
@@ -141,14 +128,12 @@ public class MyGraf {
         option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y)
                 .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4);
 
-              /*  .addSeries(series5).addSeries(series6).addSeries(series7).addSeries(series8)
-                .addSeries(series9).addSeries(series10).addSeries(series11);*/
 
         return option;
     }
 
     /**
-     * 饼图测试
+     * 市场价
      *
      * @return 饼图
      */
@@ -167,8 +152,9 @@ public class MyGraf {
                 // {a}（系列名称），{b}（类目值），{c}（数值）
                 .setFormatter("{a}-{b} : {c}");
 
-        Map<String, Integer> map = get();
-//        Map<String, Integer> map = mps.getMaket();
+//        Map<String, Integer> map = get();
+        //获取数据
+        Map<String, Integer> map = mps.getMaket();
 
         // 图例
         Legend legend = new Legend()
@@ -180,7 +166,7 @@ public class MyGraf {
                 .addData(new Pie.PieData<Integer>("最高房价", map.get("max")))
                 .addData(new Pie.PieData<Integer>("最低房价", map.get("min")))
                 .addData(new Pie.PieData<Integer>("平均房价", map.get("avg")));
-        ((Pie)series1).setCenter("30%", "30%").setRadius("20%");
+        ((Pie)series1).setCenter("30%", "50%").setRadius("20%");
 
 
 
@@ -190,7 +176,7 @@ public class MyGraf {
                 .addData(new Pie.PieData<Integer>("50万-100万", map.get("50万-100万")))
                 .addData(new Pie.PieData<Integer>("100万-150万", map.get("100万-150万")))
                 .addData(new Pie.PieData<Integer>("250万以上", map.get("250万以上")));
-        ((Pie)series3).setCenter("70%", "30%").setRadius("20%");
+        ((Pie)series3).setCenter("70%", "50%").setRadius("20%");
 
 
 
@@ -202,7 +188,7 @@ public class MyGraf {
 
 
     /**
-     * 饼图测试
+     * 家庭人数
      *
      * @return 饼图
      */
@@ -221,8 +207,8 @@ public class MyGraf {
                 // {a}（系列名称），{b}（类目值），{c}（数值）
                 .setFormatter("{a}-{b} : {c}");
 
-        Map<String, Integer> map = get();
-        Map<String, Integer> person = getPerson();
+        //获取家庭人数
+        Map<String, Integer> person = mps.getPerson();
 
 
         // 图例
@@ -239,7 +225,7 @@ public class MyGraf {
                 .addData(new Pie.PieData<Integer>("5人", person.get("5人")))
                 .addData(new Pie.PieData<Integer>("6人", person.get("6人")))
                 .addData(new Pie.PieData<Integer>("6人以上", person.get("6人以上")));
-        ((Pie)series2).setCenter("30%", "60%").setRadius("20%");
+        ((Pie)series2).setCenter("30%", "50%").setRadius("20%");
 
 
 
@@ -248,117 +234,12 @@ public class MyGraf {
                 .addData(new Pie.PieData<Integer>("最大人数", person.get("max")))
                 .addData(new Pie.PieData<Integer>("最小人数", person.get("min")))
                 .addData(new Pie.PieData<Integer>("平均人数", person.get("avg")));
-        ((Pie)series4).setCenter("70%", "60%").setRadius("20%");
+        ((Pie)series4).setCenter("70%", "50%").setRadius("20%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series2).addSeries(series4);
         return option;
     }
-
-
-    private Map<String,Integer> get(){
-        Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
-        String user="root";
-        String password="root";
-
-        try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                String s=rs.getString("x");
-                if("市场价".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
-
-                }
-            }
-
-            conn.close();
-
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
-
-
-
-        return map;
-    }
-
-    private Map<String,Integer> getPerson(){
-        Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
-        String user="root";
-        String password="root";
-
-        try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                String s=rs.getString("x");
-                if("家庭人数".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
-
-                }
-            }
-
-            conn.close();
-
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
-
-
-
-        return map;
-    }
-
-    private Map<String,Integer> getIncome(){
-        Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
-        String user="root";
-        String password="root";
-
-        try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                String s=rs.getString("x");
-                if("年收入".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
-
-                }
-            }
-
-            conn.close();
-
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
-        return map;
-    }
-
-
 
     private void set(List<Integer> list,String city,int value){
         if("1".equals(city)){
