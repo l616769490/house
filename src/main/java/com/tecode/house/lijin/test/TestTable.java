@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class TestTable {
-
+/*
     @Autowired
     TestService testService;
 
-    /**
+    *//**
      * @return 请求结果
-     */
+     *//*
     @ResponseBody
     @RequestMapping(value = "/test-table", method = RequestMethod.POST)
     public Table testTable(@RequestParam(required = false) TablePost tablePost) {
@@ -28,5 +28,5 @@ public class TestTable {
             return testService.getTable();
         }
         return testService.getTable(tablePost);
-    }
+    }*/
 }

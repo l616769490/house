@@ -1,24 +1,32 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.zhangzhou.controller;
 
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
 import com.tecode.echarts.enums.AxisType;
 import com.tecode.echarts.enums.Trigger;
-import com.tecode.house.zhangzhou.mysqlDao.MysqlDao;
+import com.tecode.house.lijin.test.TestOption;
 import com.tecode.house.zhangzhou.mysqlDao.impl.MysqlDaoImpl;
+import com.tecode.table.Table;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+import java.util.Map;
+
+/**
+ * 1.在接收html请求的java文件的类上添加@Controller
+ */
 @Controller
-public class TestOption {
-/*
-    *//**
+public class OptionController {
+
+    /**
      * 折线图测试
      *
      * @return 折线图
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "/test-line", method = RequestMethod.POST)
     public Option testLine() {
@@ -66,11 +74,11 @@ public class TestOption {
     }
 
 
-    *//**
+    /**
      * 独栋建筑比例柱状图
      *
      * @return 柱状图
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "/test-bar", method = RequestMethod.POST)
     public Option testBar(String year) {
@@ -137,11 +145,11 @@ public class TestOption {
     }
 
 
-    *//**
+    /**
      * 房产税柱状图
      *
      * @return 柱状图
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "/test-houseDuty", method = RequestMethod.POST)
     public Option testHouseDuty(String year) {
@@ -216,11 +224,11 @@ public class TestOption {
                 .addSeries(series1).addSeries(series2).addSeries(series3);
         return option;
     }
-    *//**
+    /**
      * 空置状态饼图
      *
      * @return 饼图
-     *//*
+     */
     @ResponseBody
     @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
     public Option testPie() {
@@ -258,5 +266,5 @@ public class TestOption {
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series1);
         return option;
-    }*/
+    }
 }
