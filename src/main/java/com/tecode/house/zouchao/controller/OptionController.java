@@ -28,7 +28,7 @@ public class OptionController {
         Option option = new Option();
         Title title = new Title()
                 .setText("公平市场租金分布")
-                .setSubtext("统计年份：" + 2013);
+                .setSubtext("统计年份：" + year);
         // 提示框
         Tooltip tooltip = new Tooltip()
                 .setTrigger(Trigger.item)
@@ -42,7 +42,7 @@ public class OptionController {
         // 数据
         Series series1 = new Pie().setName("租金区间");
 
-        List<Data> legendData = showSerivce.getData("2013", "公平市场租金", 2,"基础分析");
+        List<Data> legendData = showSerivce.getData(year, "公平市场租金", 2,"基础分析");
         //System.out.println(legendData.size());
         //遍历data对象，设置图例及数据对象的数据
         for (Data data : legendData) {
@@ -57,7 +57,7 @@ public class OptionController {
         ////折线图
         //
         //
-        List<Data> lineData = showSerivce.getData("2013", "公平市场租金", 1,"基础分析");
+        List<Data> lineData = showSerivce.getData(year, "公平市场租金", 1,"基础分析");
         String Max = null;
         String Min = null;
         String Avg = null;
@@ -107,14 +107,14 @@ public class OptionController {
     @ResponseBody
     @RequestMapping(value = "/priceByBuild", method = RequestMethod.POST)
     public Option priceByBuild(String year) {
-        Option option = showSerivce.select("2013", "价格统计","年份统计");
+        Option option = showSerivce.select(year, "价格统计","年份统计");
         return option;
     }
 
     @ResponseBody
     @RequestMapping(value = "/roomByBuild", method = RequestMethod.POST)
     public Option roomByBuild(String year) {
-        Option option = showSerivce.select("2013", "房间数统计","年份统计");
+        Option option = showSerivce.select(year, "房间数统计","年份统计");
         return option;
     }
 
