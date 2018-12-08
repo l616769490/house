@@ -4,9 +4,12 @@ import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
 import com.tecode.echarts.enums.AxisType;
 import com.tecode.echarts.enums.Trigger;
+import com.tecode.house.d01.service.Analysis;
 import com.tecode.house.liuhao.bean.City;
 import com.tecode.house.liuhao.dao.ReadMyqslDao;
 import com.tecode.house.liuhao.dao.impl.ReadMysqlDaoImpl;
+import com.tecode.house.liuhao.server.StructureType;
+import com.tecode.house.liuhao.server.Tax;
 import com.tecode.house.liuhao.utils.MySQLUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -140,7 +143,7 @@ public class PackageOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "CitySize_Tax_Avg_Bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/CitySize_Tax_Avg_Bar", method = RequestMethod.POST)
     public Option CityTaxBar(String year) {
         Option option = new Option();
         // 标题
@@ -201,9 +204,15 @@ public class PackageOption {
      *
      * @return 饼图
      */
+    /**
+     *
+     * @param tablename hbase的表名
+      * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "CitySize_Tax_Avg_Pie", method = RequestMethod.POST)
-    public Option testPies() {
+    @RequestMapping(value = "/CitySize_Tax_Avg_Pie", method = RequestMethod.POST)
+    public Option testPies(String year) {
+
         Option option = new Option();
         // 标题
         Title title = new Title()

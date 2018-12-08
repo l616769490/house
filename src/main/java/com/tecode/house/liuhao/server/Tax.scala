@@ -25,7 +25,7 @@ class Tax extends Analysis{
   override def analysis(tableName: String): Boolean = {
      val tax = new Tax()
     println("读取税务相关数据...")
-    val read: RDD[(Int, Double, Double, Double)] = tax.readTax("2013")
+    val read: RDD[(Int, Double, Double, Double)] = tax.readTax(tableName);
     //    read.collect().foreach(println)
     println("读取数据完成，开始分析税务相关的数据...")
     val analy: ArrayBuffer[(String, Int)] = tax.analyTax(read)
@@ -46,6 +46,7 @@ class Tax extends Analysis{
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
     //读取hbase中数据并转换为rdd
 
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
@@ -53,10 +54,10 @@ class Tax extends Analysis{
 
       classOf[Result]).map(x =>
 
-      (Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("METRO3"))).toInt,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("ZSMHC"))).toDouble,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("UTILITY"))).toDouble,
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("OTHERCOST"))
+      (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))).toInt,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))).toDouble,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))).toDouble,
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
         ).toDouble))
     //    hbaseRDD.collect().foreach(println)
     hbaseRDD

@@ -18,19 +18,6 @@ import org.apache.spark.{SparkConf, SparkContext}
   * 分析建筑结构类型
   *
   */
-/*object StructureType {
-  def main(args: Array[String]): Unit = {
-    println("读取数据中...")
-    val stru = new StructureType()
-    val read = stru.read("2013", "STRUCTURETYPE")
-    println("数据读取完成，开始分析...")
-    val analy = stru.analyStructureType(read)
-
-    println("分析完成，开始导入...")
-    stru.packageBean("2013", analy)
-    println("导入完成")
-  }
-}*/
 
 
 class StructureType extends Analysis {
@@ -45,7 +32,7 @@ class StructureType extends Analysis {
 
     println("开始读取建筑结构类型数据...")
     val stru = new StructureType()
-    val read2 = stru.read("2013", "STRUCTURETYPE")
+    val read2 = stru.read(tableName, "STRUCTURETYPE")
     println("数据读取完成，开始分析...")
     val analy2 = stru.analyStructureType(read2)
 
@@ -67,7 +54,8 @@ class StructureType extends Analysis {
     val sc = new SparkContext(con)
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
-    conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    //conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
     //读取hbase中数据并转换为rdd
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
@@ -79,7 +67,7 @@ class StructureType extends Analysis {
       for (elem <- rawCells) {
 
         if (Bytes.toString(CellUtil.cloneQualifier(elem)).equals(qualifiername)) {
-          println(Bytes.toString(CellUtil.cloneValue(elem)).toInt)
+          //println(Bytes.toString(CellUtil.cloneValue(elem)).toInt)
           value = Bytes.toString(CellUtil.cloneValue(elem)).toInt
         }
       }
