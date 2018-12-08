@@ -447,6 +447,7 @@ class SparkService{
     * @return 返回一个分组后的Map对象
     */
   def selectHouseDutyTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
+
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
