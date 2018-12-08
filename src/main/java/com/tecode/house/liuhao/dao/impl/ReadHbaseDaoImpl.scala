@@ -116,6 +116,8 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     var showdata:util.List[util.ArrayList[String]] = null
     val size = javalist.size()
 
+
+
     if(page*10>size){
       showdata =javalist.subList((page-1)*10,size)
     }else{
