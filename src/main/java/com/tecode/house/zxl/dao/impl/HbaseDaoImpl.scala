@@ -1,5 +1,7 @@
 package com.tecode.house.zxl.dao.impl
 
+import java.util
+
 import com.tecode.house.zxl.dao.HbaseDao
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
@@ -7,6 +9,8 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.{SparkConf, SparkContext}
+
+import scala.collection.JavaConverters._
 
 class HbaseDaoImpl extends HbaseDao {
 
@@ -16,10 +20,10 @@ class HbaseDaoImpl extends HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  override def getIncome(year: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getIncome(): Map[String, Iterable[(String, Int, Int)]] = {
 
     val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
@@ -97,7 +101,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().foreach(map+=((_)))
 
     sc.stop()
 
@@ -145,7 +149,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += ((_)))
 
     sc.stop()
 
@@ -193,7 +197,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += ((_)))
 
     sc.stop()
 
@@ -207,9 +211,9 @@ class HbaseDaoImpl extends HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  override def getPerson(year: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getPerson(): Map[String, Iterable[(String, Int, Int)]] = {
     val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
@@ -241,7 +245,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += ((_)))
 
     sc.stop()
 
@@ -289,7 +293,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().foreach(map += ((_)))
+    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
 
     sc.stop()
 
@@ -337,7 +341,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += ((_)))
 
     sc.stop()
     return map
@@ -386,7 +390,7 @@ class HbaseDaoImpl extends HbaseDao {
       }
 
     }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().foreach(map += ((_)))
+    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
 
     sc.stop()
     return map
@@ -398,9 +402,9 @@ class HbaseDaoImpl extends HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  override def getValue(year: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getValue(): Map[String, Iterable[(String, Int, Int)]] = {
     val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
@@ -430,7 +434,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("250万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += ((_)))
 
     sc.stop()
 
@@ -477,6 +481,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("250万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
+
     s2.filter(_._1.equals(value)).collect().foreach(map += ((_)))
 
     sc.stop()

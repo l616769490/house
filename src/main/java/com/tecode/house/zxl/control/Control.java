@@ -6,10 +6,7 @@ import com.tecode.house.zxl.server.MaketPriceServer;
 import com.tecode.house.zxl.server.impl.ServerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +53,9 @@ public class Control {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl-valuetable", method = RequestMethod.POST)
-    public Table valueTable(@RequestParam(required = false) TablePost tablePost, int year) {
+    public Table valueTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
-            return mps.getValueTable(year);
+            return mps.getValueTable();
         }
         return mps.getValueTable(tablePost);
     }
@@ -72,9 +69,9 @@ public class Control {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl-persontable", method = RequestMethod.POST)
-    public Table personTable(@RequestParam(required = false) TablePost tablePost, int year) {
+    public Table personTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
-            return mps.getPersonTable(year);
+            return mps.getPersonTable();
         }
         return mps.getPersonTable(tablePost);
     }
@@ -87,9 +84,9 @@ public class Control {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl-incometable", method = RequestMethod.POST)
-    public Table incomeTable(@RequestParam(required = false) TablePost tablePost, int year) {
+    public Table incomeTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
-            return mps.getIncomeTable(year);
+            return mps.getIncomeTable();
         }
         return mps.getIncomeTable(tablePost);
     }

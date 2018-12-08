@@ -10,10 +10,13 @@ import com.tecode.house.zxl.server.MaketPriceServer;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 import scala.Tuple3;
+import scala.actors.threadpool.Arrays;
 import scala.collection.Iterable;
 import scala.collection.Iterator;
 import scala.collection.immutable.List;
 import scala.collection.immutable.Map;
+
+import java.util.ArrayList;
 
 @Service
 public class ServerImpl implements MaketPriceServer {
@@ -86,19 +89,18 @@ public class ServerImpl implements MaketPriceServer {
     /**
      * 获取市场价的表格
      *
-     * @param year 要查询的年份
      * @return 表格结果
      */
     @Override
-    public Table getValueTable(int year) {
+    public Table getValueTable() {
 
         Table table = new Table();
-        table.setYear(year).setPage(new Page().setThisPage(1));
+        table.setYear(2013).setPage(new Page().setThisPage(1));
         table.addTop("房屋ID").addTop("城市").addTop("市场价");
 
         Page p = new Page();
 
-        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getValue(String.valueOf(year));
+        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getValue();
         setTable(data, table, p);
         return table;
     }
@@ -113,8 +115,10 @@ public class ServerImpl implements MaketPriceServer {
     public Table getValueTable(TablePost tablePost) {
         Table table = new Table();
 
+        table.addSearchs(new Search().setTitle("市场价").addValue("50万以下").addValue("50万-100万").addValue("100万-150万").addValue("150万-200万")
+                .addValue("200万-250万").addValue("250万以上"));
         String year = tablePost.getYear().toString();
-        String search = tablePost.getSearches().get(1).getTitle();
+        String search = tablePost.getSearches().get(0).getValues().get(0);
         table.setYear(tablePost.getYear()).addTop("房屋ID").addTop("城市").addTop("市场价");
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
@@ -135,18 +139,17 @@ public class ServerImpl implements MaketPriceServer {
     /**
      * 获取家庭人数的表格数据
      *
-     * @param year 查询的年份
      * @return 表格数据
      */
     @Override
-    public Table getPersonTable(int year) {
+    public Table getPersonTable() {
         Table table = new Table();
-        table.setYear(year).setPage(new Page().setThisPage(1));
+        table.setYear(2013).setPage(new Page().setThisPage(1));
         table.addTop("房屋ID").addTop("城市").addTop("家庭人数");
 
         Page p = new Page();
 
-        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getPerson(String.valueOf(year));
+        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getPerson();
 
         setTable(data, table, p);
         return table;
@@ -161,6 +164,10 @@ public class ServerImpl implements MaketPriceServer {
     @Override
     public Table getPersonTable(TablePost tablePost) {
         Table table = new Table();
+
+        table.addSearchs(new Search().setTitle("家庭人数").addValue("1人").addValue("2人").addValue("3人").addValue("4人")
+                .addValue("5人").addValue("6人").addValue("6人以上"));
+        table.addSearchs(new Search().setTitle("城市").addValue("1").addValue("2").addValue("3").addValue("4").addValue("5"));
 
         String year = tablePost.getYear().toString();
 
@@ -181,8 +188,8 @@ public class ServerImpl implements MaketPriceServer {
                 setTable(valueData, table, p);
             }
         } else if (searches.size() == 2) {
-            valueData = hd.getPerson(year, searches.get(0).getTitle(), searches.get(1).getTitle());
-            setTable(valueData, table, p, searches.get(1).getTitle());
+            valueData = hd.getPerson(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
+            setTable(valueData, table, p);
         }
 
 
@@ -192,18 +199,17 @@ public class ServerImpl implements MaketPriceServer {
 
     /**
      *
-     * @param year
      * @return
      */
     @Override
-    public Table getIncomeTable(int year) {
+    public Table getIncomeTable() {
         Table table = new Table();
-        table.setYear(year).setPage(new Page().setThisPage(1));
+        table.setYear(2013).setPage(new Page().setThisPage(1));
         table.addTop("房屋ID").addTop("城市").addTop("家庭收入");
 
         Page p = new Page();
 
-        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getIncome(String.valueOf(year));
+        Map<String, Iterable<Tuple3<String, Object, Object>>> data = hd.getIncome();
 
         setTable(data, table, p);
         return table;
@@ -218,28 +224,34 @@ public class ServerImpl implements MaketPriceServer {
     public Table getIncomeTable(TablePost tablePost) {
         Table table = new Table();
 
+        table.addSearchs(new Search().setTitle("家庭收入").addValue("5万以下").addValue("5万-10万").addValue("10万-15万").addValue("15-20万")
+        .addValue("20万-25万").addValue("25万以上"));
+        table.addSearchs(new Search().setTitle("城市").addValue("1").addValue("2").addValue("3").addValue("4").addValue("5"));
+
         String year = tablePost.getYear().toString();
 
         table.setYear(tablePost.getYear()).addTop("房屋ID").addTop("城市").addTop("家庭收入");
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
         java.util.List<Search> searches = tablePost.getSearches();
-        String search = "";
 
         Map<String, Iterable<Tuple3<String, Object, Object>>> valueData = null;
 
         if (searches.size() == 1) {
-            search = searches.get(0).getTitle();
-            if (!search.contains("万")) {
-                valueData = hd.getIncome(year, Integer.valueOf(search));
-                setTable(valueData, table, p);
-            } else {
-                valueData = hd.getIncome(year, search);
-                setTable(valueData, table, p);
+            java.util.List<String> values = searches.get(0).getValues();
+            for (String value : values) {
+                if (!value.contains("万")) {
+                    valueData = hd.getIncome(year, Integer.valueOf(value));
+                    setTable(valueData, table, p);
+                } else {
+                    valueData = hd.getIncome(year, value);
+                    setTable(valueData, table, p);
+                }
             }
+
         } else if (searches.size() == 2) {
-            valueData = hd.getIncome(year, searches.get(0).getTitle(), searches.get(1).getTitle());
-            setTable(valueData, table, p, searches.get(1).getTitle());
+            valueData = hd.getIncome(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
+            setTable(valueData, table, p);
         }
 
 
@@ -267,8 +279,6 @@ public class ServerImpl implements MaketPriceServer {
         Iterator<Tuple2<String, Iterable<Tuple3<String, Object, Object>>>> iterator = valueData.iterator();
         while (iterator.hasNext()) {
             Tuple2<String, Iterable<Tuple3<String, Object, Object>>> next = iterator.next();
-            String name = next._1;
-            table.addSearchs(new Search().setTitle(name));
             Iterable<Tuple3<String, Object, Object>> it = next._2;
             Iterator<Tuple3<String, Object, Object>> it2 = it.iterator();
             List<Tuple3<String, Object, Object>> tuple3List = it.toList();
@@ -284,26 +294,6 @@ public class ServerImpl implements MaketPriceServer {
         }
     }
 
-    private void setTable(Map<String, Iterable<Tuple3<String, Object, Object>>> valueData, Table table, Page p, String city) {
-        Iterator<Tuple2<String, Iterable<Tuple3<String, Object, Object>>>> iterator = valueData.iterator();
-        while (iterator.hasNext()) {
-            Tuple2<String, Iterable<Tuple3<String, Object, Object>>> next = iterator.next();
-            String name = next._1;
-            table.addSearchs(new Search().setTitle(name));
-            table.addSearchs(new Search().setTitle(city));
-            Iterable<Tuple3<String, Object, Object>> it = next._2;
-            Iterator<Tuple3<String, Object, Object>> it2 = it.iterator();
-            List<Tuple3<String, Object, Object>> tuple3List = it.toList();
-            int size = tuple3List.size();
-            int page = size / 10 + 1;
-            for (int i = 1; i < page; i++) {
-                table.setPage(p.addData(i));
-            }
-            while (it2.hasNext()) {
-                Tuple3<String, Object, Object> next1 = it2.next();
-                table.addData(new Row().addRow(next1._1()).addRow(next1._2().toString()).addRow(next1._3().toString()));
-            }
-        }
-    }
+
 
 }

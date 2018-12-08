@@ -9,17 +9,17 @@ public interface MaketPriceServer {
 
     boolean intoMysql(String year);
 
-    Table getValueTable(int year);
+    Table getValueTable();
 
     Table getValueTable(TablePost tablePost);
 
     Map<String,Integer> getMaket();
 
-    Table getPersonTable(int year);
+    Table getPersonTable();
 
     Table getPersonTable(TablePost tablePost);
 
-    Table getIncomeTable(int year);
+    Table getIncomeTable();
 
     Table getIncomeTable(TablePost tablePost);
 

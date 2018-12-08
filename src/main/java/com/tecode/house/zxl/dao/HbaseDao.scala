@@ -8,7 +8,7 @@ trait HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  def getIncome(year: String): Map[String, Iterable[(String, Int, Int)]]
+  def getIncome(): Map[String, Iterable[(String, Int, Int)]]
 
   /**
     * 查询家庭收入，根据收入区间查询
@@ -45,7 +45,7 @@ trait HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  def getPerson(year: String): Map[String, Iterable[(String, Int, Int)]]
+  def getPerson(): Map[String, Iterable[(String, Int, Int)]]
 
   /**
     * 获取家庭人数,根据人数进行查询
@@ -81,7 +81,7 @@ trait HbaseDao {
     * @param year 要查询的年份
     * @return 查询结果
     */
-  def getValue(year: String): Map[String, Iterable[(String, Int, Int)]]
+  def getValue(): Map[String, Iterable[(String, Int, Int)]]
 
   /**
     * 查询市场价，根据价格区间查询
