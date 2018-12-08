@@ -17,7 +17,6 @@ public class Test3 {
         Table table=new Table();
         table.setYear(2013).addTop("房屋ID").addTop("城市").addTop("家庭收入");
 
-
         Page p=new Page();
         table.setPage(p.setThisPage(2));
         GetIncome getIncome=new GetIncome();
