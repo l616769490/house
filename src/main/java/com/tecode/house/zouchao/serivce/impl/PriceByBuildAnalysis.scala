@@ -40,17 +40,16 @@ class PriceByBuildAnalysis extends Analysis {
     //    println("价格==================")
     //    value.collect().foreach(println)
 
-    //    将Buffer类型转换为java的List类型
-    val rentbuffer: mutable.Buffer[(String, Double)] = rent.collect().toBuffer
-    val rentlist: util.List[(String, Double)] = scala.collection.JavaConversions.bufferAsJavaList(rentbuffer)
-
+    //    租金
+    //    将array转换为list
+    val rentbuffer = rent.collect().toList
 
     //    价格
     val value: RDD[(String, Double)] = calculation(valueRDD)
 
-    //    将Buffer类型转换为java的List类型
-    val valuebuffer: mutable.Buffer[(String, Double)] = value.collect().toBuffer
-    val valuelist: util.List[(String, Double)] = scala.collection.JavaConversions.bufferAsJavaList(valuebuffer)
+    //    将array类型转换为List类型
+    val valueList = value.collect().toList
+    packageDate(tableName, rentbuffer, valueList)
     sc.stop()
     true
   }
@@ -98,12 +97,25 @@ class PriceByBuildAnalysis extends Analysis {
     //    val l = rdd.map(_._2).count()
     //    将具体的建成年份转换成建成年份区间
     val result: RDD[(String, Double)] = rdd.map(x => {
-      if (x._1 < 2000) {
-        ("(1900,2000)", x._2)
-      } else if (x._1 < 2010) {
-        ("(2000,2010)", x._2)
+      /*
+      124, '建筑年份', '1900-1940', 'BUILD');
+125, '建筑年份', '1940-1960', 'BUILD');
+126, '建筑年份', '1960-1980', 'BUILD');
+127, '建筑年份', '1980-2000', 'BUILD');
+128, '建筑年份', '2000+', 'BUILD');
+
+
+       */
+      if (x._1 < 1940) {
+        ("1900-1940", x._2)
+      } else if (x._1 < 1960) {
+        ("1940-1960", x._2)
+      } else if (x._1 < 1980) {
+        ("1960-1980", x._2)
+      } else if (x._1 < 2000) {
+        ("1980-2000", x._2)
       } else {
-        ("(2010,2018)", x._2)
+        ("2000+", x._2)
       }
     })
     //按建成年份区间分组
@@ -119,16 +131,20 @@ class PriceByBuildAnalysis extends Analysis {
     v
   }
 
-
-  def packageDate(tableName: String) = {
+  /**
+    * 封装数据，将数据插入MySQL数据库
+    *
+    * @param tableName 表名
+    * @param rentList  租金分析结果
+    * @param valueList 价格分析结果
+    */
+  def packageDate(tableName: String, rentList: List[(String, Double)], valueList: List[(String, Double)]) = {
     var conn: Connection = null;
-    val ps: PreparedStatement = null;
-    val rs: ResultSet = null;
     val dao: MySQLDao = new MySQLDaoImpl()
     try {
-      conn = MySQLUtil.getConn();
+      conn = MySQLUtil.getConn()
       //事务控制，开启事务
-      conn.setAutoCommit(false);
+      conn.setAutoCommit(false)
       //      插入报表表
       val report: Report = new Report()
       report.setName("价格统计")
@@ -136,6 +152,7 @@ class PriceByBuildAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("年份统计")
       report.setStatus(1)
+      report.setUrl("http://166.166.0.10/priceByBuild")
       val reportId: Int = dao.putInTableReport(conn, report)
 
       //折线图
@@ -153,9 +170,9 @@ class PriceByBuildAnalysis extends Analysis {
 
       //    插入x轴表
       val lineXaxis: Xaxis = new Xaxis()
-      lineXaxis.setName("年份")
+      lineXaxis.setName("年份区间")
       lineXaxis.setDiagramId(lineDiagramId)
-      lineXaxis.setDimGroupName("建成年份")
+      lineXaxis.setDimGroupName("建筑年份")
 
       val lineXaxisId: Int = dao.putInTableXaxis(conn, lineXaxis)
 
@@ -165,22 +182,41 @@ class PriceByBuildAnalysis extends Analysis {
       lineYaxis.setDiagramId(lineDiagramId)
 
       val lineYaxisId: Int = dao.putInTableYaxis(conn, lineYaxis)
-      //    插入数据集表
-      val lineLegend = new Legend()
-      lineLegend.setName("价格统计")
-      lineLegend.setDiagramId(lineDiagramId)
-      lineLegend.setDimGroupName("价格统计")
 
-      val lineLegendId = dao.putInTableLegend(conn, lineLegend)
+      // 数据集表
+      val lineValueLegend = new Legend()
+      lineValueLegend.setName("价格统计")
+      lineValueLegend.setDiagramId(lineDiagramId)
+      lineValueLegend.setDimGroupName("价格统计")
 
-
-
-      //    插入数据表
-
+      val lineLegendId = dao.putInTableLegend(conn, lineValueLegend)
+      //数据表
+      //    插入房屋平均租金
+      for (elem <- rentList) {
+        /*
+        private var value: String = null
+    private var xId: Int = 0
+    private var legendId: Int = 0
+    private var x: String = null
+    private var legend: String = null
+         */
+        val data = new Data(elem._2.toString, lineXaxisId, lineLegendId, elem._1, "平均租金")
+        dao.putInTableData(conn, data)
+      }
+      //    插入房屋平均价格
+      for (elem <- valueList) {
+        val data = new Data(elem._2.toString, lineXaxisId, lineLegendId, elem._1, "平均价格")
+        dao.putInTableData(conn, data)
+      }
 
       //    插入搜索表
-
-
+      //建成年份区间搜索
+      val yearYearch = new Search("建成年份区间搜索", "建筑年份", reportId)
+      dao.putInTableSearch(conn, yearYearch)
+      //     城市规模搜索
+      val cityYearch = new Search("城市规模搜索", "城市规模", reportId)
+      dao.putInTableSearch(conn, cityYearch)
+      conn.commit
     } catch {
       case e: Exception => {
         //回滚事务

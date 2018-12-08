@@ -1,8 +1,8 @@
 package com.tecode.house.zouchao.bean;
 
 import scala.Tuple2;
+import scala.collection.immutable.List;
 
-import java.util.List;
 
 public class Rent {
     private int max;

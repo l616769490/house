@@ -35,17 +35,17 @@ class RentAnalysis extends Analysis {
     //将具体的租金转换为租金区间并计数
     val rents: RDD[(String, Int)] = rentsRDD.map(x => {
       if (x < 1000) {
-        ("(0,1000)", 1)
+        ("0-1000", 1)
       } else if (x < 1500) {
-        ("(1000,1500)", 1)
+        ("1000-1500", 1)
       } else if (x < 2000) {
-        ("(1500,2000)", 1)
+        ("1500-2000", 1)
       } else if (x < 2500) {
-        ("(2000,2500)", 1)
+        ("2000-2500", 1)
       } else if (x < 3000) {
-        ("(2500,3000)", 1)
+        ("2500-3000", 1)
       } else {
-        ("(3000,)", 1)
+        ("3000+", 1)
       }
     })
     //    统计各租金区间的总数
@@ -58,18 +58,16 @@ class RentAnalysis extends Analysis {
     val count: Long = rentsRDD.count()
     val sum: Double = rentsRDD.sum()
     val avg: Double = sum / count
-    //    println("max: " + max)
+//        println("max: " + max)
     //    println("min: " + min)
     //    println("avg: " + avg)
-    //    value.collect().foreach(println)
-    //    将int类型封装为Integer类型，并将RDD变成Buffer
-    val buffer: mutable.Buffer[(String, Integer)] = value.map(x => (x._1, {
+    ////    value.collect().foreach(println)
+    //    将int类型封装为Integer类型，并将RDD变成List
+    val buffer = value.map(x => (x._1, {
       Integer.valueOf(x._2)
-    })).collect().toBuffer
-    //    将Buffer类型转换为java的List类型
-    val list: util.List[(String, Integer)] = scala.collection.JavaConversions.bufferAsJavaList(buffer)
+    })).collect().toList
     //    封装对象
-    val rent: Rent = new Rent(max, min, avg, list)
+    val rent: Rent = new Rent(max, min, avg, buffer)
     //    调用封装方法
     packageDate(rent, tableName)
     sc.stop()
@@ -106,16 +104,18 @@ class RentAnalysis extends Analysis {
     rentsRDD
   }
 
-
+  /**
+    *封装数据，将数据插入MySQL数据库
+    * @param rent      分析结果
+    * @param tableName HBase表名
+    */
   def packageDate(rent: Rent, tableName: String) = {
-    var conn: Connection = null;
-    val ps: PreparedStatement = null;
-    val rs: ResultSet = null;
+    var conn: Connection = null
     val dao: MySQLDao = new MySQLDaoImpl()
     try {
-      conn = MySQLUtil.getConn();
+      conn = MySQLUtil.getConn
       //事务控制，开启事务
-      conn.setAutoCommit(false);
+      conn.setAutoCommit(false)
       //      插入报表表
 
       val report: Report = new Report()
@@ -124,6 +124,9 @@ class RentAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
+      report.setUrl("http://166.166.0.10/rent")
+
+      //      println(report)
 
       val reportId: Int = dao.putInTableReport(conn, report)
       //饼图
@@ -133,7 +136,7 @@ class RentAnalysis extends Analysis {
       pieDiagram.setName("租金分布图")
       pieDiagram.setType(2)
       pieDiagram.setReportId(reportId)
-      pieDiagram.setSubtext("统计租金分布情况")
+      pieDiagram.setSubtext("统计各租金区间的数量")
 
       val pieDiagramId: Int = dao.putInTableDiagram(conn, pieDiagram)
 
@@ -144,32 +147,53 @@ class RentAnalysis extends Analysis {
       pieXaxis.setDimGroupName("租金")
 
       val pieXaxisId: Int = dao.putInTableXaxis(conn, pieXaxis)
+
       //    插入y轴表
       val pieYaxis = new Yaxis()
       pieYaxis.setName("户")
       pieYaxis.setDiagramId(pieDiagramId)
 
       val pieYaxisId: Int = dao.putInTableYaxis(conn, pieYaxis)
-
       //    插入数据集表
       val pieLegend = new Legend()
       pieLegend.setName("租金区间")
       pieLegend.setDiagramId(pieDiagramId)
-      pieLegend.setDimGroupName("租金统计")
+      pieLegend.setDimGroupName("空维度")
 
       val pieLegendId = dao.putInTableLegend(conn, pieLegend)
 
       //    插入数据表
-      //    插入搜索表
+      val list: List[(String, Integer)] = rent.getList()
+      for (elem <- list) {
+        val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "分布统计")
+        dao.putInTableData(conn, pieData)
+      }
 
 
-      //折线图
+      /*
+      private var id: Int = 0
+  private var value: String = null
+  private var xId: Int = 0
+  private var legendId: Int = 0
+  private var x: String = null
+  private var legend: String = null
+       */
+      /*
+id	int		自增id，维度顺序按id排序	主键、自增
+value	varchar	50	数据值	非空
+xId	int		x轴id	非空
+legendId	int		图例id	非空
 
-      //租金极值折线图
+*/
+
+
+      //柱状图
+
+      //租金极值柱状图表
 
       val lineDiagram: Diagram = new Diagram()
       lineDiagram.setName("租金最大最小值")
-      lineDiagram.setType(0)
+      lineDiagram.setType(1)
       lineDiagram.setReportId(reportId)
       lineDiagram.setSubtext("统计租金的最大最小平均值")
 
@@ -180,7 +204,7 @@ class RentAnalysis extends Analysis {
       val lineXaxis: Xaxis = new Xaxis()
       lineXaxis.setName("美元")
       lineXaxis.setDiagramId(lineDiagramId)
-      lineXaxis.setDimGroupName()
+      lineXaxis.setDimGroupName("数学统计")
 
       val lineXaxisId: Int = dao.putInTableXaxis(conn, lineXaxis)
 
@@ -190,34 +214,66 @@ class RentAnalysis extends Analysis {
       lineYaxis.setDiagramId(lineDiagramId)
 
       val lineYaxisId: Int = dao.putInTableYaxis(conn, lineYaxis)
-      //    插入数据集表
+
+      //    插入最大值
       val lineMaxLegend = new Legend()
-      lineMaxLegend.setName("极值")
+      lineMaxLegend.setName("最大值")
       lineMaxLegend.setDiagramId(lineDiagramId)
       lineMaxLegend.setDimGroupName("最大值")
 
       val lineMaxLegendId = dao.putInTableLegend(conn, lineMaxLegend)
+      //      插入数据表
+      /*
+      private var id: Int = 0
+      private var value: String = null
+      private var xId: Int = 0
+      private var legendId: Int = 0
+      private var x: String = null
+      private var legend: String = null
+      */
+      val lineMaxData = new Data(rent.getMax.toString, lineXaxisId, lineMaxLegendId, "最大值", "最大值")
+      dao.putInTableData(conn, lineMaxData)
+      //      插入最小值
 
       val lineMinLegend = new Legend()
-      lineMinLegend.setName("极值")
+      lineMinLegend.setName("最小值")
       lineMinLegend.setDiagramId(lineDiagramId)
       lineMinLegend.setDimGroupName("最小值")
       val lineMinLegendId = dao.putInTableLegend(conn, lineMinLegend)
+      //    插入数据表
+      val lineMinData = new Data(rent.getMin.toString, lineXaxisId, lineMinLegendId, "最小值", "最小值")
+      dao.putInTableData(conn, lineMinData)
+      //      插入平均值
 
       val lineAvgLegend = new Legend()
-      lineAvgLegend.setName("极值")
+      lineAvgLegend.setName("平均值")
       lineAvgLegend.setDiagramId(lineDiagramId)
       lineAvgLegend.setDimGroupName("平均值")
       val lineAvgLegendId = dao.putInTableLegend(conn, lineAvgLegend)
-
-
-
       //    插入数据表
-
+      val lineAvgData = new Data(rent.getAvg.toString, lineXaxisId, lineAvgLegendId, "平均值", "平均值")
+      dao.putInTableData(conn, lineAvgData)
 
 
       //    插入搜索表
+      /*
+      /*
+          id	int		自增id，维度顺序按id排序
+      name	varchar	50	名字
+      dimGroupName	varchar	50	维度组名字（对应维度表的维度组名）
+      reportId	int		报表id，外键（FK_search_report_id）
 
+           */
+      private var id: Int = 0
+          private var name: String = null
+          private var dimGroupName: String = null
+          private var reportId: Int = 0
+
+       */
+      val search = new Search("租金区间搜索", "租金", reportId)
+      dao.putInTableSearch(conn, search)
+
+      conn.commit
 
     } catch {
       case e: Exception => {

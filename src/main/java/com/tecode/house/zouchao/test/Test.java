@@ -1,19 +1,28 @@
 package com.tecode.house.zouchao.test;
 
 import com.tecode.house.zouchao.bean.*;
+import com.tecode.house.zouchao.controller.TableController;
 import com.tecode.house.zouchao.dao.impl.MySQLDaoImpl;
 import com.tecode.house.zouchao.hbase.FilleToHBase;
 import com.tecode.house.zouchao.serivce.impl.PriceByBuildAnalysis;
+import com.tecode.house.zouchao.serivce.impl.RentAnalysis;
 import com.tecode.house.zouchao.serivce.impl.RoomsByBuildAnalysis;
 import com.tecode.house.zouchao.util.HBaseUtil;
 import com.tecode.house.zouchao.util.MySQLUtil;
+import com.tecode.table.Row;
+import com.tecode.table.Search;
+import com.tecode.table.Table;
+import com.tecode.table.TablePost;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
     public static void main(String[] args) throws IOException {
+
         //HBaseUtil util = new HBaseUtil();
         //util.deleteTable("thads:2011");
         //      System.out.println(util.isNameSpaceExits("thads"));
@@ -25,15 +34,16 @@ public class Test {
 
         //分析租金数据
         //RentAnalysis rentAnalysis = new RentAnalysis();
-        //rentAnalysis.analysis("thads:2013");
-
-        //分析价格
+        //rentAnalysis.analysis("thads:2011");
+        //
+        //
+        ////分析价格
         //PriceByBuildAnalysis rentByBuildAnalysis = new PriceByBuildAnalysis();
-        //System.out.println(rentByBuildAnalysis.analysis("thads:2013"));
-
-        //分析房间数
+        //System.out.println(rentByBuildAnalysis.analysis("thads:2011"));
+        //
+        ////分析房间数
         //RoomsByBuildAnalysis roomsByBuildAnalysis = new RoomsByBuildAnalysis();
-        //System.out.println(roomsByBuildAnalysis.analysis("thads:2013"));
+        //System.out.println(roomsByBuildAnalysis.analysis("thads:2011"));
 
         //try {
         //    Connection conn = MySQLUtil.getConn();
@@ -134,6 +144,38 @@ legendId	int		图例id	非空
         //}
 
 
+        TableController t = new TableController();
+        TablePost tp = new TablePost();
+        tp.setPage(10);
+        tp.setYear(2013);
+        //构建    建成年份Search对象
+        Search se1 = new Search();
+        se1.setTitle("建成年份");
+        List<String> va = new ArrayList<>();
+        va.add("1900-1940");
+        se1.setValues(va);
+        //构建    城市规模Search对象
+        Search se2 = new Search();
+        se2.setTitle("城市规模");
+        List<String> va1 = new ArrayList<>();
+        va1.add("5");
+        se2.setValues(va1);
+        List<Search> ls = new ArrayList<>();
+        //ls.add(se1);
+        //ls.add(se2);
+        tp.setSearches(ls);
+        Table table = t.RoomByBuild(tp);
+        System.out.println("year:   "+table.getYear());
+        System.out.println("this:   "+table.getPage().getThisPage());
+        System.out.println("page:   "+table.getPage().getData().toString());
+        for (Search search : table.getSearch()) {
+            System.out.println(search.getTitle()+" : "+search.getValues().toString());
+        }
+        System.out.println("top:    "+table.getTop().toString());
+
+        for (Row datum : table.getData()) {
+            System.out.println("data:   "+datum.getRow().toString());
+        }
 
 
     }

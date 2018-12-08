@@ -15,6 +15,17 @@ subtext	varchar	100	描述
     private int reportId;
     private String subtext;
 
+    @Override
+    public String toString() {
+        return "Diagram{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", reportId=" + reportId +
+                ", subtext='" + subtext + '\'' +
+                '}';
+    }
+
     public Diagram(String name, int type, int reportId, String subtext) {
         this.name = name;
         this.type = type;
