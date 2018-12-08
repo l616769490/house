@@ -90,7 +90,7 @@
             data: JSON.stringify({
                 'year': 2013,
                 'page': 2,
-                'searches': [{'title': '空置状态', 'values': ['空置']}]
+                'searches': [{'title': '空置状态', 'values': ['空置','居住']}]
             }),
             success: function (result) {
                 showTable(result);

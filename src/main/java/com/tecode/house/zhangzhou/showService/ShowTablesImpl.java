@@ -25,7 +25,7 @@ public class ShowTablesImpl implements ShowTables{
         Page page = new Page();
         page.setThisPage(tp.getPage());
         SparkService sc = new SparkService();
-        Map<String, Iterable<String>> dataMap = sc.selectVacancyTable("thads:"+tp.getYear(),tp.getSearches().get(0).getValues().get(0));
+        Map<String, Iterable<String>> dataMap = sc.selectVacancyTable("thads:"+tp.getYear(),tp.getSearches().get(0).getValues().get(0),3);
         Search search = new Search();
         search.setTitle("空置状态");
         showUtil(dataMap,table,page,search);

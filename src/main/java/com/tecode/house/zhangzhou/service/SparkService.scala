@@ -9,7 +9,7 @@ import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -18,7 +18,9 @@ import org.apache.spark.{SparkConf, SparkContext}
   * @param houseDuty 房屋费用
   */
 case class TmpClass(city:String ,houseDuty:Double)
-
+case class VacClass(CONTROL:String,METRO3:String,BUILT:String,AGE1:String,VACANCY:String,ASSISTED:String)
+case class SingleClass(CONTROL:String,METRO3:String,BUILT:String,STRUCTURETYPE:String,BEDRMS:String,ROOMS:String)
+case class HouseClass(CONTROL:String,METRO3:String,BUILT:String,STRUCTURETYPE:String,ZSMHC:String,ROOMS:String,VALUE:String)
 class SparkService{
   val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
   val sc = new SparkContext(sparkConf)
@@ -344,14 +346,14 @@ class SparkService{
     * @param search：查询的选项
     * @return：返回一个分组后的Map对象
     */
-  def selectVacancyTable(tableName:String,search:String): Map[String,Iterable[String]] ={
+  def selectVacancyTable(tableName:String,search:String,page:Int): Map[String,Iterable[String]] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+    /*var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
@@ -374,9 +376,31 @@ class SparkService{
     var mmap = Map[String,Iterable[String]]()
     mapRDD.collect().foreach(mmap+=(_))
     spark.close()
+    return mmap*/
+
+    val vacRDD = hbaseRDD.map(x => VacClass(Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+    val varDF = vacRDD.toDF()
+    varDF.createOrReplaceTempView("tmp")
+    if(search.equals("居住")){
+
+    }
+    val frame: DataFrame = spark.sql("selecet * from (select * from tmp where VACANCY = '-6') t limit "+(page-1)*10 + ","+page*10)
+    var vrdd = frame.rdd.map(x => ("居住",x.get(0)+"_"+x.get(1)+"_"+x.get(2)+"_"+x.get(3)+"_"+"居住"+"_"+x.get(5))).groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    vrdd.collect().foreach(mmap+=(_))
+    spark.close()
+    print(mmap.size+"=========================")
     return mmap
 
+
   }
+
+
 
   /**
     * 在hbase中查询得到和独栋建筑相关的列
@@ -502,5 +526,10 @@ class SparkService{
     return mmap
   }
 }
-
+object SparkService{
+  def main(args: Array[String]): Unit = {
+    val ss = new SparkService
+    ss.selectVacancyTable("thads:2013","居住",3)
+  }
+}
 
