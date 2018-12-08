@@ -17,13 +17,65 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
+ <!-- 配置数据的副本数量-->
+
 	<property>
 		<name>dfs.replication</name>
 		<value>3</value>
 	</property>
 
+
+
+
+
+<!--设置辅助名称节点所在地址,如果不配置该参数，则辅助名称节点默认和namenonde节点在一个服务器上-->
+
 	<property>
-        <name>dfs.namenode.secondary.http-address</name>
-        <value>snn:50090</value>
+		<name>dfs.namenode.secondary.http-address</name>
+		<value>hadoop02:50090</value>
 	</property>
+
+<!--定义hadoop文件系统中允许的块的最小值为多少，注意每个块的大小必须是512的倍数，因为hadoop每次校验512个字节-->
+
+	<property>
+        	<name>dfs.namenode.fs-limits.min-block-size</name>
+        	<value>512</value>
+	</property>
+
+
+
+
+<!--更改checkpoint参数-->
+
+	<property>
+		<name>dfs.namenode.checkpoint.txns</name>
+		<value>1000000</value>
+		<description>操作动作次数</description>
+	</property>
+
+	<property>
+		<name>dfs.namenode.checkpoint.check.period</name>
+		<value>3600</value>
+		<description> 1分钟检查一次操作次数</description>
+	</property>
+
+
+
+<!--namenode的多目录参数配置-->
+
+	<property>
+		<name>dfs.namenode.name.dir</name>
+		<value>file:///${hadoop.tmp.dir}/dfs/name1,file:///${hadoop.tmp.dir}/dfs/name2</value>
+	</property>
+
+
+
+
+
+
+
+
+
+
+
 </configuration>
