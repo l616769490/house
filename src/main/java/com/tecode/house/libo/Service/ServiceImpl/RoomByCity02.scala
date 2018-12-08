@@ -1,4 +1,4 @@
-package com.tecode.house.libo.Service
+package com.tecode.house.libo.Service.ServiceImpl
 
 import java.sql
 import java.sql.{Connection, SQLException}
@@ -31,7 +31,7 @@ object RoomByCity02 {
     //print("asdcvc".split(";")(0))
     //room.selfRentTable("2013","租赁")
     //room.roomsTable("2013","5","6")
-    room.singleTable("2013","1999","否")
+    //room.singleTable("2013","1999","否")
   }
 
 
@@ -381,7 +381,7 @@ class RoomByCity02 extends Analysis {
     * -----自住、租赁-----
     * ID  城市等级  简称年份  建筑结构  自住、租赁
     */
-  def selfRentTable(tableName:String,select:String): Map[String,String] = {
+  def selfRentTable(tableName:String,select:String,page:Int): Map[String,String] = {
 
     var selfTableMap = Map[String,String]()
     var values = hbaseRDD.map { x => {
@@ -427,7 +427,7 @@ class RoomByCity02 extends Analysis {
     *       条件：城市等级  房间数最大15
     *       ID  城市等级  房间数   卧室数
     */
-  def roomsTable(tableName:String,city:String,rooms:String):Map[String,String] ={
+  def roomsTable(tableName:String,city:String,rooms:String,page:Int):Map[String,String] ={
     var roomsMap = Map[String,String]();
     //取数据
     var value = hbaseRDD.map(x=>{
@@ -437,6 +437,7 @@ class RoomByCity02 extends Analysis {
         Bytes.toString(x._2.getValue("info".getBytes(),"BEDRMS".getBytes())))
     }).filter(x=>x._4.toInt>0)
     //(499434810242,499434810242_2_5_3)
+    //过滤输入的城市等级
     if(city .equals("1") ){
       value = value.filter(_._2.equals("1"))
     }else if(city .equals("2")){
@@ -447,6 +448,8 @@ class RoomByCity02 extends Analysis {
       value = value.filter(_._2.equals("4"))
     }else if(city .equals("5")){
       value = value.filter(_._2.equals("5"))
+    }else if(city ==null){
+      value = value
     }else{
       value = value
     }
@@ -455,6 +458,8 @@ class RoomByCity02 extends Analysis {
       value = value.filter(_._3.equals("1"))
     }else if(rooms .equals("2")){
       value = value.filter(_._3.equals("2"))
+    }else if(rooms==null){
+      value = value
     }else if(rooms .equals("3")){
       value = value.filter(_._3.equals("3"))
     }else if(rooms .equals("4")){
@@ -489,7 +494,7 @@ class RoomByCity02 extends Analysis {
     *   条件：年份区间    是否独栋
     * CONTROL METRO3 BUILT STRUCTURETYPE
     */
-  def singleTable(tableName:String,year:String,ifSingleBuild: String): Map[String,String] ={
+  def singleTable(tableName:String,year:String,ifSingleBuild: String,page:Int): Map[String,String] ={
     var singleMap = Map[String,String]()
     var values = hbaseRDD.map{x=>{
       (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
@@ -523,11 +528,11 @@ class RoomByCity02 extends Analysis {
       }else{
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"否")
       }
-    })
+    })//.collect().toMap.foreach(println)
     v.collect().foreach(singleMap+=(_))
-    for (elem <- singleMap) {
-      println(elem)
-    }
+//    for (elem <- singleMap) {
+//      println(elem)
+//    }
     return singleMap
   }
 

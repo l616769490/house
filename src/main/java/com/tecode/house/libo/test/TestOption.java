@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.libo.test;
 
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;

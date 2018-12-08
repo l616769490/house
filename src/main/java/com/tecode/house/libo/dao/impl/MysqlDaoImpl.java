@@ -74,6 +74,7 @@ public class MysqlDaoImpl {
         return id;
     }
 
+
     public int insertIntoLegend(String name,String dimGroupName,int diagramId){
         int id = -1;
         try {

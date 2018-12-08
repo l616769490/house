@@ -1,7 +1,7 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.libo.test;
 
-import com.tecode.table.TablePost;
 import com.tecode.table.Table;
+import com.tecode.table.TablePost;
 
 public interface TestService {
     /**
