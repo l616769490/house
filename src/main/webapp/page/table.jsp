@@ -159,7 +159,7 @@
             let title = searchs[i].title;
             $("#house_search").append($("<label></label>").append(title)).addClass("col-lg-1  col-md-offset-1");
             let values = searchs[i].values;
-            let search = $("<select></select>").addClass("col-lg-1 col-md-offset-2");
+            let search = $("<select class='col-lg-1 col-md-offset-2'></select>");
             for (let j = 0; j < values.length; j++) {
                 search.append($("<option></option>").append(values[j]));
             }
