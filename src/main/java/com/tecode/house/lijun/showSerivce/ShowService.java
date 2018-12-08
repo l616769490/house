@@ -1,8 +1,8 @@
 package com.tecode.house.lijun.showSerivce;
 
 import com.tecode.echarts.Option;
-import com.tecode.house.zouchao.bean.Data;
-import com.tecode.house.zouchao.bean.Xaxis;
+import com.tecode.house.lijun.bean.Data;
+import com.tecode.house.lijun.bean.Xaxis;
 
 import java.util.List;
 

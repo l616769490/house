@@ -22,7 +22,6 @@ public class Test1 {
         fth.readFile("D:\\thads2013n.csv","thads:2013");*/
 
 /*
-
      //分析房屋费用
         ZSMHCAnalysis Analysis = new ZSMHCAnalysis();
         Analysis.analysis("2013");

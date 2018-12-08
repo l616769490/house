@@ -1,7 +1,8 @@
 package com.tecode.house.lijun.dao.impl;
 
+
+import com.tecode.house.lijun.bean.*;
 import com.tecode.house.lijun.dao.MySQLDao;
-import com.tecode.house.zouchao.bean.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -304,12 +305,7 @@ public class MySQLDaoImpl implements MySQLDao {
 
     @Override
     public int putInTableXaxis(Connection conn, Xaxis xaxis) throws SQLException {
-       /*
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(20) NOT NULL,
-  `diagramId` int(11) NOT NULL,
-  `dimGroupName` varchar(50) NOT NULL,
-        */
+
         String xaxisSql = "insert into xaxis(name,diagramId,dimGroupName) values(?,?,?)";
         ps = conn.prepareStatement(xaxisSql, new String[]{"id"});
         //占位符赋值

@@ -10,7 +10,7 @@ public class Rent {
     private double avg;
     private List<Tuple2<String, Integer>> list;
 
-    public Rent(int max, int min, double avg, List<Tuple2<String, Integer>> list) {
+    public Rent(List<Tuple2<String, Integer>> list) {
         this.max = max;
         this.min = min;
         this.avg = avg;

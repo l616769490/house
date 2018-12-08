@@ -3,10 +3,10 @@ package com.tecode.house.lijun.serivce.impl
 import java.sql.{Connection, SQLException}
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijun.bean._
 import com.tecode.house.lijun.dao.MySQLDao
 import com.tecode.house.lijun.dao.impl.MySQLDaoImpl
 import com.tecode.house.lijun.util.MySQLUtil
-import com.tecode.house.zouchao.bean._
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat

@@ -4,12 +4,12 @@ import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
 import com.tecode.echarts.enums.AxisType;
 import com.tecode.echarts.enums.Trigger;
+import com.tecode.house.lijun.bean.*;
+import com.tecode.house.lijun.bean.Legend;
 import com.tecode.house.lijun.dao.MySQLDao;
 import com.tecode.house.lijun.dao.impl.MySQLDaoImpl;
 import com.tecode.house.lijun.showSerivce.ShowService;
 import com.tecode.house.lijun.util.MySQLUtil;
-import com.tecode.house.zouchao.bean.*;
-import com.tecode.house.zouchao.bean.Legend;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,7 +31,7 @@ public class ShowServiceImpl implements ShowService {
         Xaxis x = null;
         try {
             int yea = Integer.parseInt(year);
-            conn = com.tecode.house.zouchao.util.MySQLUtil.getConn();
+            conn = MySQLUtil.getConn();
             int reportId = dao.getByTableReport(conn, reportName, yea).getId();
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
             int diagramId = -1;
@@ -48,7 +48,7 @@ public class ShowServiceImpl implements ShowService {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            com.tecode.house.zouchao.util.MySQLUtil.close(conn);
+            MySQLUtil.close(conn);
         }
         return x;
     }
@@ -58,7 +58,7 @@ public class ShowServiceImpl implements ShowService {
         Option option = new Option();
         try {
             int yea = Integer.parseInt(year);
-            conn = com.tecode.house.zouchao.util.MySQLUtil.getConn();
+            conn =MySQLUtil.getConn();
             //获取report
             Report report = dao.getByTableReport(conn, reportName, yea);
             //获取diagrams表
@@ -152,7 +152,8 @@ public class ShowServiceImpl implements ShowService {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            com.tecode.house.zouchao.util.MySQLUtil.close(conn);
+
+            MySQLUtil.close(conn);
         }
         return option;
     }

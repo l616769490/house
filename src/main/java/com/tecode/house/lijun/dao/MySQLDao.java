@@ -1,6 +1,6 @@
 package com.tecode.house.lijun.dao;
 
-import com.tecode.house.zouchao.bean.*;
+import com.tecode.house.lijun.bean.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
