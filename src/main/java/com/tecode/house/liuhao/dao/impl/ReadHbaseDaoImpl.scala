@@ -89,9 +89,9 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
       classOf[Result]).map(x =>{
       val list = new util.ArrayList[String]()
       val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("METRO3"))),
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("ZSMHC"))),
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("UTILITY"))),
-        Bytes.toString(x._2.getValue(Bytes.toBytes("INFO"), Bytes.toBytes("OTHERCOST"))
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))),
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))),
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
         ))
       if(value._1.equals(citys)){
         print("======================")
