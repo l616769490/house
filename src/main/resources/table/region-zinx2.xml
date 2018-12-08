@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 按区域-家庭收入分析 -->
+<tables>
+    <!-- 数据库中需要读哪些字段 -->
+    <titles>
+        <title field="CONTROL" alias="编号"/>
+        <title field="REGION" alias="区域"/>
+        <title field="IPOV" alias="贫困线"/>
+        <title field="L30" alias="L30"/>
+        <title field="L50" alias="L50"/>
+        <title field="L80" alias="L80"/>
+        <title field="LMED" alias="中位数"/>
+        <title field="ZINC2" alias="家庭收入"/>
+    </titles>
+    <!-- 搜索项的匹配规则 -->
+    <search>
+        <!-- 匹配类型 -->
+        <!-- field : 字段匹配-->
+        <type>field</type>
+        <!-- 数据分组字段 -->
+        <group>REGION</group>
+        <!-- 对哪个字段进行字段匹配 -->
+        <field>ZINC2</field>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
+        <items>
+            <item name="IPOV">
+                <max>IPOV</max>
+            </item>
+            <item name="L30">
+                <min>IPOV</min>
+                <max>L30</max>
+            </item>
+            <item name="L50">
+                <min>L30</min>
+                <max>L50</max>
+            </item>
+            <item name="L80">
+                <min>L50</min>
+                <max>L80</max>
+            </item>
+            <item name="L80+">
+                <min>L80</min>
+            </item>
+            <item name="LMED">
+                <min>LMED</min>
+            </item>
+        </items>
+    </search>
+</tables>

@@ -128,7 +128,7 @@ public class FileToHBase {
      */
     private void write(BufferedReader br) {
 
-        br.lines()
+        br.lines()      .limit(100)
                 // 过滤空字符串
                 .filter(s -> s != null && !s.isEmpty())
                 // 拆分并去除首尾空格和引号

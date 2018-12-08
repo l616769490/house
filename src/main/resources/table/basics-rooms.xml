@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 基础-房间数分析 -->
+<tables>
+    <!-- 数据库中需要读哪些字段 -->
+    <titles>
+        <title field="CONTROL" alias="编号"/>
+        <title field="METRO3" alias="城市等级"/>
+        <title field="REGION" alias="区域"/>
+        <title field="ROOMS" alias="房间数"/>
+        <title field="BEDRMS" alias="卧室数"/>
+    </titles>
+    <!-- 搜索项的匹配规则 -->
+    <search>
+        <!-- 匹配类型 -->
+        <!-- equals : 等值匹配-->
+        <type>equals</type>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
+    </search>
+</tables>

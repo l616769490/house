@@ -2,6 +2,7 @@ package com.tecode.house.lijin.hbase;
 
 import com.tecode.house.lijin.utils.ConfigUtil;
 import com.tecode.house.lijin.utils.HBaseUtil;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

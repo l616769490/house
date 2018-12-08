@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <!-- 报表名 -->
+    <name>按区域-房产税分析</name>
+    <!-- 报表组名 -->
+    <group>区域统计</group>
+    <!-- 报表请求地址 -->
+    <url>http://166.166.0.13:8080/region_zxmhc_num</url>
+    <!-- 图表 -->
+    <diagrams>
+        <diagram name="各区域房产税分布图" subName="各房产税阶段户数统计">
+            <!-- y轴 -->
+            <yAxes>
+                <yAxis name="户数"/>
+            </yAxes>
+            <!-- x轴 -->
+            <xAxes>
+                <xAxis>
+                    <name>分类</name>
+                    <dimGroupName>房产税</dimGroupName>
+                </xAxis>
+            </xAxes>
+            <!-- 图例 -->
+            <legends>
+                <legend>
+                    <name>区域划分</name>
+                    <dimGroupName>区域</dimGroupName>
+                </legend>
+            </legends>
+        </diagram>
+    </diagrams>
+</report>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 按区域-房产税分析 -->
+<tables>
+    <!-- 数据库中需要读哪些字段 -->
+    <titles>
+        <title field="CONTROL" alias="编号"/>
+        <title field="METRO3" alias="城市等级"/>
+        <title field="REGION" alias="区域"/>
+        <title field="VALUE" alias="市场价"/>
+        <title field="ZSMHC" alias="房产税"/>
+    </titles>
+    <!-- 搜索项的匹配规则 -->
+    <search>
+        <!-- 匹配类型 -->
+        <!-- range : 范围匹配-->
+        <type>range</type>
+        <!-- 对哪个字段进行匹配 -->
+        <field>ZSMHC</field>
+        <!-- 数据分组字段 -->
+        <group>REGION</group>
+        <!-- 多个搜索字段之间是or还是and -->
+        <rule>or</rule>
+    </search>
+</tables>
