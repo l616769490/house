@@ -12,6 +12,8 @@
 <head>
     <title>主页</title>
     <%
+        String url = request.getParameter("url");
+        String[] yearArr = request.getParameter("year").split(",");
         pageContext.setAttribute("APP_PATH", request.getContextPath());
     %>
 
@@ -31,6 +33,17 @@
     </script>
 </head>
 <body>
+<div style="height: 50px;">
+
+选择年份:<select name="year" onchange="show(this.value)">
+        <%for(String y:yearArr){
+            %>
+                <option value="<%=y%>"><%=y%></option>
+            <%
+        }%>
+
+</select>
+</div>
 <div class="container-fluid">
     <div class="row">
         <div id="show" style="width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
@@ -38,7 +51,7 @@
         </div>
 
     </div>
-    <div class="row">
+   <%-- <div class="row">
         <div id="btns1" class="col-lg-8 col-md-offset-2">
             <button id="btn-1" class="btn btn-success" onclick="show('/basics_rooms_num')">基础-房间数分析</button>
             <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="show('/region_zinc2_num')">按区域-家庭收入分析
@@ -51,7 +64,7 @@
             <button id="btn-5" class="btn btn-success col-md-offset-2" onclick="show('/test-tp')">表格传输测试</button>
             <button id="btn-6" class="btn btn-success col-md-offset-2" onclick="toFile()">文件上传</button>
         </div>
-    </div>
+    </div>--%>
 </div>
 
 
@@ -60,17 +73,19 @@
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('show'));
 
-    function show(show_url) {
-        $.ajax({
-            url: show_url,
-            type: "POST",
-            data: "year=2013",
-            success: function (result) {
-                // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(result);
-            }
-        });
-    };
+    window.onload=show(<%=yearArr[0]%>);
+
+        function show(year) {
+            $.ajax({
+                url: "<%=url%>",
+                type: "POST",
+                data: "year="+year,
+                success: function (result) {
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(result);
+                }
+            });
+        };
 
     function getTable() {
         window.location.href = "/table"
@@ -78,6 +93,7 @@
 
     function toFile() {
         window.location.href = "/file-page"
+        //$("#idzhi").val()
     }
 </script>
 </body>
