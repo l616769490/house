@@ -1,5 +1,5 @@
 package com.tecode.house.liuhao.dao.impl
-
+import scala.collection.JavaConverters._
 import java.util
 
 import com.tecode.house.liuhao.dao.ReadHbaseDao
@@ -44,7 +44,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     //将rdd转换成scala的list
     val scalalist: List[util.ArrayList[String]] = listrow.collect().toList
     //将scala的list转换成Javalist
-    val javalist: util.ArrayList[util.ArrayList[String]] = scalalist.asJava
+    val javalist: util.List[util.ArrayList[String]] = scalalist.asJava
     var showdata:util.List[util.ArrayList[String]] = null
     val size = javalist.size()
 
@@ -107,7 +107,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     //将rdd转换成scala的list
     val scalalist: List[util.ArrayList[String]] = listrow.collect().toList
     //将scala的list转换成Javalist
-    val javalist: util.ArrayList[util.ArrayList[String]] = scalalist.asJava
+    val javalist: util.List[util.ArrayList[String]] = scalalist.asJava
     var showdata:util.List[util.ArrayList[String]] = null
     val size = javalist.size()
 

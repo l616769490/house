@@ -13,7 +13,7 @@ trait ReadHbaseDao {
     * @param arr  查看的列的集合
     * @return
     */
-  def readData(tablename:String,page:Int,,arr:String):(Integer,util.List[util.ArrayList[String]])
+  def readData(tablename:String,page:Int,arr:String):(Integer,util.List[util.ArrayList[String]])
 
 
   /**
