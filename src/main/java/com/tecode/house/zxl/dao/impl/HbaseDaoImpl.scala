@@ -199,9 +199,10 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).filter(_._1.equals(income))
-    val java = s2.take(p*10).toList.asJava
+
+    val javaList = s2.take(p*10).toList.asJava
     val count: Long = s2.count()
-    val tuples = setSublist(p,count.toInt,java)
+    val tuples = setSublist(p,count.toInt,javaList)
     val value = tuples.iterator()
 
     while (value.hasNext) {
@@ -217,12 +218,12 @@ class HbaseDaoImpl extends HbaseDao {
     list
   }
 
-  def setSublist(p:Int,count:Int,java: util.List[(String, (String, Int, Int))]): util.List[(String, (String, Int, Int))] ={
+  def setSublist(p:Int,count:Int,javaList: util.List[(String, (String, Int, Int))]): util.List[(String, (String, Int, Int))] ={
     if(p*10>count){
-      java.subList(count-10,count)
+      javaList.subList(count-10,count)
 
     }else{
-      java.subList((p-1)*10,p*10)
+      javaList.subList((p-1)*10,p*10)
     }
   }
 
@@ -314,7 +315,7 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += (_))
+    s2.filter(_._1.equals(person)).collect().foreach(map += (_))
 
     sc.stop()
 
@@ -411,9 +412,9 @@ class HbaseDaoImpl extends HbaseDao {
       }
 
     }).filter(_._1.equals(person))
-    val java = s2.take(p*10).toList.asJava
+    val javaList = s2.take(p*10).toList.asJava
     val count: Long = s2.count()
-    val tuples = setSublist(p,count.toInt,java)
+    val tuples = setSublist(p,count.toInt,javaList)
     val value = tuples.iterator()
 
     while (value.hasNext) {
@@ -512,9 +513,9 @@ class HbaseDaoImpl extends HbaseDao {
       }
     }).filter(_._1.equals(value))
 
-    val java = s2.take(p*10).toList.asJava
+    val javaList = s2.take(p*10).toList.asJava
     val count: Long = s2.count()
-    val tuples = setSublist(p,count.toInt,java)
+    val tuples = setSublist(p,count.toInt,javaList)
     val value2 = tuples.iterator()
 
     while (value2.hasNext) {
@@ -522,7 +523,6 @@ class HbaseDaoImpl extends HbaseDao {
       list:+=(count.toInt,tuple._2)
 
     }
-
 
     sc.stop()
 

@@ -27,7 +27,7 @@ public class MyGraf {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_income", method = RequestMethod.POST)
     public Option testBar(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -138,7 +138,7 @@ public class MyGraf {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-pie", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_value", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题
@@ -193,7 +193,7 @@ public class MyGraf {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-pie2", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_person", method = RequestMethod.POST)
     public Option testPie2() {
         Option option = new Option();
         // 标题

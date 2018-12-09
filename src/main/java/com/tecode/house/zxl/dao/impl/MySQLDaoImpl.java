@@ -58,7 +58,14 @@ public class MySQLDaoImpl implements MySQLDao {
 
             if(reportid>0&&digId>0&&xId>0&&dataId>0&&legId>0&&dimId>0&&yId>0){
                 conn.commit();
-                return true;
+                int i = updateStatus(conn, reportid);
+                if(i>0){
+                    conn.commit();
+                    return true;
+                }else {
+                    return false;
+                }
+
             }
         } catch (SQLException e) {
             try {
@@ -74,6 +81,14 @@ public class MySQLDaoImpl implements MySQLDao {
 
 
         return false;
+    }
+
+    private int updateStatus(Connection conn,int reportId) throws SQLException {
+        String sql="update report set status=1 where id=?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1,reportId);
+        int i = ps.executeUpdate();
+        return i;
     }
 
     @Override
@@ -271,7 +286,7 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     private int toX(Connection conn,PreparedStatement ps,ResultSet rs,int digId,String type,String x) throws SQLException {
-        String sql2="insert into xAxis value(?,?,?,?)";
+        String sql2="insert into xaxis value(?,?,?,?)";
         int xId=0;
         ps=conn.prepareStatement(sql2,new String[]{"id"});
         ps.setInt(1,0);
@@ -291,7 +306,7 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     private int toY(Connection conn,PreparedStatement ps,ResultSet rs,int digId,String y) throws SQLException {
-        String sql5="insert into yAxis value(?,?,?)";
+        String sql5="insert into yaxis value(?,?,?)";
         int yId=0;
         ps=conn.prepareStatement(sql5,new String[]{"id"});
         ps.setInt(1,0);

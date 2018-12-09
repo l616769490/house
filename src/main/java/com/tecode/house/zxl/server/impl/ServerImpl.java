@@ -1,6 +1,7 @@
 package com.tecode.house.zxl.server.impl;
 
 
+import com.tecode.house.d01.service.Analysis;
 import com.tecode.house.zxl.dao.HbaseDao;
 import com.tecode.house.zxl.dao.impl.HbaseDaoImpl;
 import com.tecode.table.*;
@@ -18,7 +19,7 @@ import scala.collection.immutable.List;
 import scala.collection.immutable.Map;
 
 @Service
-public class ServerImpl implements MaketPriceServer {
+public class ServerImpl implements MaketPriceServer, Analysis {
 
 
     @Autowired
@@ -27,63 +28,43 @@ public class ServerImpl implements MaketPriceServer {
     @Autowired
     private HbaseDao hd = new HbaseDaoImpl();
 
-    /**
-     * 向mysql里插入统计结果
-     *
-     * @param year
-     * @return
-     */
-    @Override
-    public boolean intoMysql(String year) {
-
-        boolean value = intoValue(year);
-
-        boolean personValue = intoPerson(year);
-
-        boolean cityValue = intoIncome(year);
-
-        if (value && personValue && cityValue) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
 
     /**
      * 向mysql中插入统计家庭人数的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoPerson(String year) {
-        Map<String, Object> personDistribution = hd.getPersonDistribution(year);
+    private boolean intoPerson(String tableName) {
+        Map<String, Object> personDistribution = hd.getPersonDistribution(tableName);
         Iterator<Tuple2<String, Object>> pIt = personDistribution.iterator();
-
+        String year=tableName.split(":")[1];
         return sd.into("家庭人数", "单项查询", "http://166.166.1.10/person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
     }
 
     /**
      * 向mysql中插入统计市场价的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoValue(String year) {
-        Map<String, Object> vmap = hd.getValueDistribution(year);
+    private boolean intoValue(String tableName) {
+        Map<String, Object> vmap = hd.getValueDistribution(tableName);
         Iterator<Tuple2<String, Object>> vIt = vmap.iterator();
+        String year=tableName.split(":")[1];
         return sd.into("市场价", "单项查询", "http://166.166.1.10/value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
     }
 
     /**
      * 向mysql中插入统计家庭收入的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoIncome(String year) {
-        Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(year);
+    private boolean intoIncome(String tableName) {
+        Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(tableName);
         Iterator<Tuple2<String, Object>> cIt = incomeDistributionByCity.iterator();
+        String year=tableName.split(":")[1];
         return sd.into("家庭收入", "多项查询", "http://166.166.1.10/income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
     }
 
@@ -318,5 +299,19 @@ public class ServerImpl implements MaketPriceServer {
     }
 
 
+    @Override
+    public boolean analysis(String tableName) {
+        boolean value = intoValue(tableName);
 
+        boolean personValue = intoPerson(tableName);
+
+        boolean cityValue = intoIncome(tableName);
+
+        if (value && personValue && cityValue) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }
