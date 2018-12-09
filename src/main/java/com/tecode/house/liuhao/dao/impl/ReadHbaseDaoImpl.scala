@@ -2,6 +2,7 @@ package com.tecode.house.liuhao.dao.impl
 import scala.collection.JavaConverters._
 import java.util
 
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.liuhao.dao.ReadHbaseDao
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
@@ -23,8 +24,8 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     * @return
     */
   override def readData(tablename:String,page:Int,arr:String):(Integer,util.List[util.ArrayList[String]])= {
-    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
-    val sc = new SparkContext(con)
+//    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
+    val sc = SparkUtil.getSparkContext
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     conf.set(TableInputFormat.SCAN_COLUMNS, "info")

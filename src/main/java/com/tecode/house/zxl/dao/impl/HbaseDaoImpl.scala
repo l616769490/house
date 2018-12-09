@@ -2,6 +2,7 @@ package com.tecode.house.zxl.dao.impl
 
 import java.util
 
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.zxl.dao.HbaseDao
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
@@ -27,8 +28,8 @@ class HbaseDaoImpl extends HbaseDao {
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),

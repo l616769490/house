@@ -3,6 +3,7 @@ package com.tecode.house.zhangzhou.service
 import java.sql.{Connection, SQLException}
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.zhangzhou.mysqlDao.impl.MysqlDaoImpl
 import com.tecode.house.zhangzhou.zzUtil.MySQLUitl
 import org.apache.hadoop.hbase.HBaseConfiguration
@@ -20,9 +21,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 case class TmpClass(city:String ,houseDuty:Double)
 
 class SparkService{
-  val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
-  val sc = new SparkContext(sparkConf)
-  val spark = SparkSession.builder().config(sparkConf).getOrCreate()
+//  val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
+  val sc = SparkUtil.getSparkContext
+  val spark = SparkSession.builder().config(sc.getConf).getOrCreate()
 
   //val tableName = "thads:2013"
   //val hbaseConf = HBaseConfiguration.create()

@@ -6,6 +6,7 @@ import java.util
 import com.tecode.house.chenyong.bean.Age
 import com.tecode.house.chenyong.dao.impl.MySQLDaoImpl
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -60,9 +61,8 @@ class AgeAnalysis extends Analysis{
     * @return 成功/失败
     */
   override def analysis(tableName: String): Boolean = {
-    val conf = new SparkConf().setAppName("AgeAnalysis").setMaster("local[*]")
 
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
 
     val ageRDD: RDD[Int] = readData(tableName,sc)
 
