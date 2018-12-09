@@ -32,16 +32,19 @@
 <body>
 <div class="container-fluid">
     <div class="row">
-        <div id="show" style="width: 800px;height: 600px" class="col-lg-12 col-md-offset-2">
+        <div id="show" style="width: 600px;height: 400px" class="col-lg-12 col-md-offset-2">
 
         </div>
 
     </div>
     <div class="row">
         <div id="btns" class="col-lg-6 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="show('/test-line')">折线图</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/test-bar')">柱状图</button>
-            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/test-pie')">饼状图</button>
+            <button id="btn-1" class="btn btn-success" onclick="show('/zxl-control')">导入数据</button>
+            <button id="btn-7" class="btn btn-success" onclick="show('/zxl-pie2')">家庭人数</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/zxl-bar')">按城市统计收入</button>
+            <button id="btn-9" class="btn btn-success col-md-offset-1" onclick="show('/zxl-incometable')">家庭收入表</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/zxl-pie')">市场价</button>
+            <button id="btn-6" class="btn btn-success col-md-offset-1" onclick="show('http://166.166.0.5/test-pie')">空置状态</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
             <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
         </div>
