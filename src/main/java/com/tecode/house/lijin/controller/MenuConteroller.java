@@ -5,6 +5,7 @@ import com.tecode.pagelist.PageList;
 import com.tecode.pagelist.Report;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
@@ -18,7 +19,7 @@ public class MenuConteroller {
 
 
     @ResponseBody
-    @RequestMapping("/testMenu")
+    @RequestMapping(value = "/testMenu", method = RequestMethod.POST)
     public PageList getMenu(){
         PageList  pageList = new PageList();
         pageList.addYear(2011).addYear(2012).addYear(2013).addYear(2014).addYear(2015).addYear(2016);

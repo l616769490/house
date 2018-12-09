@@ -2,7 +2,6 @@ package com.tecode.house.zouchao.dao.impl
 
 import java.util
 
-import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.zouchao.dao.HBaseDao
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -21,8 +20,8 @@ class HBaseDaoImpl extends HBaseDao {
 
   override def getForRent(tableName: String, filter: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
 
-//    val conf = new SparkConf().setAppName("getForRent").setMaster("local[*]")
-    val sc = SparkUtil.getSparkContext
+    val conf = new SparkConf().setAppName("getForRent").setMaster("local[*]")
+    val sc = new SparkContext(conf)
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名

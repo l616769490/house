@@ -27,8 +27,11 @@ public class PageListController {
     // <年份， 报表组>
     private Map<Integer, PageList> pageListMap;
     @ResponseBody
-    @RequestMapping(value = "/menu", method = RequestMethod.POST)
+    @RequestMapping("/menu")
     public PageList getMenu(Integer year) {
+        if(year == null || year == 0) {
+            year = 2013;
+        }
         if(pageListMap == null) {
             pageListMap = new HashedMap();
             Set<Integer> yearSet = new HashSet<>();
@@ -68,8 +71,6 @@ public class PageListController {
                     pageList.addGroup(groupEntry.getValue());
                 }
             }
-
-
         }
 
         return pageListMap.get(year);
