@@ -20,12 +20,11 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 查询家庭收入
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getIncome(): Map[String, Iterable[(String, Int, Int)]] = {
 
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -40,7 +39,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -57,11 +56,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().foreach(map += (_))
 
     sc.stop()
 
-    return map
+    map
 
   }
 
@@ -73,7 +72,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getIncome(year: String, income: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -87,7 +86,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -104,11 +103,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().foreach(map+=((_)))
+    s2.collect().foreach(map+=(_))
 
     sc.stop()
 
-    return map
+    map
   }
 
 
@@ -120,7 +119,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getIncome(year: String, city: Int): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -135,7 +134,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -152,11 +151,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
     sc.stop()
 
-    return map
+    map
   }
 
   /**
@@ -168,7 +167,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getIncome(year: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]  = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -183,7 +182,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var list:List[(Int, (String, Int, Int))]=List();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -215,7 +214,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     sc.stop()
 
-    return list
+    list
   }
 
   def setSublist(p:Int,count:Int,java: util.List[(String, (String, Int, Int))]): util.List[(String, (String, Int, Int))] ={
@@ -230,11 +229,10 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 获取家庭人数
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getPerson(): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -248,7 +246,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -267,11 +265,12 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+
+    s2.collect().take(100).foreach(map += (_))
 
     sc.stop()
 
-    return map
+    map
   }
 
   /**
@@ -282,7 +281,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getPerson(year: String, person: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -296,7 +295,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -315,11 +314,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
+    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += (_))
 
     sc.stop()
 
-    return map
+     map
   }
 
   /**
@@ -330,7 +329,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getPerson(year: String, city: Int): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -344,7 +343,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(city.toInt == _._2)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -363,10 +362,10 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
     sc.stop()
-    return map
+     map
   }
 
   /**
@@ -378,7 +377,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getPerson(year: String, person: String, city: String,p:Int):List[(Int, (String, Int, Int))] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -392,7 +391,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var list:List[(Int, (String, Int, Int))]=List();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -425,17 +424,16 @@ class HbaseDaoImpl extends HbaseDao {
 
 
     sc.stop()
-    return list
+    list
   }
 
   /**
     * 查询市场价
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getValue(): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -449,7 +447,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 500000) {
@@ -466,11 +464,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("250万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
     sc.stop()
 
-    return map
+    map
   }
 
   /**
@@ -481,7 +479,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getValue(year: String, value: String,p:Int): List[(Int, (String, Int, Int))] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -496,7 +494,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var list:List[(Int, (String, Int, Int))]=List();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 500000) {
@@ -528,7 +526,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     sc.stop()
 
-    return list
+    list
 
   }
 
@@ -539,14 +537,14 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 统计结果
     */
   override def getValueDistribution(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
     val sc = new SparkContext(spconf)
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s = hbaseRDD.map(x =>
 
@@ -584,7 +582,7 @@ class HbaseDaoImpl extends HbaseDao {
     map += (("min", min))
     map += (("avg", avg.toInt))
     sc.stop()
-    return map
+    map
 
   }
 
@@ -595,7 +593,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 统计结果
     */
   override def getPersonDistribution(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -608,7 +606,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     ).map(_.toInt).filter(_ > 0)
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s2 = s.map(i => {
 
@@ -636,7 +634,7 @@ class HbaseDaoImpl extends HbaseDao {
     val sum = s.sum()
     val count = s.count()
     val avg = sum / count
-    s2.collect().foreach(map += ((_)))
+    s2.collect().foreach(map += (_))
 
     map += (("max", max))
     map += (("min", min))
@@ -644,7 +642,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     sc.stop()
 
-    return map
+   map
   }
   /**
     * 按照城市统计家庭收入
@@ -653,7 +651,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 统计结果
     */
   override def getIncomeDistributionByCity(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -666,7 +664,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._2.toInt > 0).groupByKey()
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s2 = s.flatMap(x => {
       val a = x._2.iterator
@@ -698,9 +696,9 @@ class HbaseDaoImpl extends HbaseDao {
 
     s.map(x => (x._1, x._2.toList.sum / x._2.toList.size)).collect().foreach(x => map += ((x._1 + "_avg", x._2.toInt)))
 
-    s4.collect().foreach(map += ((_)))
+    s4.collect().foreach(map += (_))
     sc.stop()
 
-    return map;
+     map
   }
 }
