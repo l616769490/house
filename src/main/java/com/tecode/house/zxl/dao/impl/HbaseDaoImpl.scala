@@ -1,5 +1,6 @@
 package com.tecode.house.zxl.dao.impl
 
+
 import java.util
 
 import com.tecode.house.zxl.dao.HbaseDao
@@ -9,9 +10,11 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.{SparkConf, SparkContext}
+import org.springframework.stereotype.Repository
 
 import scala.collection.JavaConverters._
 
+@Repository
 class HbaseDaoImpl extends HbaseDao {
 
   /**
@@ -164,7 +167,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param city   要查询的城市等级
     * @return 查询结果
     */
-  override def getIncome(year: String, income: String, city: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getIncome(year: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]  = {
     val conf = HBaseConfiguration.create();
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
@@ -180,7 +183,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List();
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -196,14 +199,33 @@ class HbaseDaoImpl extends HbaseDao {
       } else {
         ("25万以上", (x._1, x._2, x._3))
       }
-    }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    }).filter(_._1.equals(income))
+    val java = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,java)
+    val value = tuples.iterator()
+
+    while (value.hasNext) {
+      val tuple = value.next()
+      list:+=(count.toInt,tuple._2)
+
+    }
+
+
 
     sc.stop()
 
-    return map
+    return list
   }
 
+  def setSublist(p:Int,count:Int,java: util.List[(String, (String, Int, Int))]): util.List[(String, (String, Int, Int))] ={
+    if(p*10>count){
+      java.subList(count-10,count)
+
+    }else{
+      java.subList((p-1)*10,p*10)
+    }
+  }
 
   /**
     * 获取家庭人数
@@ -355,7 +377,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param person 要查询的年份
     * @return 查询结果
     */
-  override def getPerson(year: String, person: String, city: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getPerson(year: String, person: String, city: String,p:Int):List[(Int, (String, Int, Int))] = {
     val conf = HBaseConfiguration.create();
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
@@ -370,7 +392,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List();
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -389,11 +411,21 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
 
-    }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
+    }).filter(_._1.equals(person))
+    val java = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,java)
+    val value = tuples.iterator()
+
+    while (value.hasNext) {
+      val tuple = value.next()
+      list:+=(count.toInt,tuple._2)
+
+    }
+
 
     sc.stop()
-    return map
+    return list
   }
 
   /**
@@ -448,7 +480,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param value 要查询的价格区间
     * @return 查询结果
     */
-  override def getValue(year: String, value: String): Map[String, Iterable[(String, Int, Int)]] = {
+  override def getValue(year: String, value: String,p:Int): List[(Int, (String, Int, Int))] = {
     val conf = HBaseConfiguration.create();
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
@@ -464,7 +496,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List();
     val s2 = s.map(x => {
       val i = x._3
       if (i < 500000) {
@@ -480,13 +512,23 @@ class HbaseDaoImpl extends HbaseDao {
       } else {
         ("250万以上", (x._1, x._2, x._3))
       }
-    }).groupByKey()
+    }).filter(_._1.equals(value))
 
-    s2.filter(_._1.equals(value)).collect().foreach(map += ((_)))
+    val java = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,java)
+    val value2 = tuples.iterator()
+
+    while (value2.hasNext) {
+      val tuple = value2.next()
+      list:+=(count.toInt,tuple._2)
+
+    }
+
 
     sc.stop()
 
-    return map
+    return list
 
   }
 

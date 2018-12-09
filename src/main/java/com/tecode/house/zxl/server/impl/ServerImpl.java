@@ -7,23 +7,24 @@ import com.tecode.table.*;
 import com.tecode.house.zxl.dao.MySQLDao;
 import com.tecode.house.zxl.dao.impl.MySQLDaoImpl;
 import com.tecode.house.zxl.server.MaketPriceServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 import scala.Tuple3;
-import scala.actors.threadpool.Arrays;
+
 import scala.collection.Iterable;
 import scala.collection.Iterator;
 import scala.collection.immutable.List;
 import scala.collection.immutable.Map;
 
-import java.util.ArrayList;
-
 @Service
 public class ServerImpl implements MaketPriceServer {
 
 
+    @Autowired
     private MySQLDao sd = new MySQLDaoImpl();
 
+    @Autowired
     private HbaseDao hd = new HbaseDaoImpl();
 
     /**
@@ -123,9 +124,9 @@ public class ServerImpl implements MaketPriceServer {
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
 
-        Map<String, Iterable<Tuple3<String, Object, Object>>> valueData = hd.getValue(year, search);
+        List<Tuple2<Object, Tuple3<String, Object, Object>>> value = hd.getValue(year, search, tablePost.getPage());
 
-        setTable(valueData, table, p);
+        setTable2(value, table, p);
 
         return table;
     }
@@ -179,7 +180,7 @@ public class ServerImpl implements MaketPriceServer {
 
         Map<String, Iterable<Tuple3<String, Object, Object>>> valueData = null;
         if (searches.size() == 1) {
-            search = searches.get(0).getTitle();
+            search = searches.get(0).getValues().get(0);
             if (!search.contains("人")) {
                 valueData = hd.getPerson(year, Integer.valueOf(search));
                 setTable(valueData, table, p);
@@ -188,8 +189,8 @@ public class ServerImpl implements MaketPriceServer {
                 setTable(valueData, table, p);
             }
         } else if (searches.size() == 2) {
-            valueData = hd.getPerson(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
-            setTable(valueData, table, p);
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            setTable2(person, table, p);
         }
 
 
@@ -250,8 +251,8 @@ public class ServerImpl implements MaketPriceServer {
             }
 
         } else if (searches.size() == 2) {
-            valueData = hd.getIncome(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
-            setTable(valueData, table, p);
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            setTable2(income, table,p);
         }
 
 
@@ -276,12 +277,16 @@ public class ServerImpl implements MaketPriceServer {
      * @param p
      */
     private void setTable(Map<String, Iterable<Tuple3<String, Object, Object>>> valueData, Table table, Page p) {
+
         Iterator<Tuple2<String, Iterable<Tuple3<String, Object, Object>>>> iterator = valueData.iterator();
+
         while (iterator.hasNext()) {
+
             Tuple2<String, Iterable<Tuple3<String, Object, Object>>> next = iterator.next();
             Iterable<Tuple3<String, Object, Object>> it = next._2;
             Iterator<Tuple3<String, Object, Object>> it2 = it.iterator();
             List<Tuple3<String, Object, Object>> tuple3List = it.toList();
+
             int size = tuple3List.size();
             int page = size / 10 + 1;
             for (int i = 1; i < page; i++) {
@@ -292,6 +297,24 @@ public class ServerImpl implements MaketPriceServer {
                 table.addData(new Row().addRow(next1._1()).addRow(next1._2().toString()).addRow(next1._3().toString()));
             }
         }
+    }
+
+    private  void  setTable2( List<Tuple2<Object, Tuple3<String, Object, Object>>> income,Table table,Page p){
+        Iterator<Tuple2<Object, Tuple3<String, Object, Object>>> iterator = income.iterator();
+        int size=0;
+        while (iterator.hasNext()){
+            Tuple2<Object, Tuple3<String, Object, Object>> next = iterator.next();
+            size=Integer.valueOf(next._1.toString());
+
+            Tuple3<String, Object, Object> next1 = next._2;
+            table.addData(new Row().addRow(next1._1()).addRow(next1._2().toString()).addRow(next1._3().toString()));
+
+        }
+        int page = size / 10 + 1;
+        for (int i = 1; i < page; i++) {
+            table.setPage(p.addData(i));
+        }
+
     }
 
 
