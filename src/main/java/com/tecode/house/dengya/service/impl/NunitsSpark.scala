@@ -166,8 +166,8 @@ class NunitsSpark extends Analysis{
 
       //搜索表
       val search: Search = new Search()
-      search.setName("单元数区间搜索")
-      search.setDimGroupName("建筑结构类型")
+      search.setName("单元数")
+      search.setDimGroupName("单元数")
       search.setReportId(reportId)
       val searchId: Int = dao.putInTableSearch(conn, search)
       println("正在插入.......")

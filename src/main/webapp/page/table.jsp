@@ -36,11 +36,8 @@
 <div class="container-fluid">
     <div class="row">
         <div id="btns" class="col-lg-8 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-房间数分析</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按区域-家庭收入分析
-            </button>
-            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按区域-房产税分析
-            </button>
+            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-建筑单元数</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按城市规模-房屋价格统计
         </div>
     </div>
     <div class="row" id="house_search">
@@ -83,14 +80,16 @@
 <script>
     function getTable1() {
         $.ajax({
-            url: "/basics_rooms_num_table",
+            url: "/units_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
                 'page': 2,
-                'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
+                'searches': [
+                    {'title': '单元数', 'values': ['0-100']}
+                ]
             }),
             success: function (result) {
                 showTable(result);
@@ -100,18 +99,16 @@
 
     function getTable2() {
         $.ajax({
-            url: "/region_zinc2_num_table",
+            url: "/priceByCity_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
-                'page': 2,
+                'page': 1,
                 'searches': [
-                    {'title': '1', 'values': ['L30']},
-                    {'title': '2', 'values': ['L80']},
-                    {'title': '3', 'values': ['L50']},
-                    {'title': '4', 'values': ['L80+']}]
+                    {'title': '租金', 'values': ['0-1000']}
+                    ]
             }),
             success: function (result) {
                 showTable(result);
@@ -119,26 +116,7 @@
         });
     }
 
-    function getTable3() {
-        $.ajax({
-            url: "/region_zsmhc_num_table",
-            type: "POST",
-            dataType: "json",
-            contentType: 'application/json',
-            data: JSON.stringify({
-                'year': 2013,
-                'page': 2,
-                'searches': [
-                    {'title': '1', 'values': ['1500-3000']},
-                    {'title': '2', 'values': ['1500-3000']},
-                    {'title': '3', 'values': ['1500-3000']},
-                    {'title': '4', 'values': ['1500-3000']}]
-            }),
-            success: function (result) {
-                showTable(result);
-            }
-        });
-    }
+
 
     function showTable(result) {
         // 表格数据

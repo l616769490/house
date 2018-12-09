@@ -16,20 +16,14 @@ public class TableController {
     @ResponseBody
     @RequestMapping(value = "/units_table", method = RequestMethod.POST)
     public Table unitsTable(@RequestBody  TablePost tablePost){
-        if(tablePost.getSearches().isEmpty()){
-            Table table =tableService.getTableForUnits(tablePost.getPage(),tablePost.getYear());
-            return table;
-        }
+
         return tableService.getTableForUnits(tablePost);
     }
 
     @ResponseBody
     @RequestMapping(value = "/priceByCity_table", method = RequestMethod.POST)
     public Table priceByCity(@RequestBody TablePost tablePost){
-        if(tablePost.getSearches().isEmpty()){
-            Table table = tableService.getTableForPrice(tablePost.getPage(),tablePost.getYear());
-            return  table;
-        }
+
         return tableService.getTableForPrice(tablePost);
     }
 

@@ -17,33 +17,39 @@ public class test {
         TablePost tablePost = new TablePost();
        tablePost.setPage(1);
        tablePost.setYear(2013);
+       //构建 单元数Search对象
+       /*Search search = new Search();
+        search.setTitle("单元数");
+        List<String> list = new ArrayList<>();
+        list.add("0-100");*/
+     //   search.setValues(list);
         //构建 建成年份Search对象
-        Search search = new Search();
+     /*  Search search = new Search();
         search.setTitle("城市规模");
         List<String> list1 = new ArrayList<>();
         list1.add("一级城市");
-        search.setValues(list1);
+        search.setValues(list1);*/
 
         //构建 租金对象
-      /* Search search1 = new Search();
-        search1.setTitle("租金区间");
+     /* Search search1 = new Search();
+        search1.setTitle("租金");
         List<String> list2 = new ArrayList<>();
         list2.add("1000-1500");
         search1.setValues(list2);*/
 
         //构建 租金对象
-       /* Search search2 = new Search();
-        search1.setTitle("价格区间");
+       Search search2 = new Search();
+        search2.setTitle("价格");
         List<String> list3 = new ArrayList<>();
-        list2.add("0-50");
-        search1.setValues(list3);*/
+        list3.add("0-50");
+        search2.setValues(list3);
 
 
 
-       List<Search> ls = new ArrayList<>();
-        ls.add(search);
-       // ls.add(search1);
-       // ls.add(search2);
+     List<Search> ls = new ArrayList<>();
+    //ls.add(search);
+      //  ls.add(search1);
+        ls.add(search2);
         tablePost.setSearches(ls);
         Table table = t.priceByCity(tablePost);
         System.out.println("year:   "+table.getYear());
