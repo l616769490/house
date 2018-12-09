@@ -36,10 +36,10 @@
 <div class="container-fluid">
     <div class="row">
         <div id="btns" class="col-lg-8 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-房间数分析</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按区域-家庭收入分析
+            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-居住类型分析</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按区域-房间数分析
             </button>
-            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按区域-房产税分析
+            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按年份-独栋建筑分析
             </button>
         </div>
     </div>
@@ -83,7 +83,7 @@
 <script>
     function getTable1() {
         $.ajax({
-            url: "/basics_rooms_num_table",
+            url: "/test-table-self",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -100,7 +100,7 @@
 
     function getTable2() {
         $.ajax({
-            url: "/region_zinc2_num_table",
+            url: "/test-table-room",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -108,10 +108,7 @@
                 'year': 2013,
                 'page': 2,
                 'searches': [
-                    {'title': '1', 'values': ['L30']},
-                    {'title': '2', 'values': ['L80']},
-                    {'title': '3', 'values': ['L50']},
-                    {'title': '4', 'values': ['L80+']}]
+                    {'title': '城市等级', 'values': ['1'], 'values': ['2'], 'values': ['3'], 'values': ['4'], 'values': ['5']}]
             }),
             success: function (result) {
                 showTable(result);
@@ -121,7 +118,7 @@
 
     function getTable3() {
         $.ajax({
-            url: "/region_zsmhc_num_table",
+            url: "/test-table-single",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -129,10 +126,8 @@
                 'year': 2013,
                 'page': 2,
                 'searches': [
-                    {'title': '1', 'values': ['1500-3000']},
-                    {'title': '2', 'values': ['1500-3000']},
-                    {'title': '3', 'values': ['1500-3000']},
-                    {'title': '4', 'values': ['1500-3000']}]
+                    {'title': '建成年份', 'values': ['1900-2000'], 'values': ['2000-2010'], 'values': ['1900-2000']}
+                    ]
             }),
             success: function (result) {
                 showTable(result);

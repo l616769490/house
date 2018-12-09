@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 表格请求接口测试
  */
-@Controller
+
 public class TestTable {
 
 

@@ -1,8 +1,9 @@
 package com.tecode.house.libo.Service.ServiceImpl
 
-import java.sql
+import java.{sql, util}
 import java.sql.{Connection, SQLException}
 
+import scala.collection.JavaConverters._
 import com.google.protobuf.SingleFieldBuilder
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.libo.dao.impl.MysqlDaoImpl
@@ -21,17 +22,19 @@ import scala.collection.immutable.HashMap
 object RoomByCity02 {
   def main(args: Array[String]): Unit = {
     val room = new RoomByCity02
-    //room.selfOrRent("2013")
-    //println("1::success")
+    //room.RoomAndBedRom("2013")
+    room.selfOrRent("2013")
+  //  println("1::success")
     // println("===============")
     //room.RoomAndBedRom("2013")
     // println("1::success")
-    //println("----------------")
+   // println("----------------")
     //room. SingleBuildByYear("2013");
     //print("asdcvc".split(";")(0))
     //room.selfRentTable("2013","租赁")
     //room.roomsTable("2013","5","6")
-    //room.singleTable("2013","1999","否")
+    //room.singleTable("2013","1999","否",5)
+  // room. RoomAndBedRom("2013")
   }
 
 
@@ -92,6 +95,7 @@ class RoomByCity02 extends Analysis {
       var legendId = 0;
       var xId = 0;
       var yId = 0;
+      var searchId = 0;
 
       //开启事物
       msconn1.setAutoCommit(false)
@@ -129,6 +133,8 @@ class RoomByCity02 extends Analysis {
       for (elem <- tenureMap) {
         table.insertIntoData(elem._2.toString, xId, legendId, elem._1, "自住、租赁图例")
       }
+      //插入搜索表
+      searchId = table.insertIntoSearch("居住状态","自住",reportId)
       //判断是否插入成功
       if (reportId > 0 && diagramId > 0 && legendId > 0 && xId > 0 && yId > 0) {
         msconn1.commit();
@@ -171,9 +177,12 @@ class RoomByCity02 extends Analysis {
     val frame = value.toDF()
     frame.createOrReplaceTempView("tmp")
     val dataFrame = spark.sql("select city,room,bedrom from tmp")
-    val rdd1 = dataFrame.rdd.map(x => (x.get(0).toString, x.get(1) + "-" + x.get(2)))
+    val rdd1 = dataFrame.rdd.map(x => (x.get(0).toString, x.get(1) + "_" + x.get(2)))
 
     rdd1.collect().foreach(RoomAndBedRom += (_))
+//    for (elem <- RoomAndBedRom) {
+//      println(elem)
+//    }
 
     //导入mysql
     RoomAndBedRomToMysql(RoomAndBedRom, tableName)
@@ -190,6 +199,7 @@ class RoomByCity02 extends Analysis {
     try {
       var reportId = 0;
       var diagramId = 0;
+      var searchId= 0
       var legendId = 0;
       var xId = 0;
       var yId = 0;
@@ -223,10 +233,12 @@ class RoomByCity02 extends Analysis {
       //插入数据集表
       ddId = table.insertIntoDimension("basic", "总房数、卧室数分布", "ROOMS")
 
+      searchId = table.insertIntoSearch("房间卧室数","房间数",reportId)
+      table.insertIntoSearch("城市等级","1",reportId)
       //数据表
       for (elem <- tenureMap) {
-        table.insertIntoData(elem._2.split("-")(0), xId, legendId, elem._1, "总房数")
-        table.insertIntoData(elem._2.split("-")(1), xId, legendId, elem._1, "卧室数")
+        table.insertIntoData(elem._2.split("_")(0), xId, legendId, elem._1, "总房数")
+        table.insertIntoData(elem._2.split("_")(1), xId, legendId, elem._1, "卧室数")
       }
 
     } catch {
@@ -252,11 +264,11 @@ class RoomByCity02 extends Analysis {
   def SingleBuildByYear(tableName: String): Unit = {
     var msconn: sql.Connection = DBUtil.getConn
     var singleMap = Map[String, Int]()
-    //链接hbase
-    val hconf = HBaseConfiguration.create()
-    //val tableName = "2013"
-    hconf.set(TableInputFormat.INPUT_TABLE, tableName)
-    hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
+//    //链接hbase
+//    val hconf = HBaseConfiguration.create()
+//    //val tableName = "2013"
+//    hconf.set(TableInputFormat.INPUT_TABLE, tableName)
+//    hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
 
     //获取数据
     val hbaseRDD: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(hconf, classOf[TableInputFormat],
@@ -310,7 +322,7 @@ class RoomByCity02 extends Analysis {
       var legID = 0;
       var xID = 0;
       var yID = 0;
-
+      var searchId= 0
 
 
       //插入report表
@@ -354,6 +366,8 @@ class RoomByCity02 extends Analysis {
           table.insertIntoData(elem._2.toString, xID, legID, elem._1.split(";")(0), "独栋建筑")
         }
       }
+
+      searchId = table.insertIntoSearch("独栋建筑比例","独栋",reportID)
       if (reportID > 0 && digID > 0 && legID > 0 && xID > 0 && yID > 0) {
         msconn.commit();
         return true;
@@ -381,9 +395,9 @@ class RoomByCity02 extends Analysis {
     * -----自住、租赁-----
     * ID  城市等级  简称年份  建筑结构  自住、租赁
     */
-  def selfRentTable(tableName:String,select:String,page:Int): Map[String,String] = {
+  def selfRentTable(tableName:String,select:String,page:Int):List[(String,String)] = {
 
-    var selfTableMap = Map[String,String]()
+
     var values = hbaseRDD.map { x => {
       (Bytes.toString(x._2.getValue("info".getBytes(), "CONTROL".getBytes())),
         (Bytes.toString(x._2.getValue("info".getBytes(), "METRO3".getBytes()))),
@@ -392,6 +406,8 @@ class RoomByCity02 extends Analysis {
         (Bytes.toString(x._2.getValue("info".getBytes(), "OWNRENT".getBytes()))))
     }
     }.filter(x => x._2.toInt>0&&x._3.toInt>0&&x._4.toInt>0&&x._5.toInt>0)
+
+
     //过滤自住、租赁
 
     if(select.equals("自住")){
@@ -400,25 +416,57 @@ class RoomByCity02 extends Analysis {
     }else{
       values = values.filter(_._5.equals("2"))
     }
+
+
+
    // values.collect()//.foreach(println)
     //println("==========")
 
-      val v = values.map{x=>{
+
+     val v = values.map{x=>{
       if(x._5.toInt==1){
         //Map中   相同key 会覆盖  取房屋编号为key:(x._1)
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"自住")
       }else{
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"租赁")
       }
-
     }}
-      v.collect().foreach(selfTableMap+=(_))
-//    for (elem <- selfTableMap) {
-//      println(selfTableMap.size)
-//      println(elem)
-//    }
-    return selfTableMap
+    /**
+      * 转成javalist
+      * 分页   传入页数，总数，
+      */
+    //import sqlContext.implicits._
+    var list:List[(String,String)] = List()
+    val java: util.List[(String, String)] = v.take(page*10).toList.asJava
+    val l: Long = v.count()
+    val tuples= subString(page,l.toInt,java)
+    val value = tuples.iterator()
+
+    while(value.hasNext){
+      val str = value.next()
+      list:+=(l.toString,str._2)
+    }
+
+  list
+
+
+
+
+
 }
+
+  /**
+    * 截取方法
+    */
+  def subString(page:Int,count:Int,list:util.List[(String, String)]): util.List[(String, String)] ={
+    if (page*10>count){
+      list.subList(count-10,count)
+    }else{
+      list.subList((page-1)*10,page*10)
+    }
+  }
+
+
 
 
   /**
@@ -427,7 +475,7 @@ class RoomByCity02 extends Analysis {
     *       条件：城市等级  房间数最大15
     *       ID  城市等级  房间数   卧室数
     */
-  def roomsTable(tableName:String,city:String,rooms:String,page:Int):Map[String,String] ={
+  def roomsTable(tableName:String,city:String,page:Int):List[(String,String)]  ={
     var roomsMap = Map[String,String]();
     //取数据
     var value = hbaseRDD.map(x=>{
@@ -454,38 +502,49 @@ class RoomByCity02 extends Analysis {
       value = value
     }
 
-    if(rooms.equals("1")){
-      value = value.filter(_._3.equals("1"))
-    }else if(rooms .equals("2")){
-      value = value.filter(_._3.equals("2"))
-    }else if(rooms==null){
-      value = value
-    }else if(rooms .equals("3")){
-      value = value.filter(_._3.equals("3"))
-    }else if(rooms .equals("4")){
-      value = value.filter(_._3.equals("4"))
-    }else if(rooms .equals("5")){
-      value = value.filter(_._3.equals("5"))
-    }else if(rooms .equals("6")){
-      value = value.filter(_._3.equals("6"))
-    }else if(rooms .equals("7")){
-      value = value.filter(_._3.equals("7"))
-    }else if(rooms .equals("8")){
-      value = value.filter(_._3.equals("8"))
-    }else if(rooms .equals("9")){
-      value = value.filter(_._3.equals("9"))
-    }else if(Integer.parseInt(rooms) >= 10&& Integer.parseInt(rooms) <=16){
-      value = value.filter(_._3.toInt>=10)
-    }else{
-      value = value
-    }
-      value.map{x=>{
+//    if(rooms.equals("1")){
+//      value = value.filter(_._3.equals("1"))
+//    }else if(rooms .equals("2")){
+//      value = value.filter(_._3.equals("2"))
+//    }else if(rooms==null){
+//      value = value
+//    }else if(rooms .equals("3")){
+//      value = value.filter(_._3.equals("3"))
+//    }else if(rooms .equals("4")){
+//      value = value.filter(_._3.equals("4"))
+//    }else if(rooms .equals("5")){
+//      value = value.filter(_._3.equals("5"))
+//    }else if(rooms .equals("6")){
+//      value = value.filter(_._3.equals("6"))
+//    }else if(rooms .equals("7")){
+//      value = value.filter(_._3.equals("7"))
+//    }else if(rooms .equals("8")){
+//      value = value.filter(_._3.equals("8"))
+//    }else if(rooms .equals("9")){
+//      value = value.filter(_._3.equals("9"))
+//    }else if(Integer.parseInt(rooms) >= 10&& Integer.parseInt(rooms) <=16){
+//      value = value.filter(_._3.toInt>=10)
+//    }else{
+//      value = value
+//    }
+     val v = value.map{x=>{
       (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
-    }}.collect().foreach(roomsMap+=(_))
+    }}
+
+      var jlist:List[(String,String)] = List()
+      val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
+      val l1: Long = v.count()
+       val tuples = subString(page,l1.toInt,l)
+    val value1 = tuples.iterator()
+//
+    while(value1.hasNext){
+      val str = value1.next()
+      jlist:+=(l.toString,str._2)
+    }
 //    for (elem <- roomsMap) {
 //      println(elem)
 //    }
-    return roomsMap
+    jlist
   }
 
 
@@ -494,7 +553,7 @@ class RoomByCity02 extends Analysis {
     *   条件：年份区间    是否独栋
     * CONTROL METRO3 BUILT STRUCTURETYPE
     */
-  def singleTable(tableName:String,year:String,ifSingleBuild: String,page:Int): Map[String,String] ={
+  def singleTable(tableName:String,year:String,page:Int):List[(String,String)]  ={
     var singleMap = Map[String,String]()
     var values = hbaseRDD.map{x=>{
       (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
@@ -513,14 +572,15 @@ class RoomByCity02 extends Analysis {
       values = values
     }
 
+
     //独栋判断
-    if(ifSingleBuild.equals("是")){
-      values = values.filter(_._4.toInt==1)
-    }else if(ifSingleBuild.equals("否")){
-      values = values.filter(_._4.toInt==2)
-    }else{
-      values = values
-    }
+//    if(ifSingleBuild.equals("是")){
+//      values = values.filter(_._4.toInt==1)
+//    }else if(ifSingleBuild.equals("否")){
+//      values = values.filter(_._4.toInt==2)
+//    }else{
+//      values = values
+//    }
     //拼接成Map
     val v=values.map(x=>{
       if(x._4.toInt==1){
@@ -528,12 +588,28 @@ class RoomByCity02 extends Analysis {
       }else{
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"否")
       }
-    })//.collect().toMap.foreach(println)
-    v.collect().foreach(singleMap+=(_))
+    })
+    var jlist:List[(String,String)] = List()
+    val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
+    val l1: Long = v.count()
+    //var page = l1.toInt
+    val tuples = subString(page,l1.toInt,l)
+    val value1 = tuples.iterator()
+    //
+    while(value1.hasNext){
+      val str = value1.next()
+      jlist:+=(l.toString,str._2)
+    }
+    //    for (elem <- roomsMap) {
+    //      println(elem)
+    //    }
+    jlist
+
+    //.collect().toMap.foreach(println)
+    //v.collect().foreach(singleMap+=(_))
 //    for (elem <- singleMap) {
 //      println(elem)
 //    }
-    return singleMap
   }
 
 
