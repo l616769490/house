@@ -55,7 +55,7 @@ class PriceValueAnalysis extends Analysis {
     val rent: Rent = new Rent(buffer)
     //    调用封装方法
     packageDate(rent, tableName)
-    sc.stop()
+
     true
   }
 
@@ -108,7 +108,7 @@ class PriceValueAnalysis extends Analysis {
       val report: Report = new Report()
       report.setName("住房价格")
       report.setCreate(System.currentTimeMillis())
-      report.setYear(Integer.valueOf(tableName))
+      report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
       report.setUrl("price_table")

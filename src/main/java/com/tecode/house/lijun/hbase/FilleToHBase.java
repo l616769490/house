@@ -19,7 +19,7 @@ public class FilleToHBase {
 
     public void readFile(String path, String tableName) throws IOException {
         HBaseUtil util = new HBaseUtil();
-        util.createTable(tableName, "info", "cost", "fmt");
+      //  util.createTable(tableName, "info", "cost", "fmt");
         BufferedReader br = new BufferedReader(new FileReader(path));
         int count = 0;
         List<String[]> lists = new ArrayList<>();

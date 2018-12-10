@@ -24,7 +24,7 @@ public class TSerivceImpl implements TSerivce {
         //获取要查询的页码
         int page = tablePost.getPage();
         //获取数据
-        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForCOST(tableName, page);
+        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForCOST("thads:"+tableName, page);
         int i = (int) Rows._1;
         //封装页数列表
         int pa = i / 10 + 1;
@@ -95,7 +95,7 @@ public class TSerivceImpl implements TSerivce {
     public Table getTablePrice(Integer page, Integer year) {
         String tableName =  year.toString();
 
-        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getPrice(tableName, page);
+        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getPrice("thads:"+tableName, page);
         int i = (int) Rows._1;
         //封装页数列表
         int pa = i / 10 + 1;
@@ -187,7 +187,7 @@ public class TSerivceImpl implements TSerivce {
         Tuple2<Object, List<ArrayList<String>>> Rows = null;
         //调用有搜索条件的方法获取数据
 
-        Rows = hBaseDao.getForIncome(tableName,page);
+        Rows = hBaseDao.getForIncome("thads:"+tableName,page);
 
 
         int i = (int) Rows._1;
