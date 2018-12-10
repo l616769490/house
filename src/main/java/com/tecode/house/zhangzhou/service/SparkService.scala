@@ -413,7 +413,7 @@ class SparkService{
     * @param search2：查询选项二
     * @return：返回一个分组后的Map对象
     */
-  def selectSingleBuildTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
+  def selectSingleBuildTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
@@ -474,7 +474,7 @@ class SparkService{
     * @param search2：查询条件二
     * @return 返回一个分组后的Map对象
     */
-  def selectHouseDutyTable(tableName:String,search:String,search2:String): Map[String,Iterable[String]] ={
+  def selectHouseDutyTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
 
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
