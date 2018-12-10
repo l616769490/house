@@ -17,7 +17,7 @@ import java.text.NumberFormat;
  * Created by Administrator on 2018/12/8.
  */
 @Controller
-public class OptionControllor {
+public class JOptionControllor {
     @ResponseBody
     @RequestMapping(value = "/per", method = RequestMethod.POST)
     public Option testPie() {
