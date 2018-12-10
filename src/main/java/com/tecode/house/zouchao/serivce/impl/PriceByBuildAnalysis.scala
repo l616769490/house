@@ -4,6 +4,7 @@ import java.sql.{Connection, PreparedStatement, ResultSet, SQLException}
 import java.util
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.zouchao.bean._
 import com.tecode.house.zouchao.dao.MySQLDao
 import com.tecode.house.zouchao.dao.impl.MySQLDaoImpl
@@ -27,8 +28,7 @@ class PriceByBuildAnalysis extends Analysis {
     * @return 成功/失败
     */
   override def analysis(tableName: String): Boolean = {
-    val conf = new SparkConf().setAppName("PriceByBuildAnalysis").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //    调用读取数据的方法
     val rentsRDD: RDD[(Int, Int)] = read(tableName, "FMR", sc)
     val valueRDD: RDD[(Int, Int)] = read(tableName, "VALUE", sc)
@@ -50,7 +50,7 @@ class PriceByBuildAnalysis extends Analysis {
     //    将array类型转换为List类型
     val valueList = value.collect().toList
     packageDate(tableName, rentbuffer, valueList)
-    sc.stop()
+//    sc.stop()
     true
   }
 

@@ -5,6 +5,7 @@ import java.sql.{Connection, PreparedStatement, ResultSet, SQLException}
 import java.util
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.zouchao.bean._
 import com.tecode.house.zouchao.dao.MySQLDao
 import com.tecode.house.zouchao.dao.impl.MySQLDaoImpl
@@ -28,8 +29,7 @@ class RentAnalysis extends Analysis {
     * @return 成功/失败
     */
   override def analysis(tableName: String): Boolean = {
-    val conf = new SparkConf().setAppName("rentAnalysis").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //    调用读取数据的方法
     val rentsRDD: RDD[Int] = read(tableName, sc)
     //将具体的租金转换为租金区间并计数
@@ -70,7 +70,7 @@ class RentAnalysis extends Analysis {
     val rent: Rent = new Rent(max, min, avg, buffer)
     //    调用封装方法
     packageDate(rent, tableName)
-    sc.stop()
+//    sc.stop()
     true
   }
 
