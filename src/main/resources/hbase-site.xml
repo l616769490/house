@@ -23,7 +23,7 @@
 <configuration>
 	<property>
 		<name>hbase.rootdir</name>
-		<value>hdfs://master:8020/hbase</value>
+		<value>hdfs://hadoop001:8020/hbase</value>
 	</property>
 	<property>
 		<name>hbase.cluster.distributed</name>
@@ -36,10 +36,11 @@
 	</property>
 	<property>
 		<name>hbase.zookeeper.quorum</name>
-		<value>slave01:2181,slave02:2181,slave03:2181</value>
+		<value>hadoop002:2181,hadoop003:2181,hadoop004:2181</value>
 	</property>
 	<property>
 		<name>hbase.zookeeper.property.dataDir</name>
-		<value>/home/lijin/zookeeper</value>
+		<value>/opt/module/zookeeper/zkData</value>
 	</property>
+
 </configuration>
