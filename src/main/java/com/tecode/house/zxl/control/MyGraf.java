@@ -19,7 +19,7 @@ import java.util.*;
 public class MyGraf {
 
     @Autowired
-    MaketPriceServer mps=new ServerImpl();
+    MaketPriceServer mps;
 
     /**
      * 年收入
@@ -28,8 +28,8 @@ public class MyGraf {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl_income", method = RequestMethod.POST)
-    public Option testBar(String year) {
-        System.out.println(year);
+    public Option incomeBar(String year) {
+
         Option option = new Option();
         // 标题
         Title title = new Title()
@@ -45,7 +45,7 @@ public class MyGraf {
 //        Map<String, Integer> income = sort(getIncome());
 
         //获取年收入
-        Map<String, Integer> income = mps.getincome();
+        Map<String, Integer> income = mps.getincome(Integer.valueOf(year));
 //        Map<String, Integer> income = getIncome();
 
         List<Integer> list1=new ArrayList<>();
@@ -139,8 +139,9 @@ public class MyGraf {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl_value", method = RequestMethod.POST)
-    public Option testPie() {
+    public Option valuePie(String year) {
         Option option = new Option();
+
         // 标题
         Title title = new Title()
                 .setText("市场价")
@@ -154,7 +155,7 @@ public class MyGraf {
 
 //        Map<String, Integer> map = get();
         //获取数据
-        Map<String, Integer> map = mps.getMaket();
+        Map<String, Integer> map = mps.getMaket(Integer.valueOf(year));
 
         // 图例
         Legend legend = new Legend()
@@ -194,9 +195,10 @@ public class MyGraf {
      */
     @ResponseBody
     @RequestMapping(value = "/zxl_person", method = RequestMethod.POST)
-    public Option testPie2() {
+    public Option personPie(String year) {
         Option option = new Option();
         // 标题
+
         Title title = new Title()
                 .setText("家庭人数")
                 .setSubtext("副标题");
@@ -208,7 +210,7 @@ public class MyGraf {
                 .setFormatter("{a}-{b} : {c}");
 
         //获取家庭人数
-        Map<String, Integer> person = mps.getPerson();
+        Map<String, Integer> person = mps.getPerson(Integer.valueOf(year));
 
 
         // 图例

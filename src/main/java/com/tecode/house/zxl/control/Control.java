@@ -16,7 +16,7 @@ import java.util.Map;
 @Controller
 public class Control {
     @Autowired
-    private static MaketPriceServer mps = new ServerImpl();
+    private static MaketPriceServer mps =new ServerImpl();
 
     private static Analysis  as=new ServerImpl();
 

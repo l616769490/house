@@ -36,7 +36,7 @@ trait HbaseDao {
     * @param city   要查询的城市等级
     * @return 查询结果
     */
-  def getIncome(year: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]
+  def getIncome(tableName: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]
 
 
   /**
@@ -73,7 +73,7 @@ trait HbaseDao {
     * @param person 要查询的年份
     * @return 查询结果
     */
-  def getPerson(year: String, person: String, city: String,p:Int): List[(Int, (String, Int, Int))]
+  def getPerson(tableName: String, person: String, city: String,p:Int): List[(Int, (String, Int, Int))]
 
   /**
     * 查询市场价
@@ -90,7 +90,7 @@ trait HbaseDao {
     * @param value 要查询的价格区间
     * @return 查询结果
     */
-  def getValue(year: String, value: String,p:Int): List[(Int, (String, Int, Int))]
+  def getValue(tableName: String, value: String,p:Int): List[(Int, (String, Int, Int))]
 
 
   /**

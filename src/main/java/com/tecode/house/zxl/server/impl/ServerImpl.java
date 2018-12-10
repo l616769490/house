@@ -23,10 +23,9 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
 
     @Autowired
-    private MySQLDao sd = new MySQLDaoImpl();
+    private MySQLDao sd =new MySQLDaoImpl();
 
-    @Autowired
-    private HbaseDao hd = new HbaseDaoImpl();
+    private HbaseDao hd=new HbaseDaoImpl();
 
 
     /**
@@ -39,7 +38,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> personDistribution = hd.getPersonDistribution(tableName);
         Iterator<Tuple2<String, Object>> pIt = personDistribution.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("家庭人数", "单项查询", "http://166.166.1.10/person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
+        return sd.into("家庭人数", "单项查询", "/zxl_person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
     }
 
     /**
@@ -52,7 +51,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> vmap = hd.getValueDistribution(tableName);
         Iterator<Tuple2<String, Object>> vIt = vmap.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("市场价", "单项查询", "http://166.166.1.10/value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
+        return sd.into("市场价", "单项查询", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
     }
 
     /**
@@ -65,7 +64,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(tableName);
         Iterator<Tuple2<String, Object>> cIt = incomeDistributionByCity.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("家庭收入", "多项查询", "http://166.166.1.10/income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
+        return sd.into("家庭收入", "多项查询", "/zxl_income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
     }
 
     /**
@@ -105,7 +104,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
 
-        List<Tuple2<Object, Tuple3<String, Object, Object>>> value = hd.getValue(year, search, tablePost.getPage());
+        List<Tuple2<Object, Tuple3<String, Object, Object>>> value = hd.getValue("thads:"+year, search, tablePost.getPage());
 
         setTable2(value, table, p);
 
@@ -113,8 +112,8 @@ public class ServerImpl implements MaketPriceServer, Analysis {
     }
 
     @Override
-    public java.util.Map<String, Integer> getMaket() {
-        return sd.get();
+    public java.util.Map<String, Integer> getMaket(int year) {
+        return sd.get(year);
 
     }
 
@@ -163,14 +162,14 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         if (searches.size() == 1) {
             search = searches.get(0).getValues().get(0);
             if (!search.contains("人")) {
-                valueData = hd.getPerson(year, Integer.valueOf(search));
+                valueData = hd.getPerson("thads:"+year, Integer.valueOf(search));
                 setTable(valueData, table, p);
             } else {
-                valueData = hd.getPerson(year, search);
+                valueData = hd.getPerson("thads:"+year, search);
                 setTable(valueData, table, p);
             }
         } else if (searches.size() == 2) {
-            List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
             setTable2(person, table, p);
         }
 
@@ -232,7 +231,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
             }
 
         } else if (searches.size() == 2) {
-            List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
             setTable2(income, table,p);
         }
 
@@ -241,13 +240,13 @@ public class ServerImpl implements MaketPriceServer, Analysis {
     }
 
     @Override
-    public java.util.Map<String, Integer> getincome() {
-        return sd.getIncome();
+    public java.util.Map<String, Integer> getincome(int year) {
+        return sd.getIncome(year);
     }
 
     @Override
-    public java.util.Map<String, Integer> getPerson() {
-        return sd.getPerson();
+    public java.util.Map<String, Integer> getPerson(int year) {
+        return sd.getPerson(year);
     }
 
     /**

@@ -10,9 +10,9 @@ public interface MySQLDao {
 
     boolean into(String name,String reportType,String url,String x, String y, String tpye, Iterator<Tuple2<String, Object>> it,String scrip,String year);
 
-    Map<String, Integer> get();
+    Map<String, Integer> get(int year);
 
-    Map<String, Integer> getIncome();
+    Map<String, Integer> getIncome(int year);
 
-    Map<String, Integer> getPerson();
+    Map<String, Integer> getPerson(int year);
 }

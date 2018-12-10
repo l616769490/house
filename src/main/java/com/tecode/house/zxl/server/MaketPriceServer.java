@@ -12,7 +12,7 @@ public interface MaketPriceServer {
 
     Table getValueTable(TablePost tablePost);
 
-    Map<String,Integer> getMaket();
+    Map<String,Integer> getMaket(int year);
 
     Table getPersonTable();
 
@@ -22,7 +22,7 @@ public interface MaketPriceServer {
 
     Table getIncomeTable(TablePost tablePost);
 
-    Map<String, Integer> getincome();
+    Map<String, Integer> getincome(int year);
 
-    Map<String, Integer> getPerson();
+    Map<String, Integer> getPerson(int year);
 }

@@ -9,11 +9,13 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBUtil {
-    private static Properties pro=new Properties();
+
     private static String driver;
     private static String url;
     private static String user;
     private static String password;
+
+    private static Properties pro=new Properties();
 
     static {
         try {

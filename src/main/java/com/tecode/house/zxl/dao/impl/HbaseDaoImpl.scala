@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
 
 import scala.collection.JavaConverters._
 
-@Repository
+
 class HbaseDaoImpl extends HbaseDao {
 
   /**
@@ -161,14 +161,14 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 查询家庭收入，根据城市等级和收入区间查询
     *
-    * @param year   要查询的年份
+    * @param tableName   要查询的表
     * @param income 要查询的收入区间
     * @param city   要查询的城市等级
     * @return 查询结果
     */
-  override def getIncome(year: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]  = {
+  override def getIncome(tableName: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]  = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
@@ -372,14 +372,14 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 获取家庭人数,根据城市等级和家庭人数进行查询
     *
-    * @param year   要查询的年份
+    * @param tableName   要查询的表
     * @param city   要查询的城市等级
     * @param person 要查询的年份
     * @return 查询结果
     */
-  override def getPerson(year: String, person: String, city: String,p:Int):List[(Int, (String, Int, Int))] = {
+  override def getPerson(tableName: String, person: String, city: String,p:Int):List[(Int, (String, Int, Int))] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
@@ -475,13 +475,13 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 查询市场价，根据价格区间查询
     *
-    * @param year  要查询的年份
+    * @param tableName  要查询的表
     * @param value 要查询的价格区间
     * @return 查询结果
     */
-  override def getValue(year: String, value: String,p:Int): List[(Int, (String, Int, Int))] = {
+  override def getValue(tableName: String, value: String,p:Int): List[(Int, (String, Int, Int))] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
