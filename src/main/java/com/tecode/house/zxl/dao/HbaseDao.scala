@@ -96,26 +96,26 @@ trait HbaseDao {
   /**
     * 统计市场价的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getValueDistribution(year: String): Map[String, Int]
+  def getValueDistribution(tableName: String): Map[String, Int]
 
   /**
     * 统计家庭人数的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getPersonDistribution(year: String): Map[String, Int]
+  def getPersonDistribution(tableName: String): Map[String, Int]
 
   /**
     * 按照城市统计家庭收入
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getIncomeDistributionByCity(year: String): Map[String, Int]
+  def getIncomeDistributionByCity(tableName: String): Map[String, Int]
 
 
 }

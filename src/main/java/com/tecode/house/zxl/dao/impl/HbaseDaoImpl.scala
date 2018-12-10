@@ -533,12 +533,12 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 统计市场价的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getValueDistribution(year: String): Map[String, Int] = {
+  override def getValueDistribution(tableName: String): Map[String, Int] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
     val sc = new SparkContext(spconf)
@@ -589,12 +589,12 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 统计家庭人数的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getPersonDistribution(year: String): Map[String, Int] = {
+  override def getPersonDistribution(tableName: String): Map[String, Int] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
@@ -647,12 +647,12 @@ class HbaseDaoImpl extends HbaseDao {
   /**
     * 按照城市统计家庭收入
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getIncomeDistributionByCity(year: String): Map[String, Int] = {
+  override def getIncomeDistributionByCity(tableName: String): Map[String, Int] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
     val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
