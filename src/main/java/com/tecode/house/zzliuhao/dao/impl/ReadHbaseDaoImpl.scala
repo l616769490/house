@@ -58,7 +58,6 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     }else{
       showdata = javalist.subList((page-1)*10,page*10)
     }
-    sc.stop()
     (size,showdata)
 
   }
@@ -124,7 +123,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     }else{
       showdata = javalist.subList((page-1)*10,page*10)
     }
-    sc.stop()
+
     (size,showdata)
 
   }
