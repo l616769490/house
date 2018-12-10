@@ -132,21 +132,27 @@ public class DiagramImpl implements MysqlDao<Diagram> {
 
         Connection conn ;
         PreparedStatement prepar = null;
-        int i= 0;
+        int id = 0;
         String sql = "insert into diagram(name,`type`,reportId,subtext) values(?,?,?,?)";
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1, diagram.getName());
             prepar.setInt(2, diagram.getType());
             prepar.setInt(3, diagram.getReportid());
             prepar.setString(4, diagram.getSubtext());
-            return prepar.executeUpdate();
+            int i =  prepar.executeUpdate();
+            if(i>0){
+                ResultSet rs = prepar.getGeneratedKeys();
+                if(rs.next()){
+                    id =  rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return i;
+        return id;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.tecode.house.jianchenfei.dao.MysqlDao
 import com.tecode.house.jianchenfei.dao.impl._
 import com.tecode.house.jianchenfei.service
 import com.tecode.house.jianchenfei.utils.ConnSource
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
@@ -23,8 +24,8 @@ class Get_Single_Region extends service.Analysis {
     * @return 成功/失败
     */
   override def analysis(tableName: String): Boolean = {
-    val conf = new SparkConf().setAppName("getSingle_region").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+
+    val sc = SparkUtil.getSparkContext
     val hbaseconf = HBaseConfiguration.create
 
     hbaseconf.set(TableInputFormat.INPUT_TABLE, tableName)
@@ -80,8 +81,9 @@ class Get_Single_Region extends service.Analysis {
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
     report.setGroup("按区域统计")
     report.setStatus(1)
-    report.setUrl("http://166.166.0.13//single_region")
+    report.setUrl("/single_region")
     val reportId: Int = reportDao.insert(report)
+
 
 
     // 插入图表表
@@ -138,6 +140,17 @@ class Get_Single_Region extends service.Analysis {
       data.setXid(XAxisId)
       daoData.insert(data)
     }
+    val daoSearch:MysqlDao[Search] = new SearchImpl
+    val single = new Search()
+    single.setDimgroupname("是否独栋")
+    single.setName("独栋比例搜索")
+    single.setReportid(reportId)
+    daoSearch.insert(single)
+    val region = new Search()
+    region.setDimgroupname("区域搜索")
+    region.setName("按区域搜索")
+    region.setReportid(reportId)
+    daoSearch.insert(region)
 
 
     conn.commit()
@@ -145,9 +158,3 @@ class Get_Single_Region extends service.Analysis {
   }
 }
 
-object Get_Single_Region{
-  def main(args: Array[String]): Unit = {
-    val s = new Get_Single_Region
-    s.analysis("thads:2013")
-  }
-}

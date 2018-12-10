@@ -7,6 +7,7 @@ import com.tecode.house.jianchenfei.dao.MysqlDao
 import com.tecode.house.jianchenfei.dao.impl._
 import com.tecode.house.jianchenfei.service
 import com.tecode.house.jianchenfei.utils.ConnSource
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
@@ -19,8 +20,8 @@ import org.apache.spark.rdd.RDD
   */
 class BasicAnalysis extends service.Analysis {
 
-  val conf = new SparkConf().setAppName("BasicAnalysis").setMaster("local[*]")
-  val sc = new SparkContext(conf)
+
+  val sc = SparkUtil.getSparkContext
   val hbaseconf = HBaseConfiguration.create
 
   /**
@@ -92,8 +93,10 @@ class BasicAnalysis extends service.Analysis {
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
     report.setGroup("基础分析")
     report.setStatus(1)
-    report.setUrl("http://166.166.0.14//per")
+    report.setUrl("/per")
     val reportId: Int = dao.insert(report)
+
+
 
     // 插入图表表
     val daoDiagram: MysqlDao[Diagram] = new DiagramImpl()
@@ -102,7 +105,7 @@ class BasicAnalysis extends service.Analysis {
     diagram.setReportid(reportId)
     diagram.setSubtext("统计家庭人数比例")
     diagram.setType(2)
-    val DiagramId: Int = daoDiagram.insert(diagram)
+    var DiagramId: Int = daoDiagram.insert(diagram)
 
     // 插入x轴表
     val daoXAxis: MysqlDao[XAxis] = new XAxisImpl()
@@ -110,14 +113,14 @@ class BasicAnalysis extends service.Analysis {
     xasis.setName("人")
     xasis.setDiagramid(DiagramId)
     xasis.setDimgroupname("人数")
-    val XAxisId: Int = daoXAxis.insert(xasis)
+    var XAxisId: Int = daoXAxis.insert(xasis)
 
     // 插入y轴表
     val daoYAxis: MysqlDao[YAxis] = new YAxisImpl()
     val yaxis: YAxis = new YAxis()
     yaxis.setName("百分比")
     yaxis.setDiagramid(DiagramId)
-    val YAxisId: Int = daoYAxis.insert(yaxis)
+    var YAxisId: Int = daoYAxis.insert(yaxis)
 
     // 插入图例表
     val daoLegend: MysqlDao[Legend] = new LegendImpl()
@@ -125,7 +128,7 @@ class BasicAnalysis extends service.Analysis {
     legend.setDiagramid(DiagramId)
     legend.setDimgroupname("空维度")
     legend.setName("家庭人数")
-    val LegendId: Int = daoLegend.insert(legend)
+    var LegendId: Int = daoLegend.insert(legend)
 
     // 插入数据表
     val daoData: MysqlDao[Data] = new DataImpl()
@@ -138,18 +141,17 @@ class BasicAnalysis extends service.Analysis {
       data.setX(elem._1)
       daoData.insert(data)
     }
+    val daoSearch:MysqlDao[Search] = new SearchImpl()
+    val search = new Search()
+    search.setDimgroupname("家庭人数")
+    search.setReportid(reportId)
+    search.setName("家庭人数搜索")
+    daoSearch.insert(search)
+
 
 
     conn.commit()
     conn.rollback()
   }
 
-}
-
-object BasicAnalysis {
-  def main(args: Array[String]): Unit = {
-    val b = new BasicAnalysis()
-    b.analysis("thads:2013")
-
-  }
 }

@@ -128,20 +128,26 @@ public class LegendImpl implements MysqlDao<Legend>{
     public int insert(Legend legend) {
         Connection conn = null;
         PreparedStatement prepar = null;
-        int i = 0;
         String sql = "insert into legend(name,dimgroupname,diagramid) values(?,?,?)";
+        int id =0;
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1, legend.getName());
             prepar.setString(2, legend.getDimgroupname());
             prepar.setInt(3, legend.getDiagramid());
-            return prepar.executeUpdate();
+            int i = prepar.executeUpdate();
+            if(i>0){
+                ResultSet rs = prepar.getGeneratedKeys();
+                if(rs.next()){
+                    id =  rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return i;
+        return id;
     }
 
     @Override

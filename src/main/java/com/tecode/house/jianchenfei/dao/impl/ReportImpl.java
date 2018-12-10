@@ -99,8 +99,8 @@ public class ReportImpl implements MysqlDao<Report> {
             if (columns[i].toLowerCase().equals("id") || columns[i].toLowerCase().equals("year")
                     || columns[i].toLowerCase().equals("status") ||columns[i].toLowerCase().equals("create")) {
                 sql.append(values[i]);
-            } else if (columns[i].toLowerCase().equals("name") || columns[i].toLowerCase().equals("group")||  columns[i].toLowerCase().equals("url")) {
-                sql.append("'" + values[i] + "'");
+            } else if (columns[i].toLowerCase().equals("name") || columns[i].toLowerCase().equals("`group`")||  columns[i].toLowerCase().equals("url")) {
+                sql.append("\'" + values[i] + "\'");
             }
             if (i != columns.length - 1) {
                 sql.append(" AND");
@@ -130,6 +130,7 @@ public class ReportImpl implements MysqlDao<Report> {
             }
         }
 
+
         return list;
 
     }
@@ -140,22 +141,31 @@ public class ReportImpl implements MysqlDao<Report> {
         String sql = "insert into report(name,`create`,year,`group` ,status,url) values (?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement prepar = null;
-        int i = 0;
+        int id = 0;
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1,report.getName());
             prepar.setLong(2, report.getCreate());
             prepar.setInt(3, report.getYear());
             prepar.setString(4, report.getGroup());
             prepar.setInt(5, report.getStatus());
             prepar.setString(6,report.getUrl());
-            i = prepar.executeUpdate();
+            int i = prepar.executeUpdate();
+            if(i>0){
+                ResultSet rs = prepar.getGeneratedKeys();
+                if(rs.next()){
+                    id =  rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return i;
+        return id;
     }
+
+
+
 
     @Override
     public int insert(List<Report> reports) {

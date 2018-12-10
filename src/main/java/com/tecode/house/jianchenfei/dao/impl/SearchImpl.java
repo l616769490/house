@@ -130,20 +130,26 @@ public class SearchImpl implements MysqlDao<Search> {
     public int insert(Search search) {
         Connection conn = null;
         PreparedStatement prepar = null;
-        int i =0;
+        int id =0;
         String sql = "insert into search(name,dimGroupName,reportId) values(?,?,?)";
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1,search.getName());
             prepar.setString(2,search.getDimgroupname());
             prepar.setInt(3,search.getReportid());
-            return prepar.executeUpdate();
+            int  i =  prepar.executeUpdate();
+            if(i>0){
+                ResultSet rs = prepar.getGeneratedKeys();
+                if(rs.next()){
+                    id =  rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return i;
+        return id;
     }
 
     @Override

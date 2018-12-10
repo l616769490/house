@@ -125,20 +125,26 @@ public class YAxisImpl implements MysqlDao<YAxis> {
     public int insert(YAxis yaxis) {
         Connection conn = null;
         PreparedStatement prepar = null;
-        int i =0;
-        String sql = "insert into yaxis(`name`,diagramId) values(?,?)";
+        int id =0;
+        String sql = "insert into yaxis(name,diagramId) values(?,?)";
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1, yaxis.getName());
             prepar.setInt(2, yaxis.getDiagramid());
-            return prepar.executeUpdate();
+            int i = prepar.executeUpdate();
+            if(i>0){
+                ResultSet rs = prepar.getGeneratedKeys();
+                if(rs.next()){
+                    id =  rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
 
-        return i;
+        return id;
     }
 
     @Override

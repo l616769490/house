@@ -147,7 +147,7 @@ public class DataImpl implements MysqlDao<Data> {
         int i = 0;
         try {
             conn = ConnSource.getConnection();
-            prepar = conn.prepareStatement(sql);
+            prepar = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             prepar.setString(1,data.getValue());
             prepar.setInt(2,data.getXid());
             prepar.setInt(3,data.getLegendid());

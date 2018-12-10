@@ -1,7 +1,7 @@
 package com.tecode.house.jianchenfei.bean;
 
 public class Report {
-    private Integer id;
+    private int id;
 
     private String name;
 

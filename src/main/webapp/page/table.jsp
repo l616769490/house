@@ -83,14 +83,14 @@
 <script>
     function getTable1() {
         $.ajax({
-            url: "/basics_per_table",
+            url: "/per_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
                 'page': 2,
-                'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
+                'searches': [{'title': '家庭人数', 'values': ['1','2','3','4','5','6','6+']}]
             }),
             success: function (result) {
                 showTable(result);
@@ -100,7 +100,7 @@
 
     function getTable2() {
         $.ajax({
-            url: "/single_region_table",
+            url: "/build_rate_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -108,10 +108,8 @@
                 'year': 2013,
                 'page': 2,
                 'searches': [
-                    {'title': '1', 'values': ['L30']},
-                    {'title': '2', 'values': ['L80']},
-                    {'title': '3', 'values': ['L50']},
-                    {'title': '4', 'values': ['L80+']}]
+                    {'title': '区域', 'values': ['1','2','3','4']},
+                    {'title': '是否独栋', 'values': ['是','否']}]
             }),
             success: function (result) {
                 showTable(result);
@@ -121,7 +119,7 @@
 
     function getTable3() {
         $.ajax({
-            url: "/rate_year_table",
+            url: "/region_single_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -129,10 +127,8 @@
                 'year': 2013,
                 'page': 2,
                 'searches': [
-                    {'title': '1', 'values': ['1500-3000']},
-                    {'title': '2', 'values': ['1500-3000']},
-                    {'title': '3', 'values': ['1500-3000']},
-                    {'title': '4', 'values': ['1500-3000']}]
+                    {'title': '建成年份', 'values': ['1900-2000','2000-2010','2010-2018']},
+                    {'title': '房产税', 'values': ['0-500','500-1000','1000-1500','1500-2000','2000-2500','2500-3000','3000-3500','3500+']}]
             }),
             success: function (result) {
                 showTable(result);

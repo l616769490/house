@@ -7,6 +7,7 @@ import com.tecode.house.jianchenfei.dao.MysqlDao
 import com.tecode.house.jianchenfei.dao.impl._
 import com.tecode.house.jianchenfei.service
 import com.tecode.house.jianchenfei.utils.ConnSource
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
@@ -23,8 +24,8 @@ class Get_Zsmhc_built extends service.Analysis {
     * @return 成功/失败
     */
   override def analysis(tableName: String): Boolean = {
-    val conf = new SparkConf().setAppName("getzsmhc_built").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+
+    val sc = SparkUtil.getSparkContext
     val hbaseconf = HBaseConfiguration.create
 
     hbaseconf.set(TableInputFormat.INPUT_TABLE, tableName)
@@ -95,7 +96,7 @@ class Get_Zsmhc_built extends service.Analysis {
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
     report.setGroup("年份统计")
     report.setStatus(1)
-    report.setUrl("http://166.166.0.13//zsmhc_built")
+    report.setUrl("/zsmhc_built")
     val reportId: Int = reportDao.insert(report)
 
 
@@ -154,6 +155,17 @@ class Get_Zsmhc_built extends service.Analysis {
             data.setXid(XAxisId)
             daoData.insert(data)
           }
+    val daoSearch:MysqlDao[Search] = new SearchImpl
+    val rate = new Search()
+    rate.setDimgroupname("房产税")
+    rate.setName("房产税区间搜索")
+    rate.setReportid(reportId)
+    daoSearch.insert(rate)
+    val built = new Search()
+    built.setDimgroupname("建成年份搜索")
+    built.setName("按建成年份搜索")
+    built.setReportid(reportId)
+    daoSearch.insert(built)
 
 
     conn.commit()
@@ -161,11 +173,4 @@ class Get_Zsmhc_built extends service.Analysis {
   }
 }
 
-object Get_Zsmhc_built {
-  def main(args: Array[String]): Unit = {
-    val b = new Get_Zsmhc_built
-    b.analysis("thads:2013")
 
-  }
-
-}
