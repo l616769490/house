@@ -5,7 +5,7 @@
     <!-- 报表组名 -->
     <group>区域统计</group>
     <!-- 报表请求地址 -->
-    <url>http://166.166.0.13:8080/region_zinc2_num</url>
+    <url>/region_zinc2_num</url>
     <!-- 图表 -->
     <diagrams>
         <diagram name="各区域收入分布图" subName="各收入线户数统计">

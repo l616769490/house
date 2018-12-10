@@ -1,6 +1,7 @@
 package com.tecode.house.liuhao.server
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.liuhao.bean._
 import com.tecode.house.liuhao.dao.MysqlDao
 import com.tecode.house.liuhao.dao.impl.PutMysqlDaoImpl
@@ -50,8 +51,7 @@ class StructureType extends Analysis {
     * @return
     */
   def read(tablename: String, qualifiername: String): RDD[(Int)] = {
-    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
-    val sc = new SparkContext(con)
+    val sc = SparkUtil.getSparkContext
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     //conf.set(TableInputFormat.SCAN_COLUMNS, "INFO")
@@ -127,7 +127,7 @@ class StructureType extends Analysis {
 
     report.setGroup("基础分析")
     report.setStatus(1)
-    report.setUrl("http://166.166.5.101:8080/basics_structuretype_num")
+    report.setUrl("/basics_structuretype_num")
     val reportId = dao.putToTableReport(conn, report)
     println(reportId)
     //柱状图封装bean

@@ -5,7 +5,7 @@
     <!-- 报表组名 -->
     <group>基础分析</group>
     <!-- 报表请求地址 -->
-    <url>http://166.166.0.13:8080/basics_rooms_num</url>
+    <url>/basics_rooms_num</url>
     <!-- 图表 -->
     <diagrams>
         <diagram name="房间数和卧室数分布图" subName="房间数卧室数分布趋势">

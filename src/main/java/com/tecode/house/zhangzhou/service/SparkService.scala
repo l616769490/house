@@ -82,7 +82,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "基础查询"
       val rStatus: Int = 0
-      val url: String = "http://166.166.2.111/vacancy"
+      val url: String = "/vacancy"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
       //饼状图（图表表）
       val dName = "空置状态"
@@ -179,7 +179,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "城市规模"
       val rStatus: Int = 0
-      val url: String = "http://166.166.2.111/singleBuilding"
+      val url: String = "/singleBuilding"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //柱状图，图表表

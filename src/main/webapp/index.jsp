@@ -89,7 +89,7 @@
 
     function getTable() {
         window.location.href = "/table"
-    };
+    }
 
     function toFile() {
         window.location.href = "/file-page"

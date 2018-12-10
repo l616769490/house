@@ -124,7 +124,7 @@ class RentAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
-      report.setUrl("http://166.166.0.10/rent")
+      report.setUrl("/rent")
 
       //      println(report)
 

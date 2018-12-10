@@ -1,11 +1,13 @@
 package com.tecode.fileimport;
 
+import com.tecode.house.d01.service.AnalysisScan;
 import com.tecode.house.lijin.utils.ConfigUtil;
 import com.tecode.house.lijin.utils.HBaseUtil;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -128,7 +130,7 @@ public class FileToHBase {
      */
     private void write(BufferedReader br) {
 
-        br.lines()      .limit(100)
+        br.lines().limit(1000)
                 // 过滤空字符串
                 .filter(s -> s != null && !s.isEmpty())
                 // 拆分并去除首尾空格和引号
@@ -136,6 +138,21 @@ public class FileToHBase {
                 .forEach(line -> insert(line));
         if (puts.size() > 0) {
             HBaseUtil.addDatas(tableName, puts);
+        }
+
+        startAnalysis(tableName);
+    }
+
+    /**
+     * 启动分析程序
+     *
+     * @param hBaseTbaleName hBase表名
+     */
+    private void startAnalysis(String hBaseTbaleName) {
+        try {
+            new AnalysisScan(hBaseTbaleName).start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -150,7 +167,7 @@ public class FileToHBase {
         }
 
         count++;
-        if(count % 1000 == 0) {
+        if (count % 100 == 0) {
             System.out.println("已插入：" + count + "行");
         }
 

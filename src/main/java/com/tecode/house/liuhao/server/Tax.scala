@@ -1,6 +1,7 @@
 package com.tecode.house.liuhao.server
 
 import com.tecode.house.d01.service.Analysis
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.liuhao.bean._
 import com.tecode.house.liuhao.dao.MysqlDao
 import com.tecode.house.liuhao.dao.impl.PutMysqlDaoImpl
@@ -41,8 +42,7 @@ class Tax extends Analysis{
     * @return
     */
   def readTax(tablename: String): RDD[(Int, Double, Double, Double)] = {
-    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
-    val sc = new SparkContext(con)
+    val sc = SparkUtil.getSparkContext
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     conf.set(TableInputFormat.SCAN_COLUMNS, "info")
@@ -163,7 +163,7 @@ class Tax extends Analysis{
     report.setYear(Integer.valueOf(tablename))
     report.setGroup("城市规模")
     report.setStatus(1)
-    report.setUrl("http://166.166.5.101:8080/CitySize_Tax_Avg")
+    report.setUrl("/CitySize_Tax_Avg")
     val reportId = dao.putToTableReport(conn, report)
     //柱状图封装bean
     val digram = new Diagram()

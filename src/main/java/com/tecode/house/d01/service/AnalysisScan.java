@@ -11,11 +11,24 @@ import java.util.List;
 public class AnalysisScan {
     public static void main(String[] args) throws Exception {
         File file = new File(AnalysisScan.class.getResource("/").getPath());
+        AnalysisScan a = new AnalysisScan("thads:2013");
+        List<File> files = a.getClassFile(file);
+        a.classLoader(files);
+    }
+
+    private String tableName = "thads:2013";
+
+    public AnalysisScan(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public void start() throws Exception {
+        File file = new File(AnalysisScan.class.getResource("/").getPath());
         List<File> files = getClassFile(file);
         classLoader(files);
     }
 
-    private static List<File> getClassFile(File file) {
+    private  List<File> getClassFile(File file) {
         List<File> fileList = new ArrayList<>();
         File[] files = file.listFiles();
         if(files == null) {
@@ -35,7 +48,7 @@ public class AnalysisScan {
         return fileList;
     }
 
-    private static void classLoader(List<File> files) throws Exception {
+    private  void classLoader(List<File> files) throws Exception {
 
         for (File file : files) {
             String path = file.getPath();
@@ -53,9 +66,10 @@ public class AnalysisScan {
                         }
                     }
                     if(b) {
+                        System.out.println("启动分析：" + classPath);
                         Object obj = aClass.newInstance();
                         Method method = aClass.getMethod("analysis", String.class);
-                        method.invoke(obj,"thads:2013");
+                        method.invoke(obj,tableName);
                     }
                 }
             }

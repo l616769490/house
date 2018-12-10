@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report>
     <!-- 报表名 -->
-    <name>按区域-房产税分析</name>
+    <name>基础-建成年份分析</name>
     <!-- 报表组名 -->
-    <group>区域统计</group>
+    <group>基础分析</group>
     <!-- 报表请求地址 -->
-    <url>/region_zsmhc_num</url>
+    <url>/basics_year_num</url>
     <!-- 图表 -->
     <diagrams>
-        <diagram name="各区域房产税分布图" subName="各房产税阶段户数统计">
+        <diagram name="建成年份分布图" subName="年份区间分布趋势">
             <!-- y轴 -->
             <yAxes>
-                <yAxis name="户数"/>
+                <yAxis name="数量"/>
             </yAxes>
             <!-- x轴 -->
             <xAxes>
                 <xAxis>
                     <name>分类</name>
-                    <dimGroupName>房产税</dimGroupName>
+                    <dimGroupName>建筑年份</dimGroupName>
                 </xAxis>
             </xAxes>
             <!-- 图例 -->
             <legends>
                 <legend>
-                    <name>区域划分</name>
-                    <dimGroupName>区域</dimGroupName>
+                    <name>建筑年份</name>
+                    <dimGroupName>空维度</dimGroupName>
                 </legend>
             </legends>
         </diagram>

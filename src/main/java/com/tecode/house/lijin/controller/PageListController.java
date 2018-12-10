@@ -76,6 +76,11 @@ public class PageListController {
         return pageListMap.get(year);
     }
 
+    @RequestMapping("/toMenu")
+    public String toMenu() {
+        return "../menu";
+    }
+
     public static void main(String[] args) {
         PageListController pageListController = new PageListController();
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
