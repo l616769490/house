@@ -1,5 +1,6 @@
 package com.tecode.house.zxl.dao.impl
 
+
 import java.util
 
 import com.tecode.house.lijin.utils.SparkUtil
@@ -10,20 +11,21 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.{SparkConf, SparkContext}
+import org.springframework.stereotype.Repository
 
 import scala.collection.JavaConverters._
+
 
 class HbaseDaoImpl extends HbaseDao {
 
   /**
     * 查询家庭收入
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getIncome(): Map[String, Iterable[(String, Int, Int)]] = {
 
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
@@ -38,7 +40,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -55,11 +57,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().foreach(map += ((_)))
+    s2.collect().foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+    map
 
   }
 
@@ -71,12 +73,12 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getIncome(year: String, income: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -85,7 +87,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -102,11 +104,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().foreach(map+=((_)))
+    s2.collect().foreach(map+=(_))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+    map
   }
 
 
@@ -118,13 +120,13 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getIncome(year: String, city: Int): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -133,7 +135,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -150,29 +152,29 @@ class HbaseDaoImpl extends HbaseDao {
         ("25万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+    map
   }
 
   /**
     * 查询家庭收入，根据城市等级和收入区间查询
     *
-    * @param year   要查询的年份
+    * @param tableName   要查询的表
     * @param income 要查询的收入区间
     * @param city   要查询的城市等级
     * @return 查询结果
     */
-  override def getIncome(year: String, income: String, city: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getIncome(tableName: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]  = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -181,7 +183,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 50000) {
@@ -197,28 +199,47 @@ class HbaseDaoImpl extends HbaseDao {
       } else {
         ("25万以上", (x._1, x._2, x._3))
       }
-    }).filter(_._1.equals(income)).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    }).filter(_._1.equals(income))
 
-    sc.stop()
+    val javaList = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,javaList)
+    val value = tuples.iterator()
 
-    return map
+    while (value.hasNext) {
+      val tuple = value.next()
+      list:+=(count.toInt,tuple._2)
+
+    }
+
+
+
+//    sc.stop()
+
+    list
   }
 
+  def setSublist(p:Int,count:Int,javaList: util.List[(String, (String, Int, Int))]): util.List[(String, (String, Int, Int))] ={
+    if(p*10>count){
+      javaList.subList(count-10,count)
+
+    }else{
+      javaList.subList((p-1)*10,p*10)
+    }
+  }
 
   /**
     * 获取家庭人数
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getPerson(): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -227,7 +248,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -246,11 +267,12 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
 
-    sc.stop()
+    s2.collect().take(100).foreach(map += (_))
 
-    return map
+//    sc.stop()
+
+    map
   }
 
   /**
@@ -261,12 +283,12 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getPerson(year: String, person: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -275,7 +297,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -294,11 +316,11 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
+    s2.filter(_._1.equals(person)).collect().foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+     map
   }
 
   /**
@@ -309,12 +331,12 @@ class HbaseDaoImpl extends HbaseDao {
     * @return 查询结果
     */
   override def getPerson(year: String, city: Int): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, year)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -323,7 +345,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(city.toInt == _._2)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -342,27 +364,27 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
-    return map
+//    sc.stop()
+     map
   }
 
   /**
     * 获取家庭人数,根据城市等级和家庭人数进行查询
     *
-    * @param year   要查询的年份
+    * @param tableName   要查询的表
     * @param city   要查询的城市等级
     * @param person 要查询的年份
     * @return 查询结果
     */
-  override def getPerson(year: String, person: String, city: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getPerson(tableName: String, person: String, city: String,p:Int):List[(Int, (String, Int, Int))] = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -371,7 +393,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0).filter(_._2 == city.toInt)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 2) {
@@ -390,26 +412,35 @@ class HbaseDaoImpl extends HbaseDao {
         ("6人以上", (x._1, x._2, x._3))
       }
 
-    }).groupByKey()
-    s2.filter(_._1.equals(person)).collect().take(100).foreach(map += ((_)))
+    }).filter(_._1.equals(person))
+    val javaList = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,javaList)
+    val value = tuples.iterator()
 
-    sc.stop()
-    return map
+    while (value.hasNext) {
+      val tuple = value.next()
+      list:+=(count.toInt,tuple._2)
+
+    }
+
+
+//    sc.stop()
+    list
   }
 
   /**
     * 查询市场价
     *
-    * @param year 要查询的年份
     * @return 查询结果
     */
   override def getValue(): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
+    val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, "2013")
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -418,7 +449,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var map: Map[String, Iterable[(String, Int, Int)]] = Map()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 500000) {
@@ -435,28 +466,28 @@ class HbaseDaoImpl extends HbaseDao {
         ("250万以上", (x._1, x._2, x._3))
       }
     }).groupByKey()
-    s2.collect().take(100).foreach(map += ((_)))
+    s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+    map
   }
 
   /**
     * 查询市场价，根据价格区间查询
     *
-    * @param year  要查询的年份
+    * @param tableName  要查询的表
     * @param value 要查询的价格区间
     * @return 查询结果
     */
-  override def getValue(year: String, value: String): Map[String, Iterable[(String, Int, Int)]] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getValue(tableName: String, value: String,p:Int): List[(Int, (String, Int, Int))] = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("CONTROL"))),
@@ -465,7 +496,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._3.toInt > 0)
 
-    var map: Map[String, Iterable[(String, Int, Int)]] = Map();
+    var list:List[(Int, (String, Int, Int))]=List()
     val s2 = s.map(x => {
       val i = x._3
       if (i < 500000) {
@@ -481,31 +512,40 @@ class HbaseDaoImpl extends HbaseDao {
       } else {
         ("250万以上", (x._1, x._2, x._3))
       }
-    }).groupByKey()
+    }).filter(_._1.equals(value))
 
-    s2.filter(_._1.equals(value)).collect().foreach(map += ((_)))
+    val javaList = s2.take(p*10).toList.asJava
+    val count: Long = s2.count()
+    val tuples = setSublist(p,count.toInt,javaList)
+    val value2 = tuples.iterator()
 
-    sc.stop()
+    while (value2.hasNext) {
+      val tuple = value2.next()
+      list:+=(count.toInt,tuple._2)
 
-    return map
+    }
+
+//    sc.stop()
+
+    list
 
   }
 
   /**
     * 统计市场价的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getValueDistribution(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getValueDistribution(tableName: String): Map[String, Int] = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s = hbaseRDD.map(x =>
 
@@ -542,24 +582,24 @@ class HbaseDaoImpl extends HbaseDao {
     map += (("max", max))
     map += (("min", min))
     map += (("avg", avg.toInt))
-    sc.stop()
-    return map
+//    sc.stop()
+    map
 
   }
 
   /**
     * 统计家庭人数的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getPersonDistribution(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getPersonDistribution(tableName: String): Map[String, Int] = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x =>
 
@@ -567,7 +607,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     ).map(_.toInt).filter(_ > 0)
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s2 = s.map(i => {
 
@@ -595,29 +635,29 @@ class HbaseDaoImpl extends HbaseDao {
     val sum = s.sum()
     val count = s.count()
     val avg = sum / count
-    s2.collect().foreach(map += ((_)))
+    s2.collect().foreach(map += (_))
 
     map += (("max", max))
     map += (("min", min))
     map += (("avg", avg.toInt))
 
-    sc.stop()
+//    sc.stop()
 
-    return map
+   map
   }
   /**
     * 按照城市统计家庭收入
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  override def getIncomeDistributionByCity(year: String): Map[String, Int] = {
-    val conf = HBaseConfiguration.create();
-    conf.set(TableInputFormat.INPUT_TABLE, year)
+  override def getIncomeDistributionByCity(tableName: String): Map[String, Int] = {
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
-    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
-    val sc = new SparkContext(spconf)
+//    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")
+    val sc = SparkUtil.getSparkContext
     val hbaseRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val s = hbaseRDD.map(x => (
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))),
@@ -625,7 +665,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     )).filter(_._2.toInt > 0).groupByKey()
 
-    var map: Map[String, Int] = Map();
+    var map: Map[String, Int] = Map()
 
     val s2 = s.flatMap(x => {
       val a = x._2.iterator
@@ -657,9 +697,9 @@ class HbaseDaoImpl extends HbaseDao {
 
     s.map(x => (x._1, x._2.toList.sum / x._2.toList.size)).collect().foreach(x => map += ((x._1 + "_avg", x._2.toInt)))
 
-    s4.collect().foreach(map += ((_)))
-    sc.stop()
+    s4.collect().foreach(map += (_))
+//    sc.stop()
 
-    return map;
+     map
   }
 }

@@ -17,9 +17,9 @@ public class CreateTable {
     }
     private static void init(){
         try {
-            nameSpace();
-            createTable("2011");
-            createTable("2013");
+//            nameSpace();
+            createTable("thads:2011");
+            createTable("thads:2013");
         } catch (IOException e) {
             e.printStackTrace();
         }

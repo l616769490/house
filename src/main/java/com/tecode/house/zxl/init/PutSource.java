@@ -22,8 +22,8 @@ public class PutSource {
         try {
             long before=System.currentTimeMillis();
             System.out.println("导入数据ing......");
-//            put();
-            put2011();
+            put();
+//            put2011();
             long after=System.currentTimeMillis();
             System.out.println("导入数据完毕，用时： "+new SimpleDateFormat("mm分ss秒").format(after-before));
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class PutSource {
 
 
         Connection conn = ConnectionFactory.createConnection(conf);
-        Table table = conn.getTable(TableName.valueOf("2013"));
+        Table table = conn.getTable(TableName.valueOf("thads:2013"));
         List<Put> list=new ArrayList<>();
         while(br.ready()) {
             String[] s=br.readLine().split(",");
@@ -272,7 +272,7 @@ public class PutSource {
 
 
         Connection conn = ConnectionFactory.createConnection(conf);
-        Table table = conn.getTable(TableName.valueOf("2011"));
+        Table table = conn.getTable(TableName.valueOf("thads:2011"));
         List<Put> list=new ArrayList<>();
         String[] title=br.readLine().split(",");
         while(br.ready()) {

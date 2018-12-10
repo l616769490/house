@@ -1,89 +1,70 @@
 package com.tecode.house.zxl.server.impl;
 
 
+import com.tecode.house.d01.service.Analysis;
 import com.tecode.house.zxl.dao.HbaseDao;
 import com.tecode.house.zxl.dao.impl.HbaseDaoImpl;
 import com.tecode.table.*;
 import com.tecode.house.zxl.dao.MySQLDao;
 import com.tecode.house.zxl.dao.impl.MySQLDaoImpl;
 import com.tecode.house.zxl.server.MaketPriceServer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 import scala.Tuple3;
-import scala.actors.threadpool.Arrays;
+
 import scala.collection.Iterable;
 import scala.collection.Iterator;
 import scala.collection.immutable.List;
 import scala.collection.immutable.Map;
 
-import java.util.ArrayList;
-
 @Service
-public class ServerImpl implements MaketPriceServer {
+public class ServerImpl implements MaketPriceServer, Analysis {
 
 
-    private MySQLDao sd = new MySQLDaoImpl();
+    @Autowired
+    private MySQLDao sd =new MySQLDaoImpl();
 
-    private HbaseDao hd = new HbaseDaoImpl();
+    private HbaseDao hd=new HbaseDaoImpl();
 
-    /**
-     * 向mysql里插入统计结果
-     *
-     * @param year
-     * @return
-     */
-    @Override
-    public boolean intoMysql(String year) {
-
-        boolean value = intoValue(year);
-
-        boolean personValue = intoPerson(year);
-
-        boolean cityValue = intoIncome(year);
-
-        if (value && personValue && cityValue) {
-            return true;
-        } else {
-            return false;
-        }
-
-    }
 
     /**
      * 向mysql中插入统计家庭人数的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoPerson(String year) {
-        Map<String, Object> personDistribution = hd.getPersonDistribution(year);
+    private boolean intoPerson(String tableName) {
+        Map<String, Object> personDistribution = hd.getPersonDistribution(tableName);
         Iterator<Tuple2<String, Object>> pIt = personDistribution.iterator();
-
-        return sd.into("家庭人数", "单项查询", "http://166.166.1.10/person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
+        String year=tableName.split(":")[1];
+        return sd.into("家庭人数", "单项查询", "/zxl_person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
     }
 
     /**
      * 向mysql中插入统计市场价的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoValue(String year) {
-        Map<String, Object> vmap = hd.getValueDistribution(year);
+    private boolean intoValue(String tableName) {
+        Map<String, Object> vmap = hd.getValueDistribution(tableName);
         Iterator<Tuple2<String, Object>> vIt = vmap.iterator();
-        return sd.into("市场价", "单项查询", "http://166.166.1.10/value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
+        String year=tableName.split(":")[1];
+        return sd.into("市场价", "单项查询", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
     }
 
     /**
      * 向mysql中插入统计家庭收入的结果
      *
-     * @param year
+     * @param tableName 要统计的表名
      * @return
      */
-    private boolean intoIncome(String year) {
-        Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(year);
+    private boolean intoIncome(String tableName) {
+        Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(tableName);
         Iterator<Tuple2<String, Object>> cIt = incomeDistributionByCity.iterator();
-        return sd.into("家庭收入", "多项查询", "http://166.166.1.10/income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
+        String year=tableName.split(":")[1];
+        return sd.into("家庭收入", "多项查询", "/zxl_income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
     }
 
     /**
@@ -123,16 +104,16 @@ public class ServerImpl implements MaketPriceServer {
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
 
-        Map<String, Iterable<Tuple3<String, Object, Object>>> valueData = hd.getValue(year, search);
+        List<Tuple2<Object, Tuple3<String, Object, Object>>> value = hd.getValue("thads:"+year, search, tablePost.getPage());
 
-        setTable(valueData, table, p);
+        setTable2(value, table, p);
 
         return table;
     }
 
     @Override
-    public java.util.Map<String, Integer> getMaket() {
-        return sd.get();
+    public java.util.Map<String, Integer> getMaket(int year) {
+        return sd.get(year);
 
     }
 
@@ -179,17 +160,17 @@ public class ServerImpl implements MaketPriceServer {
 
         Map<String, Iterable<Tuple3<String, Object, Object>>> valueData = null;
         if (searches.size() == 1) {
-            search = searches.get(0).getTitle();
+            search = searches.get(0).getValues().get(0);
             if (!search.contains("人")) {
-                valueData = hd.getPerson(year, Integer.valueOf(search));
+                valueData = hd.getPerson("thads:"+year, Integer.valueOf(search));
                 setTable(valueData, table, p);
             } else {
-                valueData = hd.getPerson(year, search);
+                valueData = hd.getPerson("thads:"+year, search);
                 setTable(valueData, table, p);
             }
         } else if (searches.size() == 2) {
-            valueData = hd.getPerson(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
-            setTable(valueData, table, p);
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            setTable2(person, table, p);
         }
 
 
@@ -250,8 +231,8 @@ public class ServerImpl implements MaketPriceServer {
             }
 
         } else if (searches.size() == 2) {
-            valueData = hd.getIncome(year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0));
-            setTable(valueData, table, p);
+            List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
+            setTable2(income, table,p);
         }
 
 
@@ -259,13 +240,13 @@ public class ServerImpl implements MaketPriceServer {
     }
 
     @Override
-    public java.util.Map<String, Integer> getincome() {
-        return sd.getIncome();
+    public java.util.Map<String, Integer> getincome(int year) {
+        return sd.getIncome(year);
     }
 
     @Override
-    public java.util.Map<String, Integer> getPerson() {
-        return sd.getPerson();
+    public java.util.Map<String, Integer> getPerson(int year) {
+        return sd.getPerson(year);
     }
 
     /**
@@ -276,12 +257,16 @@ public class ServerImpl implements MaketPriceServer {
      * @param p
      */
     private void setTable(Map<String, Iterable<Tuple3<String, Object, Object>>> valueData, Table table, Page p) {
+
         Iterator<Tuple2<String, Iterable<Tuple3<String, Object, Object>>>> iterator = valueData.iterator();
+
         while (iterator.hasNext()) {
+
             Tuple2<String, Iterable<Tuple3<String, Object, Object>>> next = iterator.next();
             Iterable<Tuple3<String, Object, Object>> it = next._2;
             Iterator<Tuple3<String, Object, Object>> it2 = it.iterator();
             List<Tuple3<String, Object, Object>> tuple3List = it.toList();
+
             int size = tuple3List.size();
             int page = size / 10 + 1;
             for (int i = 1; i < page; i++) {
@@ -294,6 +279,38 @@ public class ServerImpl implements MaketPriceServer {
         }
     }
 
+    private  void  setTable2( List<Tuple2<Object, Tuple3<String, Object, Object>>> income,Table table,Page p){
+        Iterator<Tuple2<Object, Tuple3<String, Object, Object>>> iterator = income.iterator();
+        int size=0;
+        while (iterator.hasNext()){
+            Tuple2<Object, Tuple3<String, Object, Object>> next = iterator.next();
+            size=Integer.valueOf(next._1.toString());
+
+            Tuple3<String, Object, Object> next1 = next._2;
+            table.addData(new Row().addRow(next1._1()).addRow(next1._2().toString()).addRow(next1._3().toString()));
+
+        }
+        int page = size / 10 + 1;
+        for (int i = 1; i < page; i++) {
+            table.setPage(p.addData(i));
+        }
+
+    }
 
 
+    @Override
+    public boolean analysis(String tableName) {
+        boolean value = intoValue(tableName);
+
+        boolean personValue = intoPerson(tableName);
+
+        boolean cityValue = intoIncome(tableName);
+
+        if (value && personValue && cityValue) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

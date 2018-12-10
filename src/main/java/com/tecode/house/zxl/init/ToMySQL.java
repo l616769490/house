@@ -35,7 +35,7 @@ public class ToMySQL {
                 "  CONSTRAINT `reportId` FOREIGN KEY (`reportId`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8;\n",
 
-                "CREATE TABLE `xAxis` (\n" +
+                "CREATE TABLE `xaxis` (\n" +
                 "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                 "  `name` varchar(20) NOT NULL,\n" +
                 "  `diagramId` int(11) NOT NULL,\n" +
@@ -45,7 +45,7 @@ public class ToMySQL {
                 "  CONSTRAINT `diagramId` FOREIGN KEY (`diagramId`) REFERENCES `diagram` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n" +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8;\n",
 
-        "CREATE TABLE `yAxis` (\n" +
+        "CREATE TABLE `yaxis` (\n" +
                 "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                 "  `name` varchar(255) NOT NULL,\n" +
                 "  `diagramId` int(11) NOT NULL,\n" +

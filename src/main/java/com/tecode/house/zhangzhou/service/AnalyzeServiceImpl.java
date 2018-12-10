@@ -56,7 +56,7 @@ public class AnalyzeServiceImpl implements Analysis {
         System.out.println("正在向mysql表中插入数据...");
         insertIntoMysql(tableName);
         System.out.println("插入数据成功");*/
-
+        insertIntoMysql(tableName);
 
         return true;
     }
@@ -81,9 +81,9 @@ public class AnalyzeServiceImpl implements Analysis {
     private void insertIntoMysql(String tableName){
         //数据分析并导入mysql阶段
         SparkService ss = new SparkService();
-        ss.selectVacancyState(tableName,2013);
-        ss.selectSingleBuildingGroupByCity(tableName,2013);
-        ss.selectHouseDutyGroupByCity(tableName,2013);
+        ss.selectVacancyState(tableName,Integer.parseInt(tableName.split(":")[1]));
+        ss.selectSingleBuildingGroupByCity(tableName,Integer.parseInt(tableName.split(":")[1]));
+        ss.selectHouseDutyGroupByCity(tableName,Integer.parseInt(tableName.split(":")[1]));
     }
 
     public static void main(String[] args) {

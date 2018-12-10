@@ -1,5 +1,6 @@
 package com.tecode.house.zxl.control;
 
+import com.tecode.house.d01.service.Analysis;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
 import com.tecode.house.zxl.server.MaketPriceServer;
@@ -15,10 +16,16 @@ import java.util.Map;
 @Controller
 public class Control {
     @Autowired
-    private static MaketPriceServer mps = new ServerImpl();
+    private static MaketPriceServer mps =new ServerImpl();
+
+    private static Analysis  as=new ServerImpl();
 
     public static void main(String[] args) {
-        mps.intoMysql("2013");
+        if(as.analysis("thads:2013")){
+            System.out.println("分析数据成功");
+        }else{
+            System.out.println("分析数据失败");
+        }
     }
 
 
@@ -31,7 +38,7 @@ public class Control {
     @ResponseBody
     @RequestMapping(value = "/zxl-control", method = RequestMethod.POST)
     public Map<String, Object> init(String year) {
-        boolean b = mps.intoMysql(year);
+        boolean b =as.analysis(year);
         Map<String, Object> map = new HashMap<>();
         if (b) {
             map.put("success", true);
@@ -52,7 +59,7 @@ public class Control {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-valuetable", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_value_table", method = RequestMethod.POST)
     public Table valueTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
             return mps.getValueTable();
@@ -68,7 +75,7 @@ public class Control {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-persontable", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_person_table", method = RequestMethod.POST)
     public Table personTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
             return mps.getPersonTable();
@@ -83,7 +90,7 @@ public class Control {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/zxl-incometable", method = RequestMethod.POST)
+    @RequestMapping(value = "/zxl_income_table", method = RequestMethod.POST)
     public Table incomeTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
             return mps.getIncomeTable();

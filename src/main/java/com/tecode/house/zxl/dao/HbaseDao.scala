@@ -36,7 +36,7 @@ trait HbaseDao {
     * @param city   要查询的城市等级
     * @return 查询结果
     */
-  def getIncome(year: String, income: String, city: String): Map[String, Iterable[(String, Int, Int)]]
+  def getIncome(tableName: String, income: String, city: String,p:Int): List[(Int, (String, Int, Int))]
 
 
   /**
@@ -73,7 +73,7 @@ trait HbaseDao {
     * @param person 要查询的年份
     * @return 查询结果
     */
-  def getPerson(year: String, person: String, city: String): Map[String, Iterable[(String, Int, Int)]]
+  def getPerson(tableName: String, person: String, city: String,p:Int): List[(Int, (String, Int, Int))]
 
   /**
     * 查询市场价
@@ -90,32 +90,32 @@ trait HbaseDao {
     * @param value 要查询的价格区间
     * @return 查询结果
     */
-  def getValue(year: String, value: String): Map[String, Iterable[(String, Int, Int)]]
+  def getValue(tableName: String, value: String,p:Int): List[(Int, (String, Int, Int))]
 
 
   /**
     * 统计市场价的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getValueDistribution(year: String): Map[String, Int]
+  def getValueDistribution(tableName: String): Map[String, Int]
 
   /**
     * 统计家庭人数的分布情况
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getPersonDistribution(year: String): Map[String, Int]
+  def getPersonDistribution(tableName: String): Map[String, Int]
 
   /**
     * 按照城市统计家庭收入
     *
-    * @param year 要统计的年份
+    * @param tableName 要统计的表
     * @return 统计结果
     */
-  def getIncomeDistributionByCity(year: String): Map[String, Int]
+  def getIncomeDistributionByCity(tableName: String): Map[String, Int]
 
 
 }

@@ -1,16 +1,19 @@
 package com.tecode.house.zhangzhou.service
 
 import java.sql.{Connection, SQLException}
+import java.util
 
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.lijin.utils.SparkUtil
+
+import scala.collection.JavaConverters._
 import com.tecode.house.zhangzhou.mysqlDao.impl.MysqlDaoImpl
 import com.tecode.house.zhangzhou.zzUtil.MySQLUitl
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -19,7 +22,9 @@ import org.apache.spark.{SparkConf, SparkContext}
   * @param houseDuty 房屋费用
   */
 case class TmpClass(city:String ,houseDuty:Double)
-
+case class VacClass(CONTROL:String,METRO3:String,BUILT:String,AGE1:String,VACANCY:String,ASSISTED:String)
+case class SingleClass(CONTROL:String,METRO3:String,BUILT:String,STRUCTURETYPE:String,BEDRMS:String,ROOMS:String)
+case class HouseClass(CONTROL:String,METRO3:String,BUILT:String,STRUCTURETYPE:String,ZSMHC:String,ROOMS:String,VALUE:String)
 class SparkService{
 //  val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
   val sc = SparkUtil.getSparkContext
@@ -82,7 +87,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "基础查询"
       val rStatus: Int = 0
-      val url: String = "/vacancy"
+      val url: String = "/basic_vacancy"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
       //饼状图（图表表）
       val dName = "空置状态"
@@ -104,7 +109,9 @@ class SparkService{
         dataId+=1
       }
       //插入搜索表
-      searchId = table.insertIntoSearch("空置状态","空置",reportId)
+      searchId = table.insertIntoSearch("空置","空置",reportId)
+      table.insertIntoSearch("居住","空置",reportId)
+      table.insertIntoSearch("全部","空置",reportId)
       if(reportId>0 && diagramId>0 && legendId>0 && xId>0 && yId>0 && dId1>0 && dId2>0 && dataId==mmap.size && searchId>0){
         //提交事务
         msconn.commit()
@@ -288,7 +295,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "城市规模"
       val rStatus: Int = 0
-      val url: String = "http://166.166.2.111/houseDuty"
+      val url: String = "/houseDuty"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //柱状图，图表表
@@ -339,42 +346,195 @@ class SparkService{
     }
   }
 
-
-  def selectData(tableName:String): Map[String,Iterable[String]] ={
+  /**
+    * 在hbase中查询得到和空置状态相关的列
+    * @param tableName：查询的hbase的表名
+    * @param search：查询的选项
+    * @return：返回一个分组后的Map对象
+    */
+  def selectVacancyTable(tableName:String,search:String,page:Int): util.List[(String, String, String, String, String, String)] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    val clumnRDD = hbaseRDD.map(x => (x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY")),
-      x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED"))))
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+    var list: List[(String, String, String, String, String, String)] = null
+    if(search.equals("空置")){
+      list = clumnRDD.filter(!_._5.equals("-6")).take(page*10).toList
+    }else if(search.equals("居住")){
+      list = clumnRDD.filter(_._5.equals("-6")).take(page*10).toList
+    }else{
+      list = clumnRDD.take(page*10).toList
+    }
+    var jList: util.List[(String, String, String, String, String, String)] = list.asJava
+    if(jList.size()>=page*10){
+      jList = jList.subList((page-1)*10,page*10)
+    }else{
+      jList = jList.subList((page-1)*10,jList.size())
+    }
+//    spark.close()
+    return jList
 
-    val mapRDD = clumnRDD.map{x => val tmp=x._5
-      if(tmp.equals("-6")){
-        ("居住",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
-      }else{
-        ("空置",x._1+"-"+x._2+"-"+x._3+"-"+x._4+"-"+x._5+"-"+x._6)
-      }
-      }.groupByKey()
-      var mmap = Map[String,Iterable[String]]()
-    mapRDD.collect().foreach(mmap+=(_))
-    return mmap
+   /* val vacRDD = hbaseRDD.map(x => VacClass(Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+    val varDF = vacRDD.toDF()
+    varDF.createOrReplaceTempView("tmp")
+    if(search.equals("居住")){
+
+    }
+    val frame: DataFrame = spark.sql("select tmp.* from tmp  where CONTROL = '-6'")
+    frame.show()
+    var vrdd = frame.rdd.map(x => ("居住",x.get(0)+"_"+x.get(1)+"_"+x.get(2)+"_"+x.get(3)+"_"+"居住"+"_"+x.get(5))).groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    vrdd.collect().foreach(mmap+=(_))
+    spark.close()
+    print(mmap.size+"=========================")
+    return mmap*/
+
 
   }
-}
 
+
+
+  /**
+    * 在hbase中查询得到和独栋建筑相关的列
+    * @param tableName：表名
+    * @param search：查询选项一
+    * @param search2：查询选项二
+    * @return：返回一个分组后的Map对象
+    */
+  def selectSingleBuildTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
+    val hbaseConf = HBaseConfiguration.create()
+    hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
+    val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
+      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
+      classOf[org.apache.hadoop.hbase.client.Result])
+
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BEDRMS"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0)
+    if(search.equals("一线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("1"))
+    }
+    if(search.equals("二线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("2"))
+    }
+    if(search.equals("三线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("3"))
+    }
+    if(search.equals("四线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("4"))
+    }
+    if(search.equals("五线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("5"))
+    }
+    if(search2.equals("独栋")){
+      clumnRDD = clumnRDD.filter(_._4.equals("1"))
+    }
+    if(search2.equals("其他")){
+      clumnRDD = clumnRDD.filter(!_._4.equals("1"))
+    }
+
+    val mapRDD = clumnRDD.map{x => val tmp=x._2
+      if(tmp.equals("1")){
+        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("2")){
+        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("3")){
+        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("4")){
+        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else{
+        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }
+    }.groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    mapRDD.collect().foreach(mmap+=(_))
+//    spark.close()
+    return mmap
+  }
+
+  /**
+    * 在hbase中查询房产税相关字段的列
+    * @param tableName：表名
+    * @param search：查询条件一
+    * @param search2：查询条件二
+    * @return 返回一个分组后的Map对象
+    */
+  def selectHouseDutyTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
+
+    val hbaseConf = HBaseConfiguration.create()
+    hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
+    val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
+      classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
+      classOf[org.apache.hadoop.hbase.client.Result])
+
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ZSMHC"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))),
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0)
+    if(search.equals("一线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("1"))
+    }
+    if(search.equals("二线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("2"))
+    }
+    if(search.equals("三线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("3"))
+    }
+    if(search.equals("四线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("4"))
+    }
+    if(search.equals("五线城市")){
+      clumnRDD = clumnRDD.filter(_._2.equals("5"))
+    }
+    if(search2.equals("独栋")){
+      clumnRDD = clumnRDD.filter(_._4.equals("1"))
+    }
+    if(search2.equals("其他")){
+      clumnRDD = clumnRDD.filter(!_._4.equals("1"))
+    }
+
+    val mapRDD = clumnRDD.map{x => val tmp=x._2
+      if(tmp.equals("1")){
+        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("2")){
+        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("3")){
+        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else if(tmp.equals("4")){
+        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }else{
+        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
+      }
+    }.groupByKey()
+    var mmap = Map[String,Iterable[String]]()
+    mapRDD.collect().foreach(mmap+=(_))
+//    spark.close()
+    return mmap
+  }
+}
 object SparkService{
   def main(args: Array[String]): Unit = {
     val ss = new SparkService
-   // ss.analysis("空置状态饼图")
-
-    println("123ada")
+    ss.selectVacancyTable("thads:2013","居住",3)
   }
 }
-
 

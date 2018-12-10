@@ -15,6 +15,26 @@ import java.util.Map;
 @Repository
 public class MySQLDaoImpl implements MySQLDao {
 
+    private boolean delete(int year){
+        Connection conn=null;
+        try {
+            conn = DBUtil.getConn();
+            String sql="deldete from `report` where `year`=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1,year);
+            int i = ps.executeUpdate();
+            if(i>0){
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            DBUtil.colse(conn);
+        }
+
+        return false;
+    }
+
     @Override
     public boolean into(String name,String reportType,String url,String x,String y,String tpye,Iterator<Tuple2<String, Object>> it,String scrip,String year) {
         Connection conn=null;
@@ -46,7 +66,7 @@ public class MySQLDaoImpl implements MySQLDao {
             legId=toLeng(conn,ps,rs,digId,tpye);
 
             //写入数据表
-           String s=toDim(conn,ps,rs,xId,it,tpye);
+           String s=toDim(conn,ps,rs,xId,it,tpye,legId);
 
            dimId=Integer.valueOf(s.split("_")[0]);
 
@@ -58,7 +78,14 @@ public class MySQLDaoImpl implements MySQLDao {
 
             if(reportid>0&&digId>0&&xId>0&&dataId>0&&legId>0&&dimId>0&&yId>0){
                 conn.commit();
-                return true;
+                int i = updateStatus(conn, reportid);
+                if(i>0){
+                    conn.commit();
+                    return true;
+                }else {
+                    return false;
+                }
+
             }
         } catch (SQLException e) {
             try {
@@ -76,25 +103,33 @@ public class MySQLDaoImpl implements MySQLDao {
         return false;
     }
 
+    private int updateStatus(Connection conn,int reportId) throws SQLException {
+        String sql="update report set status=1 where id=?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1,reportId);
+        int i = ps.executeUpdate();
+        return i;
+    }
+
     @Override
-    public Map<String, Integer> get() {
+    public java.util.Map<String, Integer> get(int year) {
         Map<String,Integer> map=new HashMap<>();
         Connection conn;
         String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
+        String url="jdbc:mysql://localhost:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
         String password="root";
 
         try{
             Class.forName(driver);
             conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String s=rs.getString("x");
                 if("市场价".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+                    map.put(rs.getString("legend"), Integer.valueOf(rs.getString("value")));
                 }
             }
 
@@ -109,24 +144,23 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Map<String, Integer> getIncome() {
+    public Map<String, Integer> getIncome(int year) {
         Map<String,Integer> map=new HashMap<>();
         Connection conn;
         String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
+        String url="jdbc:mysql://localhost:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
         String password="root";
-
         try{
             Class.forName(driver);
             conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String s=rs.getString("x");
                 if("年收入".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+                    map.put(rs.getString("legend"), Integer.valueOf(rs.getString("value")));
 
                 }
             }
@@ -142,24 +176,24 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Map<String, Integer> getPerson() {
+    public Map<String, Integer> getPerson(int year) {
         Map<String,Integer> map=new HashMap<>();
         Connection conn;
         String driver="com.mysql.jdbc.Driver";
-        String url="jdbc:mysql://166.166.1.10/house";
+        String url="jdbc:mysql://localhost:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
         String password="root";
 
         try{
             Class.forName(driver);
             conn= DriverManager.getConnection(url,user,password);
-            String sql="select d1.dimName,d.value,d.x from `data` d right join dimension d1 on d.legendId=d1.id";
+            String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String s=rs.getString("x");
                 if("家庭人数".equals(s)) {
-                    map.put(rs.getString("dimName"), Integer.valueOf(rs.getString("value")));
+                    map.put(rs.getString("legend"), Integer.valueOf(rs.getString("value")));
 
                 }
             }
@@ -174,7 +208,7 @@ public class MySQLDaoImpl implements MySQLDao {
         return map;
     }
 
-    private int toData(PreparedStatement ps,Connection conn,int xId,int dimId,Object value,String type){
+    private int toData(PreparedStatement ps,Connection conn,int xId,int dimId,Object value,String type,String s){
 
         try {
             String sql="insert into data values(?,?,?,?,?,?)";
@@ -184,7 +218,7 @@ public class MySQLDaoImpl implements MySQLDao {
             ps.setInt(3,xId);
             ps.setInt(4,dimId);
             ps.setString(5,type);
-            ps.setString(6,null);
+            ps.setString(6,s);
             int i = ps.executeUpdate();
             if(i>0){
                 return i;
@@ -271,7 +305,7 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     private int toX(Connection conn,PreparedStatement ps,ResultSet rs,int digId,String type,String x) throws SQLException {
-        String sql2="insert into xAxis value(?,?,?,?)";
+        String sql2="insert into xaxis value(?,?,?,?)";
         int xId=0;
         ps=conn.prepareStatement(sql2,new String[]{"id"});
         ps.setInt(1,0);
@@ -291,7 +325,7 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     private int toY(Connection conn,PreparedStatement ps,ResultSet rs,int digId,String y) throws SQLException {
-        String sql5="insert into yAxis value(?,?,?)";
+        String sql5="insert into yaxis value(?,?,?)";
         int yId=0;
         ps=conn.prepareStatement(sql5,new String[]{"id"});
         ps.setInt(1,0);
@@ -307,7 +341,7 @@ public class MySQLDaoImpl implements MySQLDao {
         return yId;
     }
 
-    private String toDim(Connection conn,PreparedStatement ps,ResultSet rs,int xId,Iterator<Tuple2<String, Object>> it,String type) throws SQLException {
+    private String toDim(Connection conn,PreparedStatement ps,ResultSet rs,int xId,Iterator<Tuple2<String, Object>> it,String type,int legId) throws SQLException {
         int dimId=0;
         int dataId=0;
 
@@ -325,7 +359,7 @@ public class MySQLDaoImpl implements MySQLDao {
                 if(rs.next()){
                     dimId=rs.getInt(1);
                 }
-                dataId=toData(ps, conn, xId, dimId, tuple2._2,type);
+                dataId=toData(ps, conn, xId, legId, tuple2._2,type,tuple2._1);
 
             }
 
