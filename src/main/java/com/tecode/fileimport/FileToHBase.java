@@ -67,7 +67,7 @@ public class FileToHBase {
     public boolean fileToHbase(String path, String[] fields, boolean del) {
         try {
             // 获取文件名
-            String fileName = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
+            final String fileName = path.substring(path.lastIndexOf('/') + 1, path.lastIndexOf('.'));
             // 获取输入流
             BufferedReader br = new BufferedReader(new FileReader(path));
             // 设置列名

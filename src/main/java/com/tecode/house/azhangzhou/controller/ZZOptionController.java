@@ -1,4 +1,4 @@
-package com.tecode.house.lijin.test;
+package com.tecode.house.azhangzhou.controller;
 
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * 1.在接收html请求的java文件的类上添加@Controller
+ */
 @Controller
-public class TestOption {
+public class ZZOptionController {
 
     /**
      * 折线图测试
@@ -19,7 +22,7 @@ public class TestOption {
      * @return 折线图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-line", method = RequestMethod.POST)
+    @RequestMapping(value = "/test-line1", method = RequestMethod.POST)
     public Option testLine() {
         Option option = new Option();
         // 标题
@@ -71,7 +74,7 @@ public class TestOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/singleBuilding", method = RequestMethod.POST)
     public Option testBar(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -142,7 +145,7 @@ public class TestOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-houseDuty", method = RequestMethod.POST)
+    @RequestMapping(value = "/houseDuty", method = RequestMethod.POST)
     public Option testHouseDuty(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -221,7 +224,7 @@ public class TestOption {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
+    @RequestMapping(value = "/basic_vacancy", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题
