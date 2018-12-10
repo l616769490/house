@@ -47,18 +47,24 @@ public class InsertToTable implements InsertTable {
         String tableName = tablePost.getYear().toString();
         //建表
         Table table = new Table();
+
         Integer pp = tablePost.getPage();
         table.addSearchs(new Search().setTitle("居住状态").addValue("自住").addValue("租赁"));
 
-        //String year = tablePost.getYear().toString();
-        //String search = tablePost.getSearches().get(0).getValues().get(0);
+
         table.setYear(tablePost.getYear()).addTop("ID").addTop("城市等级").addTop("简称年份")
                 .addTop("建筑结构").addTop("自住\\租赁");
-        Page p = new Page();
-        table.setPage(p.setThisPage(tablePost.getPage()));
-       // System.out.println(tablePost.getSearches().get(0));
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.selfRentTable(tableName, tablePost.getSearches().get(0).getValues().get(0), pp);
 
+       // System.out.println(tablePost.getSearches().get(0));
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.selfRentTable(tableName, tablePost.getSearches().get(0).getValues().get(0), pp,table);
+
+//        List<Integer> list = new ArrayList<>();
+//        for(int i = 0;i<m.size();i++){
+//            list.add(i+1);
+//        }
+
+
+        long size = m.size();
 
         Iterator<Tuple2<String, String>> iter = m.iterator();
 
@@ -74,16 +80,35 @@ public class InsertToTable implements InsertTable {
 
         }
 
+        //Page p = new Page();
+       // p.setThisPage(tablePost.getPage());
+        //p.setData(list);
+       // table.setPage(p);
+
 
 
         System.out.println("查询年份："+table.getYear());
         System.out.println("当前页："+table.getPage().getThisPage());
-        System.out.println("所有页："+table.getPage().getData().size());
+        System.out.println("所有页："+size);
         System.out.println(table.getTop());
         table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
         return table;
 
     }
+
+
+    /**
+     * 截取方法
+     */
+//    def subString(page:Int,count:Int,list:util.List[(String, String)]): util.List[(String, String)] ={
+//        if (page*10>count){
+//            list.subList(count-10,count)
+//        }else{
+//            list.subList((page-1)*10,page*10)
+//        }
+//    }
+
+
 
     /**
      * 把数据封装进表格         房间数、卧室数
@@ -107,7 +132,7 @@ public class InsertToTable implements InsertTable {
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
         // System.out.println(tablePost.getSearches().get(0));
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable(tableName, tablePost.getSearches().get(0).getValues().get(0), 3);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable(tableName, tablePost.getSearches().get(0).getValues().get(0), 3,table);
         int pages = m.size();
         Iterator<Tuple2<String, String>> iter = m.iterator();
 
@@ -217,10 +242,9 @@ public class InsertToTable implements InsertTable {
         s.setTitle("年份").addValue("1900-2000").addValue("2000-2010").addValue("2010-2018");
 
         //数据   Row
-
         //List<String> row1 = new ArrayList<>();
         //调用获取self表格所需字段的方法
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable(tablePost.getYear().toString(), tablePost.getSearches().get(0).getValues().get(0), 3);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable(tablePost.getYear().toString(), tablePost.getSearches().get(0).getValues().get(0),tablePost.getPage() ,table);
         int size = m.size();
         int page = size/10+1;
         Iterator<Tuple2<String, String>> iter = m.iterator();

@@ -8,6 +8,8 @@ import com.google.protobuf.SingleFieldBuilder
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.libo.dao.impl.MysqlDaoImpl
 import com.tecode.house.libo.util.DBUtil
+import com.tecode.table
+import com.tecode.table.{Page, Table}
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -18,6 +20,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.immutable.HashMap
+import scala.collection.mutable.ArrayBuffer
 
 object RoomByCity02 {
   def main(args: Array[String]): Unit = {
@@ -395,7 +398,7 @@ class RoomByCity02 extends Analysis {
     * -----自住、租赁-----
     * ID  城市等级  简称年份  建筑结构  自住、租赁
     */
-  def selfRentTable(tableName:String,select:String,page:Int):List[(String,String)] = {
+  def selfRentTable(tableName:String,select:String,page:Int,table: Table):List[(String,String)] = {
 
 
     var values = hbaseRDD.map { x => {
@@ -409,19 +412,12 @@ class RoomByCity02 extends Analysis {
 
 
     //过滤自住、租赁
-
     if(select.equals("自住")){
       //("自住",x._1+"_"+x._2+"_"+x._3+"_"+x._4)
      values =  values.filter(_._5.equals("1"))
     }else{
       values = values.filter(_._5.equals("2"))
     }
-
-
-
-   // values.collect()//.foreach(println)
-    //println("==========")
-
 
      val v = values.map{x=>{
       if(x._5.toInt==1){
@@ -437,22 +433,27 @@ class RoomByCity02 extends Analysis {
       */
     //import sqlContext.implicits._
     var list:List[(String,String)] = List()
+
+
     val java: util.List[(String, String)] = v.take(page*10).toList.asJava
     val l: Long = v.count()
     val tuples= subString(page,l.toInt,java)
     val value = tuples.iterator()
 
+
+    val p = new Page;
+    p.setThisPage(page);
+    var list1= new ArrayBuffer[Integer]()
+    for(i <- 1 to l.toInt){
+      p.addData(i)
+    }
+    table.setPage(p)
+
     while(value.hasNext){
       val str = value.next()
       list:+=(l.toString,str._2)
     }
-
   list
-
-
-
-
-
 }
 
   /**
@@ -475,7 +476,7 @@ class RoomByCity02 extends Analysis {
     *       条件：城市等级  房间数最大15
     *       ID  城市等级  房间数   卧室数
     */
-  def roomsTable(tableName:String,city:String,page:Int):List[(String,String)]  ={
+  def roomsTable(tableName:String,city:String,page:Int,table :Table):List[(String,String)]  ={
     var roomsMap = Map[String,String]();
     //取数据
     var value = hbaseRDD.map(x=>{
@@ -531,12 +532,28 @@ class RoomByCity02 extends Analysis {
       (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
     }}
 
+
       var jlist:List[(String,String)] = List()
       val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
       val l1: Long = v.count()
        val tuples = subString(page,l1.toInt,l)
     val value1 = tuples.iterator()
 //
+
+    //获取所有页码
+    val p = new Page;
+    p.setThisPage(page);
+    var list1= new ArrayBuffer[Integer]()
+    for(i <- 1 to l1.toInt){
+      p.addData(i)
+    }
+    table.setPage(p)
+
+
+
+
+
+
     while(value1.hasNext){
       val str = value1.next()
       jlist:+=(l.toString,str._2)
@@ -553,7 +570,7 @@ class RoomByCity02 extends Analysis {
     *   条件：年份区间    是否独栋
     * CONTROL METRO3 BUILT STRUCTURETYPE
     */
-  def singleTable(tableName:String,year:String,page:Int):List[(String,String)]  ={
+  def singleTable(tableName:String,year:String,page:Int,table:Table):List[(String,String)]  ={
     var singleMap = Map[String,String]()
     var values = hbaseRDD.map{x=>{
       (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
@@ -592,24 +609,32 @@ class RoomByCity02 extends Analysis {
     var jlist:List[(String,String)] = List()
     val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
     val l1: Long = v.count()
-    //var page = l1.toInt
+    println("长度:"+l)
     val tuples = subString(page,l1.toInt,l)
     val value1 = tuples.iterator()
-    //
+
+
+
+    val p = new Page;
+    p.setThisPage(page);
+    var list1= new ArrayBuffer[Integer]()
+    for(i <- 1 to l1.toInt){
+      p.addData(i)
+    }
+    table.setPage(p)
+
+
+
+
+
+
     while(value1.hasNext){
       val str = value1.next()
       jlist:+=(l.toString,str._2)
     }
-    //    for (elem <- roomsMap) {
-    //      println(elem)
-    //    }
+
     jlist
 
-    //.collect().toMap.foreach(println)
-    //v.collect().foreach(singleMap+=(_))
-//    for (elem <- singleMap) {
-//      println(elem)
-//    }
   }
 
 
