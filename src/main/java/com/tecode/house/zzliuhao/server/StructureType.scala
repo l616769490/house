@@ -122,8 +122,7 @@ class StructureType extends Analysis {
     val report = new Report()
     report.setName("类型")
     report.setCreate(System.currentTimeMillis())
-
-    report.setYear(Integer.valueOf(tablename))
+    report.setYear(Integer.valueOf(tablename.split(":")(1)))
 
     report.setGroup("基础分析")
     report.setStatus(1)

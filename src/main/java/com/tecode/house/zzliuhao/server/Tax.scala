@@ -160,7 +160,7 @@ class Tax extends Analysis{
     val report = new Report()
     report.setName("各个城市规模税务统计")
     report.setCreate(System.currentTimeMillis())
-    report.setYear(Integer.valueOf(tablename))
+    report.setYear(Integer.valueOf(tablename.split(":")(1)))
     report.setGroup("城市规模")
     report.setStatus(1)
     report.setUrl("/CitySize_Tax_Avg")
