@@ -1,4 +1,4 @@
-package com.tecode.d01.service;
+package com.tecode.house.dengya.d01.service;
 
 /**
  * 数据分析接口

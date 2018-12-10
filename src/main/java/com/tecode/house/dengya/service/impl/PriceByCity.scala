@@ -2,8 +2,8 @@ package com.tecode.house.dengya.service.impl
 
 import java.sql.Connection
 
-import com.tecode.d01.service.Analysis
 import com.tecode.house.dengya.bean._
+import com.tecode.house.dengya.d01.service.Analysis
 import com.tecode.house.dengya.dao.MySQLDao
 import com.tecode.house.dengya.dao.impl.MySQLDaoImpl
 import com.tecode.house.dengya.utils.MySQLUtil
