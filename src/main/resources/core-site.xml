@@ -17,10 +17,14 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-                        <property>
-				<!--配置默认的文件系统的参数-->
-				<name>fs.defaultFS</name>
-				<!--文件系统所在地-->
-				<value>hdfs://hadoop001</value>
-			</property>
+	<!-- 指定HDFS中NameNode的地址 -->
+	<property>
+		<name>fs.defaultFS</name>
+        <value>hdfs://master</value>
+	</property>
+<!-- 指定hadoop运行时产生文件的存储目录 -->
+	<property>
+		<name>hadoop.tmp.dir</name>
+		<value>/home/lijin/hadoop_tmp</value>
+	</property>
 </configuration>

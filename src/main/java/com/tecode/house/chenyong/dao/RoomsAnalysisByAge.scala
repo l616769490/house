@@ -164,6 +164,7 @@ class RoomsAnalysisByAge extends Analysis{
       bedroomsReport.setYear(Integer.valueOf(tableName.split(":")(1)))
       bedroomsReport.setGroup("卧室统计")
       bedroomsReport.setStatus(1)
+      bedroomsReport.setUrl("/roomsAnalysisByAge")
       val reportId: Int = msDao.putInTableReport(conn, bedroomsReport)
 
       //房间数饼图

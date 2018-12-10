@@ -17,13 +17,13 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-                <property>
-			<name>dfs.replication</name>
-			<value>3</value>
-		</property>
-<!--设置辅助名称节点所在地址,如果不配置该参数，则辅助名称节点默认和namenonde节点在一个服务器上-->
-			<property>
-				<name>dfs.namenode.secondary.http-address</name>
-				<value>hadoop002:50090</value>
-			</property>
+	<property>
+		<name>dfs.replication</name>
+		<value>3</value>
+	</property>
+
+	<property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>snn:50090</value>
+	</property>
 </configuration>
