@@ -108,7 +108,9 @@ class SparkService{
         dataId+=1
       }
       //插入搜索表
-      searchId = table.insertIntoSearch("空置状态","空置",reportId)
+      searchId = table.insertIntoSearch("空置","空置",reportId)
+      table.insertIntoSearch("居住","空置",reportId)
+      table.insertIntoSearch("全部","空置",reportId)
       if(reportId>0 && diagramId>0 && legendId>0 && xId>0 && yId>0 && dId1>0 && dId2>0 && dataId==mmap.size && searchId>0){
         //提交事务
         msconn.commit()
