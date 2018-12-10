@@ -36,7 +36,7 @@
 <div class="container-fluid">
     <div class="row">
         <div id="btns" class="col-lg-8 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="getTable1()">基础-房间数分析</button>
+            <button id="btn-1" class="btn btn-success" onclick="getTable1()">空置状态</button>
             <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按区域-家庭收入分析
             </button>
             <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按区域-房产税分析

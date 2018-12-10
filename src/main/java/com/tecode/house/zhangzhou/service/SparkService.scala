@@ -1,8 +1,11 @@
 package com.tecode.house.zhangzhou.service
 
 import java.sql.{Connection, SQLException}
+import java.util
 
 import com.tecode.house.d01.service.Analysis
+
+import scala.collection.JavaConverters._
 import com.tecode.house.zhangzhou.mysqlDao.impl.MysqlDaoImpl
 import com.tecode.house.zhangzhou.zzUtil.MySQLUitl
 import org.apache.hadoop.hbase.HBaseConfiguration
@@ -346,39 +349,37 @@ class SparkService{
     * @param search：查询的选项
     * @return：返回一个分组后的Map对象
     */
-  def selectVacancyTable(tableName:String,search:String,page:Int): Map[String,Iterable[String]] ={
+  def selectVacancyTable(tableName:String,search:String,page:Int): util.List[(String, String, String, String, String, String)] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    /*var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+    var clumnRDD = hbaseRDD.map(x => (Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+    var list: List[(String, String, String, String, String, String)] = null
     if(search.equals("空置")){
-      clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
+      list = clumnRDD.filter(!_._5.equals("-6")).take(page*10).toList
+    }else if(search.equals("居住")){
+      list = clumnRDD.filter(_._5.equals("-6")).take(page*10).toList
+    }else{
+      list = clumnRDD.take(page*10).toList
     }
-    if(search.equals("居住")){
-      clumnRDD = clumnRDD.filter(_._5.equals("-6"))
+    var jList: util.List[(String, String, String, String, String, String)] = list.asJava
+    if(jList.size()>=page*10){
+      jList = jList.subList((page-1)*10,page*10)
+    }else{
+      jList = jList.subList((page-1)*10,jList.size())
     }
-
-    val mapRDD = clumnRDD.map{x => val tmp=x._5
-      if(tmp.equals("-6")){
-        ("居住",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"居住"+"_"+x._6)
-      }else{
-        ("空置",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"空置"+"_"+x._6)
-      }
-    }.groupByKey()
-    var mmap = Map[String,Iterable[String]]()
-    mapRDD.collect().foreach(mmap+=(_))
     spark.close()
-    return mmap*/
+    return jList
 
-    val vacRDD = hbaseRDD.map(x => VacClass(Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
+   /* val vacRDD = hbaseRDD.map(x => VacClass(Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
@@ -389,13 +390,14 @@ class SparkService{
     if(search.equals("居住")){
 
     }
-    val frame: DataFrame = spark.sql("select * from (select * from tmp where VACANCY = '-6') t limit "+(page-1)*10 + ","+10+";")
+    val frame: DataFrame = spark.sql("select tmp.* from tmp  where CONTROL = '-6'")
+    frame.show()
     var vrdd = frame.rdd.map(x => ("居住",x.get(0)+"_"+x.get(1)+"_"+x.get(2)+"_"+x.get(3)+"_"+"居住"+"_"+x.get(5))).groupByKey()
     var mmap = Map[String,Iterable[String]]()
     vrdd.collect().foreach(mmap+=(_))
     spark.close()
     print(mmap.size+"=========================")
-    return mmap
+    return mmap*/
 
 
   }
