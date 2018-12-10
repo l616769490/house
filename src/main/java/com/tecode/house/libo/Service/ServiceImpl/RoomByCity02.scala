@@ -65,9 +65,9 @@ class RoomByCity02 extends Analysis {
 
 
   /**
-    * 自住\租赁
+    * 自住\租赁   RoomAndBedRom  selfOrRent
     */
-  def selfOrRent(tableName: String): Unit = {
+  def selfOrRent(tableName: String): Boolean = {
     //获得Mysql的链接
     var msconn: sql.Connection = DBUtil.getConn
     //定义一个Map   将查询的结果存入该Map  传入setIntoMysqlTable中
@@ -83,6 +83,7 @@ class RoomByCity02 extends Analysis {
     value.collect().foreach(selfOrRentMap += (_))
     //调用传入MySQLde 方法
     setIntoMysqlTable(selfOrRentMap, tableName)
+    return true
   }
 
   /**
@@ -162,7 +163,7 @@ class RoomByCity02 extends Analysis {
     * 城市规模统计：房间总数和卧室数
     */
 
-  def RoomAndBedRom(tableName: String): Unit = {
+  def RoomAndBedRom(tableName: String): Boolean = {
     //MySQL链接
     var msconn: sql.Connection = DBUtil.getConn
 
@@ -189,6 +190,8 @@ class RoomByCity02 extends Analysis {
 
     //导入mysql
     RoomAndBedRomToMysql(RoomAndBedRom, tableName)
+
+    return true
   }
 
   /**
@@ -264,7 +267,7 @@ class RoomByCity02 extends Analysis {
   /**
     * 按照建成年份：统计独栋建筑比例
     */
-  def SingleBuildByYear(tableName: String): Unit = {
+  def SingleBuildByYear(tableName: String): Boolean = {
     var msconn: sql.Connection = DBUtil.getConn
     var singleMap = Map[String, Int]()
 //    //链接hbase
@@ -310,6 +313,7 @@ class RoomByCity02 extends Analysis {
     //将封装好的Map传入 SingleBuildToHtml 方法中，封装成网页需要的数据
     singleToHTML(singleMap, tableName);
 
+    return  true
   }
 
   /**
@@ -391,7 +395,7 @@ class RoomByCity02 extends Analysis {
     }
 
   }
-
+//============================================插入表格数据==============================================
 
   /**
     * 查询表格中需要的数据
@@ -645,5 +649,16 @@ class RoomByCity02 extends Analysis {
     * @param tableName HBase数据库名字
     * @return 成功/失败
     */
-  override def analysis(tableName: String): Boolean = ???
+  override def analysis(tableName: String): Boolean = {
+    val flag = true
+    var a=SingleBuildByYear(tableName);
+    val b =  RoomAndBedRom(tableName)
+    val c = selfOrRent(tableName)
+
+    if(a==true&&b==true&&c==true){
+      return flag
+    }
+    return false
+
+  }
 }
