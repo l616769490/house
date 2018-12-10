@@ -77,7 +77,7 @@ public class TestOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/price_city", method = RequestMethod.POST)
     public Option testBar(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -163,7 +163,7 @@ public class TestOption {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
+    @RequestMapping(value = "/units_option", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题

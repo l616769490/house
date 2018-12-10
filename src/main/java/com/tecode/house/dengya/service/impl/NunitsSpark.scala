@@ -157,6 +157,7 @@ class NunitsSpark extends Analysis{
         val data: Data = new Data()
         data.setValue(elem._2.toString)
         data.setxId(xaxisId)
+        data.setxId(xaxisId)
         data.setLegendId(legendId)
         data.setX("空维度")
         data.setLegend(elem._1.toString)
