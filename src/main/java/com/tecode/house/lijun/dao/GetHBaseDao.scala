@@ -2,7 +2,7 @@ package com.tecode.house.lijun.dao
 
 import java.util
 
-trait HBaseDao {
+trait GetHBaseDao {
   /**
     * 查询租金报表的所有数据
     *
@@ -21,7 +21,7 @@ trait HBaseDao {
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     **/
 
-  def getAllForValue(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getPrice(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]])
 
 
   /**

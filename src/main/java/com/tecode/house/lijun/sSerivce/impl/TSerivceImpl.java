@@ -1,8 +1,8 @@
-package com.tecode.house.lijun.showSerivce.impl;
+package com.tecode.house.lijun.sSerivce.impl;
 
-import com.tecode.house.lijun.dao.HBaseDao;
-import com.tecode.house.lijun.dao.impl.HBaseDaoImpl;
-import com.tecode.house.lijun.showSerivce.TableSerivce;
+import com.tecode.house.lijun.dao.GetHBaseDao;
+import com.tecode.house.lijun.dao.impl.GetHBaseDaoImpl;
+import com.tecode.house.lijun.sSerivce.TSerivce;
 import com.tecode.table.*;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TableSerivceImpl implements TableSerivce {
+public class TSerivceImpl implements TSerivce {
 
-    HBaseDao hBaseDao = new HBaseDaoImpl();
+    GetHBaseDao hBaseDao = new GetHBaseDaoImpl();
 
     @Override
     public Table getTableForCost(TablePost tablePost) {
@@ -92,10 +92,10 @@ public class TableSerivceImpl implements TableSerivce {
     }
 
     @Override
-    public Table getTableForPrice(Integer page, Integer year) {
+    public Table getTablePrice(Integer page, Integer year) {
         String tableName =  year.toString();
 
-        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getAllForValue(tableName, page);
+        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getPrice(tableName, page);
         int i = (int) Rows._1;
         //封装页数列表
         int pa = i / 10 + 1;

@@ -6,7 +6,7 @@ import com.tecode.echarts.enums.AxisType;
 import com.tecode.echarts.enums.Orient;
 import com.tecode.echarts.enums.Trigger;
 import com.tecode.house.lijun.bean.Data;
-import com.tecode.house.lijun.showSerivce.impl.ShowServiceImpl;
+import com.tecode.house.lijun.sSerivce.impl.TUServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -129,7 +129,7 @@ public class TestOption {
     @ResponseBody
     @RequestMapping(value = "/test-pie", method = RequestMethod.POST)
     public Option testPie() {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         // 标题
         Title title = new Title()

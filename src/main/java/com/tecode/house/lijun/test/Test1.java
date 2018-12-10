@@ -1,7 +1,6 @@
 package com.tecode.house.lijun.test;
 
 import com.tecode.house.lijun.controller.TController;
-import com.tecode.house.lijun.serivce.impl.*;
 import com.tecode.table.Row;
 import com.tecode.table.Search;
 import com.tecode.table.Table;
@@ -23,7 +22,7 @@ public class Test1 {
         fth.readFile("D:\\thads2013n.csv","thads:2013");*/
 
      //分析房屋费用
-        ZSMHCAnalysis Analysis = new ZSMHCAnalysis();
+     /* ZSMHCAnalysis Analysis = new ZSMHCAnalysis();
         Analysis.analysis("2013");
         System.out.println("1");
 
@@ -51,7 +50,7 @@ public class Test1 {
 
         //住房租金
         PriceFRMAnalysis priceFRMAnalysis =new PriceFRMAnalysis();
-        priceFRMAnalysis.analysis("2013");
+        priceFRMAnalysis.analysis("2013");*/
 
 
         TController t = new TController();

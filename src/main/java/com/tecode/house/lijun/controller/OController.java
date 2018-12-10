@@ -5,7 +5,7 @@ import com.tecode.echarts.enums.Align;
 import com.tecode.echarts.enums.Orient;
 import com.tecode.echarts.enums.Trigger;
 import com.tecode.house.lijun.bean.Data;
-import com.tecode.house.lijun.showSerivce.impl.ShowServiceImpl;
+import com.tecode.house.lijun.sSerivce.impl.TUServiceImpl;
 import com.tecode.house.lijun.util.MySQLUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/cost", method = RequestMethod.POST)
     public Option testPie() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService=new ShowServiceImpl();
+        TUServiceImpl showService=new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
         // 标题
@@ -75,7 +75,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/shuidian", method = RequestMethod.POST)
     public Option testPie1() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
         // 标题
@@ -120,7 +120,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/other", method = RequestMethod.POST)
     public Option testPie2() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
         // 标题
@@ -164,7 +164,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/total", method = RequestMethod.POST)
     public Option testPie4() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
         // 标题
@@ -210,7 +210,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/income", method = RequestMethod.POST)
     public Option income() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
         // 标题
@@ -255,7 +255,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/value", method = RequestMethod.POST)
     public Option priceValue() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         // 标题
         Title title1 = new Title()
@@ -306,7 +306,7 @@ public class OController {
     @ResponseBody
     @RequestMapping(value = "/frm", method = RequestMethod.POST)
     public Option priceFRM() throws SQLException, ClassNotFoundException {
-        ShowServiceImpl showService = new ShowServiceImpl();
+        TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         // 标题
         Title title1 = new Title()

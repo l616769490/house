@@ -89,8 +89,8 @@
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
-                'page': 2,
-                'searches': [{'title': '总费用', 'values': ['0-1000']}]
+                'page': 11,
+                'searches': [{'title': '总费用', 'values': ['0-1500']}]
             }),
             success: function (result) {
                 showTable(result);

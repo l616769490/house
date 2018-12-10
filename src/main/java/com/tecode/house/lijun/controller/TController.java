@@ -1,7 +1,7 @@
 package com.tecode.house.lijun.controller;
 
-import com.tecode.house.lijun.showSerivce.TableSerivce;
-import com.tecode.house.lijun.showSerivce.impl.TableSerivceImpl;
+import com.tecode.house.lijun.sSerivce.TSerivce;
+import com.tecode.house.lijun.sSerivce.impl.TSerivceImpl;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ public class TController {
 
 
 
-    TableSerivce tableSerivce = new TableSerivceImpl();
+    TSerivce tableSerivce = new TSerivceImpl();
     @ResponseBody
     @RequestMapping(value = "/cost_table", method = RequestMethod.POST)
     public Table cost(@RequestBody TablePost tablePost) {
@@ -26,7 +26,7 @@ public class TController {
     @ResponseBody
     @RequestMapping(value = "/price_table", method = RequestMethod.POST)
     public Table price(@RequestBody TablePost tablePost){
-            Table table = tableSerivce.getTableForPrice(tablePost.getPage(), tablePost.getYear());
+            Table table = tableSerivce.getTablePrice(tablePost.getPage(), tablePost.getYear());
             return table;
 
 

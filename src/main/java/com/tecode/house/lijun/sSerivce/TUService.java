@@ -1,4 +1,4 @@
-package com.tecode.house.lijun.showSerivce;
+package com.tecode.house.lijun.sSerivce;
 
 import com.tecode.echarts.Option;
 import com.tecode.house.lijun.bean.Data;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2018/12/5.
  */
-public interface ShowService {
+public interface TUService {
 
 
     public Xaxis getX(String year, String reportName);

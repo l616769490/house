@@ -2,7 +2,7 @@ package com.tecode.house.lijun.dao.impl;
 
 
 import com.tecode.house.lijun.bean.*;
-import com.tecode.house.lijun.dao.MySQLDao;
+import com.tecode.house.lijun.dao.MySqlDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLDaoImpl implements MySQLDao {
+public class MySqlDaoImpl implements MySqlDao {
     private PreparedStatement ps;
     private ResultSet rs;
 

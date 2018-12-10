@@ -2,7 +2,7 @@ package com.tecode.house.lijun.dao.impl
 
 import java.util
 
-import com.tecode.house.lijun.dao.HBaseDao
+import com.tecode.house.lijun.dao.GetHBaseDao
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
@@ -15,8 +15,13 @@ import org.springframework.stereotype.Repository
 import scala.collection.JavaConverters._
 
 @Repository
-class HBaseDaoImpl extends HBaseDao {
-
+class GetHBaseDaoImpl extends GetHBaseDao {
+  /**
+    * 得到房屋费用
+    * @param tableName 表名
+    * @param page      查询的页码
+    * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
+    */
   override def getForCOST(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
     val conf = new SparkConf().setAppName("getAllForRent").setMaster("local[*]")
     val sc = new SparkContext(conf)
@@ -89,7 +94,14 @@ class HBaseDaoImpl extends HBaseDao {
     (count, rows)
   }
 
-  override def getAllForValue(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+
+  /**
+    *
+    * @param tableName 表名
+    * @param page      查询页码
+    * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
+    */
+  override def getPrice(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
     val conf = new SparkConf().setAppName("getAllForValue").setMaster("local[*]")
     val sc = new SparkContext(conf)
     //    配置HBase参数

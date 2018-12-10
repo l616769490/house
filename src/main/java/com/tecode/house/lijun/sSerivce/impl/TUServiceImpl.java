@@ -1,4 +1,4 @@
-package com.tecode.house.lijun.showSerivce.impl;
+package com.tecode.house.lijun.sSerivce.impl;
 
 import com.tecode.echarts.*;
 import com.tecode.echarts.enums.Align;
@@ -6,9 +6,9 @@ import com.tecode.echarts.enums.AxisType;
 import com.tecode.echarts.enums.Trigger;
 import com.tecode.house.lijun.bean.*;
 import com.tecode.house.lijun.bean.Legend;
-import com.tecode.house.lijun.dao.MySQLDao;
-import com.tecode.house.lijun.dao.impl.MySQLDaoImpl;
-import com.tecode.house.lijun.showSerivce.ShowService;
+import com.tecode.house.lijun.dao.MySqlDao;
+import com.tecode.house.lijun.dao.impl.MySqlDaoImpl;
+import com.tecode.house.lijun.sSerivce.TUService;
 import com.tecode.house.lijun.util.MySQLUtil;
 
 import java.sql.Connection;
@@ -21,8 +21,8 @@ import java.util.Set;
 /**
  * Created by Administrator on 2018/12/5.
  */
-public class ShowServiceImpl implements ShowService {
-    private MySQLDao dao = new MySQLDaoImpl();
+public class TUServiceImpl implements TUService {
+    private MySqlDao dao = new MySqlDaoImpl();
     private Connection conn;
 
 

@@ -1,11 +1,11 @@
-package com.tecode.house.lijun.serivce.impl
+package com.tecode.house.lijun.serivceHbase.impl
 
 import java.sql.{Connection, SQLException}
 
 import com.tecode.house.d01.service.Analysis
 import com.tecode.house.lijun.bean._
-import com.tecode.house.lijun.dao.MySQLDao
-import com.tecode.house.lijun.dao.impl.MySQLDaoImpl
+import com.tecode.house.lijun.dao.MySqlDao
+import com.tecode.house.lijun.dao.impl.MySqlDaoImpl
 import com.tecode.house.lijun.util.MySQLUtil
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -16,7 +16,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 
-class PriceValueAnalysis extends Analysis {
+class PriceFRMAnalysis extends Analysis {
   /**
     * 数据分析接口
     *
@@ -30,20 +30,18 @@ class PriceValueAnalysis extends Analysis {
     val VALUERDD: RDD[Double] = read(tableName, sc)
     //将具体的家庭收人转换为家庭收入区间并计数
     val utility: RDD[(String, Int)] = VALUERDD.map(x => {
-      if (x < 500000) {
-        ("0-500000", 1)
-      } else if (x < 1000000) {
-        ("500000-1000000", 1)
-      } else if (x < 1500000) {
-        ("1000000-1500000", 1)
-      } else if (x < 2000000) {
-        ("1500000-2000000", 1)
-      } else if (x < 2500000) {
-        ("2000000-2500000", 1)
-      } else if (x < 2500000) {
-        ("2500000-3000000", 1)
+      if (x < 1000) {
+        ("(0,1000)", 1)
+      } else if (x < 1500) {
+        ("(1000,1500)", 1)
+      } else if (x < 2000) {
+        ("(1500,2000)", 1)
+      } else if (x < 2500) {
+        ("(2000,2500)", 1)
+      } else if (x < 3000) {
+        ("(2500,3000)", 1)
       } else {
-        ("2500000+", 1)
+        ("(3000,)", 1)
       }
     })
     //    统计家庭收入的总数
@@ -81,7 +79,7 @@ class PriceValueAnalysis extends Analysis {
       val cells: Array[Cell] = x.rawCells()
       var value: Double = 0;
       for (elem <- cells) {
-        if (Bytes.toString(CellUtil.cloneQualifier(elem)).equals("VALUE"))
+        if (Bytes.toString(CellUtil.cloneQualifier(elem)).equals("FMR"))
           value = (Bytes.toString(CellUtil.cloneValue(elem))).toDouble
       }
       value
@@ -98,7 +96,7 @@ class PriceValueAnalysis extends Analysis {
     */
   def packageDate(rent: Rent, tableName: String) = {
     var conn: Connection = null
-    val dao: MySQLDao = new MySQLDaoImpl()
+    val dao: MySqlDao = new MySqlDaoImpl()
     try {
       conn = MySQLUtil.getConn
       //事务控制，开启事务
@@ -106,7 +104,7 @@ class PriceValueAnalysis extends Analysis {
       //      插入报表表
 
       val report: Report = new Report()
-      report.setName("住房价格")
+      report.setName("住房租金")
       report.setCreate(System.currentTimeMillis())
       report.setYear(Integer.valueOf(tableName))
       report.setGroup("基础分析")
@@ -118,10 +116,10 @@ class PriceValueAnalysis extends Analysis {
       //    插入图表表
       //      租金分布饼图
       val pieDiagram: Diagram = new Diagram()
-      pieDiagram.setName("住房价格分布图")
+      pieDiagram.setName("住房租金分布图")
       pieDiagram.setType(2)
       pieDiagram.setReportId(reportId)
-      pieDiagram.setSubtext("统计住房价格")
+      pieDiagram.setSubtext("统计住房租金")
 
       val pieDiagramId: Int = dao.putInTableDiagram(conn, pieDiagram)
 
@@ -150,7 +148,7 @@ class PriceValueAnalysis extends Analysis {
       //    插入数据表
       val list: List[(String, Integer)] = rent.getList()
       for (elem <- list) {
-        val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "住房价格")
+        val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "住房租金")
         dao.putInTableData(conn, pieData)
       }
 
