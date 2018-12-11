@@ -1,9 +1,11 @@
 package com.tecode.house.liuhao.dao.impl;
 
 
+
 import com.tecode.house.liuhao.bean.City;
 import com.tecode.house.liuhao.bean.Xaxis;
 import com.tecode.house.liuhao.dao.ReadMyqslDao;
+import com.tecode.house.liuhao.utils.MySQLUtil;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -29,7 +31,7 @@ public class ReadMysqlDaoImpl implements ReadMyqslDao {
         try {
             statement = conn.createStatement();
             //sql查询语句
-            String sql = "select x,value from data where id" + where;
+            String sql = "select x,value from data where legend = '建筑结构类型'";
             //用于返回结果
             ResultSet resultSet = statement.executeQuery(sql);
             String xname = "";
@@ -40,16 +42,14 @@ public class ReadMysqlDaoImpl implements ReadMyqslDao {
                 xname = resultSet.getString(1);
                 xvalue = resultSet.getString(2);
                 value = xname + ":" + xvalue;
-
+                list.add(value);
 
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        for (String s : list) {
-            System.out.println(s);
-        }
+        MySQLUtil.close(conn);
         return list;
     }
 
@@ -62,7 +62,7 @@ public class ReadMysqlDaoImpl implements ReadMyqslDao {
         try {
             statement = conn.createStatement();
             //sql查询语句
-            String sql = "select x,value from data where id <16";
+            String sql = "select x,value from data where legend = '城市规模'";
             //用于返回结果
             ResultSet resultSet = statement.executeQuery(sql);
             String xname = "";
@@ -116,7 +116,6 @@ public class ReadMysqlDaoImpl implements ReadMyqslDao {
                 }
                 if (type.equals("其他费用")) {
                     if (city.equals("一线城市")) {
-                        System.out.println("进入双循环");
 
                         city1.setOneOtherCost(xvalue);
                     } else if (city.equals("二线城市")) {
@@ -136,7 +135,7 @@ public class ReadMysqlDaoImpl implements ReadMyqslDao {
                 }
 
             }
-
+            MySQLUtil.close(conn);
 
         } catch (Exception e) {
             e.printStackTrace();

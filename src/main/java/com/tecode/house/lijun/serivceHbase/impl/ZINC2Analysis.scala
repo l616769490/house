@@ -102,12 +102,12 @@ class ZINC2Analysis extends Analysis {
       //      插入报表表
 
       val report: Report = new Report()
-      report.setName("家庭收入")
+      report.setName("年龄家庭收入")
       report.setCreate(System.currentTimeMillis())
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
-      report.setGroup("基础分析")
+      report.setGroup("户主年龄")
       report.setStatus(1)
-      report.setUrl("income_table")
+      report.setUrl("/age_income")
 
       val reportId: Int = dao.putInTableReport(conn, report)
       //饼图
@@ -146,7 +146,7 @@ class ZINC2Analysis extends Analysis {
       //    插入数据表
       val list: List[(String, Integer)] = rent.getList()
       for (elem <- list) {
-        val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "家庭收入")
+        val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "年龄家庭收入")
         dao.putInTableData(conn, pieData)
       }
 

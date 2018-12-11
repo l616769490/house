@@ -32,7 +32,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -70,7 +69,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -104,7 +102,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -137,7 +134,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -174,7 +170,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -211,7 +206,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -247,7 +241,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -279,7 +272,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }

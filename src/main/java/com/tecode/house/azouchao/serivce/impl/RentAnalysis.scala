@@ -187,13 +187,13 @@ legendId	int		图例id	非空
 */
 
 
-      //柱状图
+      //折线图
 
-      //租金极值柱状图表
+      //租金极值折线图
 
       val lineDiagram: Diagram = new Diagram()
       lineDiagram.setName("租金最大最小值")
-      lineDiagram.setType(1)
+      lineDiagram.setType(0)
       lineDiagram.setReportId(reportId)
       lineDiagram.setSubtext("统计租金的最大最小平均值")
 

@@ -31,15 +31,15 @@ class StructureType extends Analysis {
     */
   override def analysis(tableName: String): Boolean = {
 
-    println("开始读取建筑结构类型数据...")
+
     val stru = new StructureType()
     val read2 = stru.read(tableName, "STRUCTURETYPE")
-    println("数据读取完成，开始分析...")
+
     val analy2 = stru.analyStructureType(read2)
 
-    println("分析完成，开始导入建筑结构类型的分析结果...")
+
     stru.packageBean(tableName, analy2)
-    println("导入完成，完成阶段二")
+
     true
   }
 
@@ -120,18 +120,24 @@ class StructureType extends Analysis {
     //   conn.setAutoCommit(false)
     //封装到report的bean
     val report = new Report()
-    report.setName("类型")
+    report.setName("建筑结构类型")
     report.setCreate(System.currentTimeMillis())
     report.setYear(Integer.valueOf(tablename.split(":")(1)))
 
     report.setGroup("基础分析")
     report.setStatus(1)
-    report.setUrl("/basics_structuretype_num")
+    report.setUrl("/basics_structuretype_num_bar")
     val reportId = dao.putToTableReport(conn, report)
-    println(reportId)
+
+
+   report.setUrl("/basics_structuretype_num_pie")
+    val reportId2 = dao.putToTableReport(conn, report)
+
+    /*report.setUrl("/structureType_table")
+    val reportId3 = dao.putToTableReport(conn, report)*/
     //柱状图封装bean
     val digram = new Diagram()
-    digram.setName("建筑结构类型分布柱状图")
+    digram.setName("建筑结构类型分布图")
     digram.setType(1)
     digram.setReportId(reportId)
     digram.setSubtext("统计建筑结构类型的分布情况统计")
@@ -173,10 +179,13 @@ class StructureType extends Analysis {
     search.setName("建筑结构类型统计")
     search.setDimGroupName("建筑结构类型")
     search.setReportId(reportId)
-
     dao.putToTablesearch(conn, search)
     MySQLUtil.close(conn);
+    /*search.setReportId(reportId2)
+    dao.putToTablesearch(conn, search)
 
+    search.setReportId(reportId3)
+    dao.putToTablesearch(conn, search)*/
   }
 
 

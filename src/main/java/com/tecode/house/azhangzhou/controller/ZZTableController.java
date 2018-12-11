@@ -1,6 +1,7 @@
 package com.tecode.house.azhangzhou.controller;
 
 
+
 import com.tecode.house.azhangzhou.showService.ShowTables;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
@@ -18,11 +19,33 @@ public class ZZTableController {
      * @return 请求结果
      */
     @ResponseBody
-    @RequestMapping(value = "/basic_vacancy_table", method = RequestMethod.POST)
-    public Table testTable(@RequestBody TablePost tablePost) {
+    @RequestMapping(value = "/basic-vacancy-table", method = RequestMethod.POST)
+    public Table vacancyTable(@RequestBody TablePost tablePost) {
         /*if (tablePost == null) {
             return showTables.showHouseDutyTable(null);
         }*/
         return showTables.showVacancyTable(tablePost);
+    }
+    /**
+     * @return 请求结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "/city-singleBuilding-table", method = RequestMethod.POST)
+    public Table singleBuildingTable(@RequestBody TablePost tablePost) {
+        /*if (tablePost == null) {
+            return showTables.showHouseDutyTable(null);
+        }*/
+        return showTables.showSingleBuildingTable(tablePost);
+    }
+    /**
+     * @return 请求结果
+     */
+    @ResponseBody
+    @RequestMapping(value = "/city-houseDuty-table", method = RequestMethod.POST)
+    public Table testTable(@RequestBody TablePost tablePost) {
+        /*if (tablePost == null) {
+            return showTables.showHouseDutyTable(null);
+        }*/
+        return showTables.showHouseDutyTable(tablePost);
     }
 }

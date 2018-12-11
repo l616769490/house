@@ -108,7 +108,7 @@ public class ZCOptionController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roomByBuild", method = RequestMethod.POST)
+    @RequestMapping(value = "/roomsByBuild", method = RequestMethod.POST)
     public Option roomByBuild(String year) {
         Option option = showSerivce.select(year, "房间数统计","年份统计");
         return option;

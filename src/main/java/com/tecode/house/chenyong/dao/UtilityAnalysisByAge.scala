@@ -85,7 +85,7 @@ class UtilityAnalysisByAge extends Analysis{
       utilityReport.setName("水电费统计")
       utilityReport.setCreate(System.currentTimeMillis())
       utilityReport.setYear(Integer.valueOf(tableName.split(":")(1)))
-      utilityReport.setGroup("水电费统计")
+      utilityReport.setGroup("户主年龄")
       utilityReport.setStatus(1)
       utilityReport.setUrl("/utilityAnalysisByAge")
       val roomReportId: Int = msDao.putInTableReport(conn, utilityReport)

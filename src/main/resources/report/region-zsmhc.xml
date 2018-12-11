@@ -3,7 +3,7 @@
     <!-- 报表名 -->
     <name>按区域-房产税分析</name>
     <!-- 报表组名 -->
-    <group>区域统计</group>
+    <group>普查区域</group>
     <!-- 报表请求地址 -->
     <url>/region_zsmhc_num</url>
     <!-- 图表 -->

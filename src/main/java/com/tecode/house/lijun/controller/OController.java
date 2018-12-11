@@ -23,6 +23,12 @@ import java.util.List;
 @Controller
 public class OController {
 
+    /**
+     * 房屋费用
+     * @return
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     @ResponseBody
     @RequestMapping(value = "/cost", method = RequestMethod.POST)
     public Option testPie() throws SQLException, ClassNotFoundException {
@@ -208,7 +214,7 @@ public class OController {
      * @return 饼图*/
 
     @ResponseBody
-    @RequestMapping(value = "/income", method = RequestMethod.POST)
+    @RequestMapping(value = "/age_income", method = RequestMethod.POST)
     public Option income() throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
@@ -230,7 +236,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("收入区间");
-        List<Data> dataList = showService.getData("2013", "家庭收入");
+        List<Data> dataList = showService.getData("2013", "年龄家庭收入");
 
         for (Data data : dataList) {
             legend.addData(data.getX());
@@ -253,7 +259,7 @@ public class OController {
      * @return 饼图*/
 
     @ResponseBody
-    @RequestMapping(value = "/value", method = RequestMethod.POST)
+    @RequestMapping(value = "/price_value", method = RequestMethod.POST)
     public Option priceValue() throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
@@ -299,12 +305,12 @@ public class OController {
 
 
     /* *
-     * 住房价格
+     * 住房租金
      *
      * @return 饼图*/
 
     @ResponseBody
-    @RequestMapping(value = "/frm", method = RequestMethod.POST)
+    @RequestMapping(value = "/price_frm", method = RequestMethod.POST)
     public Option priceFRM() throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();

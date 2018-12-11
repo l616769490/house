@@ -111,7 +111,7 @@ val sc = SparkUtil.getSparkContext
       val rName: String = "住房自住、租赁分析"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
-      val rGroup: String = "basic"
+      val rGroup: String = "基础分析"
       val rStatus: Int = 0
       val url: String = "/libo_self"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
@@ -224,7 +224,7 @@ val sc = SparkUtil.getSparkContext
       val rName: String = "房间数、卧室数分析"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
-      val rGroup: String = "basic"
+      val rGroup: String = "基础分析"
       val rStatus: Int = 0
       val url: String = "/libo_room"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
@@ -347,7 +347,7 @@ val sc = SparkUtil.getSparkContext
       val name = "独栋建筑图";
       val create = System.currentTimeMillis();
       val year = year1
-      val group = "111"
+      val group = "建成年份"
       val status = 0
       val url = "/libo_single";
       reportID = table.insertIntoReport(name, create, year, group, status, url)
@@ -533,31 +533,6 @@ val sc = SparkUtil.getSparkContext
       value
     }
 
-//    if(rooms.equals("1")){
-//      value = value.filter(_._3.equals("1"))
-//    }else if(rooms .equals("2")){
-//      value = value.filter(_._3.equals("2"))
-//    }else if(rooms==null){
-//      value = value
-//    }else if(rooms .equals("3")){
-//      value = value.filter(_._3.equals("3"))
-//    }else if(rooms .equals("4")){
-//      value = value.filter(_._3.equals("4"))
-//    }else if(rooms .equals("5")){
-//      value = value.filter(_._3.equals("5"))
-//    }else if(rooms .equals("6")){
-//      value = value.filter(_._3.equals("6"))
-//    }else if(rooms .equals("7")){
-//      value = value.filter(_._3.equals("7"))
-//    }else if(rooms .equals("8")){
-//      value = value.filter(_._3.equals("8"))
-//    }else if(rooms .equals("9")){
-//      value = value.filter(_._3.equals("9"))
-//    }else if(Integer.parseInt(rooms) >= 10&& Integer.parseInt(rooms) <=16){
-//      value = value.filter(_._3.toInt>=10)
-//    }else{
-//      value = value
-//    }
      val v = value.map{x=>{
       (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
     }}
@@ -568,7 +543,7 @@ val sc = SparkUtil.getSparkContext
       val l1: Long = v.count()
        val tuples = subString(page,l1.toInt,l)
     val value1 = tuples.iterator()
-//
+
 
     //获取所有页码
     val p = new Page;
@@ -579,18 +554,10 @@ val sc = SparkUtil.getSparkContext
     }
     table.setPage(p)
 
-
-
-
-
-
     while(value1.hasNext){
       val str = value1.next()
       jlist:+=(l.toString,str._2)
     }
-//    for (elem <- roomsMap) {
-//      println(elem)
-//    }
     jlist
   }
 
@@ -688,16 +655,7 @@ val sc = SparkUtil.getSparkContext
     */
   override def analysis(tableName: String): Boolean = {
     insertIntoMysql(tableName:String)
-//    val flag = true
-//
-//    val a=SingleBuildByYear(tableName.split(":")(1));
-//    val b =  RoomAndBedRom(tableName.split(":")(1))
-//    val c = selfOrRent(tableName.split(":")(1))
-//
-//    if(a==true&&b==true&&c==true){
       return true
-//    }
-//    return false
 
   }
 }

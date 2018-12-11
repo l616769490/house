@@ -25,14 +25,12 @@ class Tax extends Analysis{
     */
   override def analysis(tableName: String): Boolean = {
      val tax = new Tax()
-    println("读取税务相关数据...")
     val read: RDD[(Int, Double, Double, Double)] = tax.readTax(tableName);
-    //    read.collect().foreach(println)
-    println("读取数据完成，开始分析税务相关的数据...")
+
     val analy: ArrayBuffer[(String, Int)] = tax.analyTax(read)
-    println("分析完成，开始插入...")
+
     tax.packageTaxBean(tableName, analy)
-    println("插入完成")
+
     true
   }
   /**
@@ -145,9 +143,6 @@ class Tax extends Analysis{
       array +=elem
     }
 
-    for (elem <- array) {
-      println(elem)
-    }
     array
   }
 
@@ -158,13 +153,19 @@ class Tax extends Analysis{
     //   conn.setAutoCommit(false)
     //封装到report的bean
     val report = new Report()
-    report.setName("各个城市规模税务统计")
+    report.setName("税务统计")
     report.setCreate(System.currentTimeMillis())
     report.setYear(Integer.valueOf(tablename.split(":")(1)))
     report.setGroup("城市规模")
     report.setStatus(1)
-    report.setUrl("/CitySize_Tax_Avg")
-    val reportId = dao.putToTableReport(conn, report)
+    report.setUrl("/CitySize_Tax_Avg_bar")
+    val reportId = dao.putToTableReport(conn,report)
+
+    report.setUrl("/CitySize_Tax_Avg_pie")
+    val reportId2 = dao.putToTableReport(conn, report)
+
+    /*report.setUrl("/cityTax_table")
+    val reportId3 = dao.putToTableReport(conn, report)*/
     //柱状图封装bean
     val digram = new Diagram()
     digram.setName("各个城市规模税务统计图")
@@ -202,7 +203,7 @@ class Tax extends Analysis{
       data.setX(x1)
       data.setxId(XaxisId)
       data.setLegend("城市规模")
-//      println(data.getX + ":" + data.getValue)
+
       dao.putToTableData(conn, data)
     }
 
@@ -211,9 +212,13 @@ class Tax extends Analysis{
     search.setName("各个规模城市税务统计")
     search.setDimGroupName("城市规模")
     search.setReportId(reportId)
-
     dao.putToTablesearch(conn, search)
-    MySQLUtil.close(conn)
+    MySQLUtil.close(conn);
+    /*search.setReportId(reportId2)
+    dao.putToTablesearch(conn, search)
+
+    search.setReportId(reportId3)
+    dao.putToTablesearch(conn, search)*/
 
   }
 

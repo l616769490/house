@@ -108,9 +108,9 @@ class PriceFRMAnalysis extends Analysis {
       report.setName("住房租金")
       report.setCreate(System.currentTimeMillis())
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
-      report.setGroup("基础分析")
+      report.setGroup("户主年龄")
       report.setStatus(1)
-      report.setUrl("")
+      report.setUrl("/price_frm")
 
       val reportId: Int = dao.putInTableReport(conn, report)
       //饼图

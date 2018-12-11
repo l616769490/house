@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class TableController {
+public class JCFTableController {
 
 
     private  TableSerivce tableSerivce = new TableServiceImpl();

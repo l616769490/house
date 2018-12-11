@@ -79,10 +79,13 @@ class Get_Single_Region extends service.Analysis {
     report.setName("独栋比例统计")
     report.setCreate(System.currentTimeMillis())
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
-    report.setGroup("按区域统计")
+    report.setGroup("普查区域")
     report.setStatus(1)
     report.setUrl("/single_region")
     val reportId: Int = reportDao.insert(report)
+
+
+
 
 
 

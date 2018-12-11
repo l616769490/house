@@ -15,66 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class ZZOptionController {
-
-    /**
-     * 折线图测试
-     *
-     * @return 折线图
-     */
-    @ResponseBody
-    @RequestMapping(value = "/test-line1", method = RequestMethod.POST)
-    public Option testLine() {
-        Option option = new Option();
-        // 标题
-        Title title = new Title()
-                .setText("折线图")
-                .setSubtext("副标题");
-
-        // 提示框
-        Tooltip tooltip = new Tooltip()
-                .setTrigger(Trigger.item)
-                // {a}（系列名称），{b}（类目值），{c}（数值）
-                .setFormatter("{a}-{b} : {c}");
-
-        // 图例
-        Legend legend = new Legend()
-                .setAlign(Align.right)
-                .addData("数据一").addData("数据二").addData("数据三").addData("数据四");
-
-        // X轴
-        Axis x = new Axis()
-                .setType(AxisType.category)
-                .addData("2011").addData("2012").addData("2013").addData("2014").addData("2015");
-        // Y轴
-        Axis y = new Axis()
-                .setType(AxisType.value);
-
-        // 数据
-        Series<Integer> series1 = new Line<Integer>()
-                .setName("数据一")
-                .addData(10).addData(12).addData(17).addData(15).addData(13);
-        Series<Integer> series2 = new Line<Integer>()
-                .setName("数据二")
-                .addData(15).addData(11).addData(13).addData(16).addData(12);
-        Series<Integer> series3 = new Line<Integer>()
-                .setName("数据三")
-                .addData(17).addData(11).addData(12).addData(11).addData(10);
-        Series<Integer> series4 = new Line<Integer>()
-                .setName("数据四")
-                .addData(15).addData(13).addData(11).addData(13).addData(11);
-        option.setTitle(title).setTooltip(tooltip).setLegend(legend).addxAxis(x).addyAxis(y)
-                .addSeries(series1).addSeries(series2).addSeries(series3).addSeries(series4);
-        return option;
-    }
-
-
     /**
      * 独栋建筑比例柱状图
      *
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/singleBuilding", method = RequestMethod.POST)
+    @RequestMapping(value = "/city-singleBuilding", method = RequestMethod.POST)
     public Option testBar(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -145,7 +92,7 @@ public class ZZOptionController {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/houseDuty", method = RequestMethod.POST)
+    @RequestMapping(value = "/city-houseDuty", method = RequestMethod.POST)
     public Option testHouseDuty(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -224,7 +171,7 @@ public class ZZOptionController {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/basic_vacancy", method = RequestMethod.POST)
+    @RequestMapping(value = "/basic-vacancy", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题

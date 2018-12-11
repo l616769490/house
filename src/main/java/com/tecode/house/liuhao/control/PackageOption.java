@@ -136,13 +136,13 @@ public class PackageOption {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/CitySize_Tax_Avg_Bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/CitySize_Tax_Avg_bar", method = RequestMethod.POST)
     public Option CityTaxBar(String year) {
         Option option = new Option();
         // 标题
         Title title = new Title()
                 .setText("税务比例柱状图")
-                .setSubtext("各个城市规模下的税务统计");
+                .setSubtext("税务统计");
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -203,7 +203,7 @@ public class PackageOption {
       * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/CitySize_Tax_Avg_Pie", method = RequestMethod.POST)
+    @RequestMapping(value = "/CitySize_Tax_Avg_pie", method = RequestMethod.POST)
     public Option testPies(String year) {
 
         Option option = new Option();

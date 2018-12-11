@@ -38,7 +38,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> personDistribution = hd.getPersonDistribution(tableName);
         Iterator<Tuple2<String, Object>> pIt = personDistribution.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("家庭人数", "单项查询", "/zxl_person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
+        return sd.into("家庭人数", "城市规模", "/zxl_person", "家庭", "人数", "家庭人数", pIt, "统计家庭人数", year);
     }
 
     /**
@@ -51,7 +51,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> vmap = hd.getValueDistribution(tableName);
         Iterator<Tuple2<String, Object>> vIt = vmap.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("市场价", "单项查询", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
+        return sd.into("市场价", "基础分析", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
     }
 
     /**
@@ -64,7 +64,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(tableName);
         Iterator<Tuple2<String, Object>> cIt = incomeDistributionByCity.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("家庭收入", "多项查询", "/zxl_income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
+        return sd.into("家庭收入", "城市规模", "/zxl_income", "城市", "收入", "年收入", cIt, "家庭的年收入", year);
     }
 
     /**

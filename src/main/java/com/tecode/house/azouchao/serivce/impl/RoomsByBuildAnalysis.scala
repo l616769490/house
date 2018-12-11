@@ -136,7 +136,7 @@ class RoomsByBuildAnalysis extends Analysis {
       report.setName("房间数统计")
       report.setCreate(System.currentTimeMillis())
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
-      report.setGroup("年份统计")
+      report.setGroup("建成年份")
       report.setStatus(1)
       report.setUrl("/roomsByBuild")
       val reportId: Int = dao.putInTableReport(conn, report)

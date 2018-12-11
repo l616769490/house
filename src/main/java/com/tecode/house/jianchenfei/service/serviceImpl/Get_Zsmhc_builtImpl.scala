@@ -94,7 +94,7 @@ class Get_Zsmhc_built extends service.Analysis {
     report.setName("房产税统计")
     report.setCreate(System.currentTimeMillis())
     report.setYear(Integer.valueOf(tableName.split(":")(1)))
-    report.setGroup("年份统计")
+    report.setGroup("建成年份")
     report.setStatus(1)
     report.setUrl("/zsmhc_built")
     val reportId: Int = reportDao.insert(report)

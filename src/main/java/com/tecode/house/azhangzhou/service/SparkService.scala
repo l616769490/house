@@ -85,9 +85,9 @@ class SparkService{
       val rName: String = "空置状态"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
-      val rGroup: String = "基础查询"
+      val rGroup: String = "基础分析"
       val rStatus: Int = 0
-      val url: String = "/basic_vacancy"
+      val url: String = "/basic-vacancy"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
       //饼状图（图表表）
       val dName = "空置状态"
@@ -186,7 +186,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "城市规模"
       val rStatus: Int = 0
-      val url: String = "/singleBuilding"
+      val url: String = "/city-singleBuilding"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //柱状图，图表表
@@ -295,7 +295,7 @@ class SparkService{
       val rYear: Int = year
       val rGroup: String = "城市规模"
       val rStatus: Int = 0
-      val url: String = "/houseDuty"
+      val url: String = "/city-houseDuty"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //柱状图，图表表
@@ -365,44 +365,26 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
-    var list: List[(String, String, String, String, String, String)] = null
+
     if(search.equals("空置")){
-      list = clumnRDD.filter(!_._5.equals("-6")).take(page*10).toList
-    }else if(search.equals("居住")){
-      list = clumnRDD.filter(_._5.equals("-6")).take(page*10).toList
+      clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
+    }
+    if(search.equals("居住")){
+      clumnRDD = clumnRDD.filter(_._5.equals("-6"))
+    }
+    var list= clumnRDD.take(page*10).toList
+    val end = clumnRDD.count().toInt/10 + 1
+    if(page!=1 && page !=2 && page !=end-1 &&page !=end){
+      val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
+      list:+=pageList
     }else{
-      list = clumnRDD.take(page*10).toList
+      val pageList: (String,  String, String, String,String,String) = ("1","2","...",(end-1).toString,"...",end.toString)
+      list:+=pageList
     }
     var jList: util.List[(String, String, String, String, String, String)] = list.asJava
-    if(jList.size()>=page*10){
-      jList = jList.subList((page-1)*10,page*10)
-    }else{
-      jList = jList.subList((page-1)*10,jList.size())
-    }
-//    spark.close()
-    return jList
-
-   /* val vacRDD = hbaseRDD.map(x => VacClass(Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("CONTROL"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("METRO3"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
-    val varDF = vacRDD.toDF()
-    varDF.createOrReplaceTempView("tmp")
-    if(search.equals("居住")){
-
-    }
-    val frame: DataFrame = spark.sql("select tmp.* from tmp  where CONTROL = '-6'")
-    frame.show()
-    var vrdd = frame.rdd.map(x => ("居住",x.get(0)+"_"+x.get(1)+"_"+x.get(2)+"_"+x.get(3)+"_"+"居住"+"_"+x.get(5))).groupByKey()
-    var mmap = Map[String,Iterable[String]]()
-    vrdd.collect().foreach(mmap+=(_))
+    jList = jList.subList((page-1)*10+1,page*10+1)
     spark.close()
-    print(mmap.size+"=========================")
-    return mmap*/
-
-
+    return jList
   }
 
 
@@ -414,7 +396,7 @@ class SparkService{
     * @param search2：查询选项二
     * @return：返回一个分组后的Map对象
     */
-  def selectSingleBuildTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
+  def selectSingleBuildTable(tableName:String,search:String,search2:String,page:Int):util.List[(String, String, String, String, String, String)] ={
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
     val hbaseRDD = sc.newAPIHadoopRDD(hbaseConf,classOf[TableInputFormat],
@@ -427,6 +409,14 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BEDRMS"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0)
+    /*clumnRDD = clumnRDD.map { x =>
+      val t = x._4
+      if (t.equals("1")) {
+        (x._1, x._2, x._3, "独栋", x._5, x._6)
+      } else {
+        (x._1, x._2, x._3, "其他", x._5, x._6)
+      }
+    }*/
     if(search.equals("一线城市")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
@@ -448,24 +438,20 @@ class SparkService{
     if(search2.equals("其他")){
       clumnRDD = clumnRDD.filter(!_._4.equals("1"))
     }
+    var list: List[(String, String, String, String, String, String)] = clumnRDD.take(page*10).toList
+    val end = clumnRDD.count().toInt/10 + 1
+    if(page!=1 && page !=2 && page !=end-1 &&page !=end){
+      val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
+      list:+=pageList
+    }else{
+      val pageList: (String,  String, String, String,String,String) = ("1","2","...",(end-1).toString,"...",end.toString)
+      list:+=pageList
+    }
+    var jList: util.List[(String, String, String, String, String, String)] = list.asJava
+    jList = jList.subList((page-1)*10+1,page*10+1)
+    spark.close()
+    return jList
 
-    val mapRDD = clumnRDD.map{x => val tmp=x._2
-      if(tmp.equals("1")){
-        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("2")){
-        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("3")){
-        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("4")){
-        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else{
-        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }
-    }.groupByKey()
-    var mmap = Map[String,Iterable[String]]()
-    mapRDD.collect().foreach(mmap+=(_))
-//    spark.close()
-    return mmap
   }
 
   /**
@@ -475,7 +461,7 @@ class SparkService{
     * @param search2：查询条件二
     * @return 返回一个分组后的Map对象
     */
-  def selectHouseDutyTable(tableName:String,search:String,search2:String,page:Int): Map[String,Iterable[String]] ={
+  def selectHouseDutyTable(tableName:String,search:String,search2:String,page:Int):  util.List[(String, String, String, String, String, String, String)] ={
 
     val hbaseConf = HBaseConfiguration.create()
     hbaseConf.set(TableInputFormat.INPUT_TABLE,tableName)
@@ -490,6 +476,13 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ZSMHC"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0)
+    /*clumnRDD = clumnRDD.map{x => val t=x._4
+      if(t.equals("1")){
+        (x._1,x._2,x._3,"独栋",x._5,x._6,x._7)
+      }else{
+        (x._1,x._2,x._3,"其他",x._5,x._6,x._7)
+      }
+    }*/
     if(search.equals("一线城市")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
@@ -512,29 +505,21 @@ class SparkService{
       clumnRDD = clumnRDD.filter(!_._4.equals("1"))
     }
 
-    val mapRDD = clumnRDD.map{x => val tmp=x._2
-      if(tmp.equals("1")){
-        ("1",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("2")){
-        ("2",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("3")){
-        ("3",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else if(tmp.equals("4")){
-        ("4",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }else{
-        ("5",x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+x._5+"_"+x._6)
-      }
-    }.groupByKey()
-    var mmap = Map[String,Iterable[String]]()
-    mapRDD.collect().foreach(mmap+=(_))
-//    spark.close()
-    return mmap
+    var list: List[(String, String, String, String, String, String, String)] = clumnRDD.take(page*10).toList
+
+    val end = clumnRDD.count()/10+1
+    if(page!=1 && page !=2 && page!=end-1 && page !=end){
+      val pageList: (String,  String, String, String,String,String,String) = ("1","2","...",page+"","...","",end.toString)
+      list:+=pageList
+    }else{
+      val pageList: (String,  String, String, String,String,String,String) = ("1","2","...",(end-1).toString,"...","",end.toString)
+      list:+=pageList
+    }
+    var jList = list.asJava
+    jList = jList.subList((page-1)*10+1,page*10+1)
+    spark.close()
+    return jList
   }
 }
-object SparkService{
-  def main(args: Array[String]): Unit = {
-    val ss = new SparkService
-    ss.selectVacancyTable("thads:2013","居住",3)
-  }
-}
+
 
