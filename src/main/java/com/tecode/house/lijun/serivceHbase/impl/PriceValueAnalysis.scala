@@ -111,7 +111,7 @@ class PriceValueAnalysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
-      report.setUrl("price_table")
+      report.setUrl("/price_table")
 
       val reportId: Int = dao.putInTableReport(conn, report)
       //饼图

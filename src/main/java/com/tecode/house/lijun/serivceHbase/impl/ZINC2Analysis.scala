@@ -106,7 +106,7 @@ class ZINC2Analysis extends Analysis {
       report.setYear(Integer.valueOf(tableName.split(":")(1)))
       report.setGroup("基础分析")
       report.setStatus(1)
-      report.setUrl("income_table")
+      report.setUrl("/income_table")
 
       val reportId: Int = dao.putInTableReport(conn, report)
       //饼图
