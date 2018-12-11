@@ -19,7 +19,7 @@ public class DBUtil {
 
     static {
         try {
-            pro.load(DBUtil.class.getClassLoader().getSystemResourceAsStream("db.properties"));
+            pro.load(DBUtil.class.getClassLoader().getResourceAsStream("db.properties"));
             user=pro.getProperty("jdbc.user");
             url=pro.getProperty("jdbc.url");
             password=pro.getProperty("jdbc.password");
@@ -34,11 +34,13 @@ public class DBUtil {
     public static String getStat(String name) {
         return pro.getProperty(name);
     }
+
     public static Connection getConn() throws SQLException {
+
         return DriverManager.getConnection(url,user, password);
     }
 
-    public static void colse(Connection conn) {
+    public static void close(Connection conn) {
         try {
             conn.close();
         } catch (SQLException e) {

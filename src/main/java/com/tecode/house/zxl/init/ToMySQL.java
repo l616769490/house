@@ -125,7 +125,7 @@ public class ToMySQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            DBUtil.colse(conn);
+            DBUtil.close(conn);
         }
 
     }

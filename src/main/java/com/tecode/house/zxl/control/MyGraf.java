@@ -29,6 +29,8 @@ public class MyGraf {
     @ResponseBody
     @RequestMapping(value = "/zxl_income", method = RequestMethod.POST)
     public Option incomeBar(String year) {
+        //获取年收入
+        Map<String, Integer> income = mps.getincome(Integer.valueOf(year));
 
         Option option = new Option();
         // 标题
@@ -44,8 +46,7 @@ public class MyGraf {
 
 //        Map<String, Integer> income = sort(getIncome());
 
-        //获取年收入
-        Map<String, Integer> income = mps.getincome(Integer.valueOf(year));
+
 //        Map<String, Integer> income = getIncome();
 
         List<Integer> list1=new ArrayList<>();
@@ -140,6 +141,9 @@ public class MyGraf {
     @ResponseBody
     @RequestMapping(value = "/zxl_value", method = RequestMethod.POST)
     public Option valuePie(String year) {
+        //获取数据
+        Map<String, Integer> map = mps.getMaket(Integer.valueOf(year));
+
         Option option = new Option();
 
         // 标题
@@ -154,13 +158,12 @@ public class MyGraf {
                 .setFormatter("{a}-{b} : {c}");
 
 //        Map<String, Integer> map = get();
-        //获取数据
-        Map<String, Integer> map = mps.getMaket(Integer.valueOf(year));
+
 
         // 图例
         Legend legend = new Legend()
                 .setAlign(Align.left)
-                .addData("0-50万").addData("50-100万").addData("100-150万").addData("250万以上");
+                .addData("0-50万").addData("50万-100万").addData("100万-150万").addData("250万以上");
 
         // 数据
         Series series1 = new Pie().setName("市场价概况")
@@ -196,6 +199,9 @@ public class MyGraf {
     @ResponseBody
     @RequestMapping(value = "/zxl_person", method = RequestMethod.POST)
     public Option personPie(String year) {
+        //获取家庭人数
+        Map<String, Integer> person = mps.getPerson(Integer.valueOf(year));
+
         Option option = new Option();
         // 标题
 
@@ -209,8 +215,7 @@ public class MyGraf {
                 // {a}（系列名称），{b}（类目值），{c}（数值）
                 .setFormatter("{a}-{b} : {c}");
 
-        //获取家庭人数
-        Map<String, Integer> person = mps.getPerson(Integer.valueOf(year));
+
 
 
         // 图例

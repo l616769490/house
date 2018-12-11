@@ -58,7 +58,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).groupByKey()
     s2.collect().foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
     map
 
@@ -105,7 +105,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).filter(_._1.equals(income)).groupByKey()
     s2.collect().foreach(map+=(_))
 
-    sc.stop()
+//    sc.stop()
 
     map
   }
@@ -153,7 +153,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).groupByKey()
     s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
     map
   }
@@ -213,7 +213,7 @@ class HbaseDaoImpl extends HbaseDao {
 
 
 
-    sc.stop()
+//    sc.stop()
 
     list
   }
@@ -269,7 +269,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
     map
   }
@@ -317,7 +317,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).groupByKey()
     s2.filter(_._1.equals(person)).collect().foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
      map
   }
@@ -365,7 +365,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).groupByKey()
     s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
      map
   }
 
@@ -424,7 +424,7 @@ class HbaseDaoImpl extends HbaseDao {
     }
 
 
-    sc.stop()
+//    sc.stop()
     list
   }
 
@@ -467,7 +467,7 @@ class HbaseDaoImpl extends HbaseDao {
     }).groupByKey()
     s2.collect().take(100).foreach(map += (_))
 
-    sc.stop()
+//    sc.stop()
 
     map
   }
@@ -524,7 +524,7 @@ class HbaseDaoImpl extends HbaseDao {
 
     }
 
-    sc.stop()
+//    sc.stop()
 
     list
 
@@ -581,7 +581,7 @@ class HbaseDaoImpl extends HbaseDao {
     map += (("max", max))
     map += (("min", min))
     map += (("avg", avg.toInt))
-    sc.stop()
+//    sc.stop()
     map
 
   }
@@ -640,7 +640,7 @@ class HbaseDaoImpl extends HbaseDao {
     map += (("min", min))
     map += (("avg", avg.toInt))
 
-    sc.stop()
+//    sc.stop()
 
    map
   }
@@ -697,7 +697,7 @@ class HbaseDaoImpl extends HbaseDao {
     s.map(x => (x._1, x._2.toList.sum / x._2.toList.size)).collect().foreach(x => map += ((x._1 + "_avg", x._2.toInt)))
 
     s4.collect().foreach(map += (_))
-    sc.stop()
+
 
      map
   }

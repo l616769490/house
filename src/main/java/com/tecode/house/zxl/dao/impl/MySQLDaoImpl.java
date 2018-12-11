@@ -7,8 +7,13 @@ import scala.Tuple2;
 import scala.collection.Iterator;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.sql.DriverManager;
+
 import java.util.Map;
 
 
@@ -29,7 +34,7 @@ public class MySQLDaoImpl implements MySQLDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            DBUtil.colse(conn);
+            DBUtil.close(conn);
         }
 
         return false;
@@ -96,7 +101,7 @@ public class MySQLDaoImpl implements MySQLDao {
             }
             e.printStackTrace();
         }finally {
-            DBUtil.colse(conn);
+            DBUtil.close(conn);
         }
 
 
@@ -114,15 +119,17 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public java.util.Map<String, Integer> get(int year) {
         Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
+        Connection conn=null;
+   /*     String driver="com.mysql.jdbc.Driver";
         String url="jdbc:mysql://166.166.1.10:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
-        String password="root";
+        String password="root";*/
 
         try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
+//            Class.forName(driver);
+
+//            conn= DriverManager.getConnection(url,user,password);
+            conn=DBUtil.getConn();
             String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -146,14 +153,17 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public Map<String, Integer> getIncome(int year) {
         Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
+        Connection conn=null;
+   /*     String driver="com.mysql.jdbc.Driver";
         String url="jdbc:mysql://166.166.1.10:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
-        String password="root";
+        String password="root";*/
+
         try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
+//            Class.forName(driver);
+
+//            conn= DriverManager.getConnection(url,user,password);
+            conn=DBUtil.getConn();
             String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -178,15 +188,17 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public Map<String, Integer> getPerson(int year) {
         Map<String,Integer> map=new HashMap<>();
-        Connection conn;
-        String driver="com.mysql.jdbc.Driver";
+        Connection conn=null;
+   /*     String driver="com.mysql.jdbc.Driver";
         String url="jdbc:mysql://166.166.1.10:3306/house?useUnicode=true&characterEncoding=utf8";
         String user="root";
-        String password="root";
+        String password="root";*/
 
         try{
-            Class.forName(driver);
-            conn= DriverManager.getConnection(url,user,password);
+//            Class.forName(driver);
+
+//            conn= DriverManager.getConnection(url,user,password);
+            conn=DBUtil.getConn();
             String sql="SELECT d.`value`,d.x,d.legend from `data` d LEFT JOIN legend l ON d.legendId=l.id LEFT JOIN diagram d2 ON l.diagramId=d2.id LEFT JOIN report r ON r.id=d2.reportId where r.`year`="+year;
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
