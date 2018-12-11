@@ -113,11 +113,7 @@ function toTable(url) {
         type: "POST",
         dataType: "json",
         contentType: 'application/json',
-        data: JSON.stringify({
-            'year': 2013,
-            'page': 2,
-            'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
-        }),
+        data: tablePost,
         success: function (result) {
             showTable(result);
         }
