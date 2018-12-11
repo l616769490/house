@@ -27,8 +27,8 @@ public class TestTable {
      * @return 请求结果
      */
     @ResponseBody
-    @RequestMapping(value = "/test-table", method = RequestMethod.POST)
-    public Table testTable(@RequestParam(required = false) TablePost tablePost) {
+    @RequestMapping(value = "/test-line_table", method = RequestMethod.POST)
+    public Table testTable(@RequestBody TablePost tablePost) {
         if (tablePost == null) {
             return testService.getTable();
         }

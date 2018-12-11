@@ -87,7 +87,7 @@
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
-            data: JSON.stringify({
+            data: JSON.parse({
                 'year': 2013,
                 'page': 2,
                 'searches': [{'title': '房间数', 'values': ['1']}, {'title': '卧室数', 'values': ['1']}]
