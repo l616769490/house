@@ -37,9 +37,9 @@
     </div>
     <div class="row">
         <div id="btns" class="col-lg-6 col-md-offset-2">
-            <button id="btn-1" class="btn btn-success" onclick="show('/test-houseDuty')">房产税</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/test-bar')">独栋建筑</button>
-            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/test-pie')">空置</button>
+            <button id="btn-1" class="btn btn-success" onclick="show('/city-houseDuty')">房产税</button>
+            <button id="btn-2" class="btn btn-success col-md-offset-1" onclick="show('/city-singleBuilding')">独栋建筑</button>
+            <button id="btn-3" class="btn btn-success col-md-offset-1" onclick="show('/basic-vacancy')">空置</button>
             <button id="btn-4" class="btn btn-success col-md-offset-1" onclick="getTable()">表格测试</button>
             <button id="btn-5" class="btn btn-success col-md-offset-1" onclick="toFile()">文件上传</button>
         </div>

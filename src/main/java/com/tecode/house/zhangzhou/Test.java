@@ -24,13 +24,14 @@ public class Test {
     public static void main(String[] args) {
         /*SparkService ss = new SparkService();
         ss.selectVacancyTable("thads:2013","居住",3);*/
-        ShowTablesImpl st = new ShowTablesImpl();
+        /*ShowTablesImpl st = new ShowTablesImpl();
         TablePost tp = new TablePost();
         tp.setPage(2);
         tp.setYear(2013);
         List<Search> list = new ArrayList<>();
-        list.add(new Search().setTitle("空置").addValue("空置").addValue("居住"));
+        list.add(new Search().setTitle("城市规模").addValue("一线城市").addValue("二线城市"));
+        list.add(new Search().setTitle("建筑结构类型").addValue("独栋").addValue("其他"));
         tp.setSearches(list);
-        st.showVacancyTable(tp);
+        st.showHouseDutyTable(tp);*/
     }
 }

@@ -37,9 +37,9 @@
     <div class="row">
         <div id="btns" class="col-lg-8 col-md-offset-2">
             <button id="btn-1" class="btn btn-success" onclick="getTable1()">空置状态</button>
-            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按区域-家庭收入分析
+            <button id="btn-2" class="btn btn-success col-md-offset-2" onclick="getTable2()">按城市-独栋建筑
             </button>
-            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按区域-房产税分析
+            <button id="btn-3" class="btn btn-success col-md-offset-2" onclick="getTable3()">按城市-房产税
             </button>
         </div>
     </div>
@@ -90,7 +90,7 @@
             data: JSON.stringify({
                 'year': 2013,
                 'page': 2,
-                'searches': [{'title': '空置状态', 'values': ['空置','居住']}]
+                'searches': [{'title': '空置状态', 'values': ['空置','居住','全部']}]
             }),
             success: function (result) {
                 showTable(result);
@@ -100,18 +100,16 @@
 
     function getTable2() {
         $.ajax({
-            url: "/region_zinc2_num_table",
+            url: "/city-singleBuilding-table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
-                'page': 2,
+                'page': 4,
                 'searches': [
-                    {'title': '1', 'values': ['L30']},
-                    {'title': '2', 'values': ['L80']},
-                    {'title': '3', 'values': ['L50']},
-                    {'title': '4', 'values': ['L80+']}]
+                    {'title': '城市规模', 'values': ['全部','一线城市','二线城市','三线城市','四线城市','五线城市']},
+                    {'title': '建筑结构类型', 'values': ['独栋','其他','全部']}]
             }),
             success: function (result) {
                 showTable(result);
@@ -121,18 +119,16 @@
 
     function getTable3() {
         $.ajax({
-            url: "/region_zsmhc_num_table",
+            url: "/city-houseDuty-table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
             data: JSON.stringify({
                 'year': 2013,
-                'page': 2,
+                'page': 5,
                 'searches': [
-                    {'title': '1', 'values': ['1500-3000']},
-                    {'title': '2', 'values': ['1500-3000']},
-                    {'title': '3', 'values': ['1500-3000']},
-                    {'title': '4', 'values': ['1500-3000']}]
+                    {'title': '城市规模', 'values': ['全部','一线城市','二线城市','三线城市','四线城市','五线城市']},
+                    {'title': '建筑结构类型', 'values': ['独栋','其他','全部']}]
             }),
             success: function (result) {
                 showTable(result);
