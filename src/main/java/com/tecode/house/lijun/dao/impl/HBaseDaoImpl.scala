@@ -2,6 +2,7 @@ package com.tecode.house.lijun.dao.impl
 
 import java.util
 
+import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.house.lijun.dao.GetHBaseDao
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -24,7 +25,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
     */
   override def getForCOST(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
     val conf = new SparkConf().setAppName("getAllForRent").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名
@@ -103,7 +104,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
     */
   override def getPrice(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
     val conf = new SparkConf().setAppName("getAllForValue").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名
@@ -176,7 +177,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
 
   override def getForIncome(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
     val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名

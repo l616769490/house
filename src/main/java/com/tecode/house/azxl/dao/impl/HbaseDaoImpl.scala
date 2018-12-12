@@ -281,7 +281,7 @@ class HbaseDaoImpl extends HbaseDao {
 
   override def getPerson(tableName: String,city:Int, page: Int): List[(Int, (String, Int, Int))] = {
     val conf = HBaseConfiguration.create()
-    conf.set(TableInputFormat.INPUT_TABLE, "2013")
+    conf.set(TableInputFormat.INPUT_TABLE, tableName)
     conf.set(TableInputFormat.SCAN_COLUMN_FAMILY, "info")
 
 //    val spconf = new SparkConf().setMaster("local[*]").setAppName("hbase")

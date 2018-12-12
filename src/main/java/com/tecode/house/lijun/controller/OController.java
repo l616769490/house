@@ -24,7 +24,7 @@ import java.util.List;
 public class OController {
 
     /**
-     * 房屋费用
+     * 房产税费用
      * @return
      * @throws SQLException
      * @throws ClassNotFoundException
@@ -60,7 +60,7 @@ public class OController {
             
         }
 
-        ((Pie) series1).setCenter("40%", "50%").setRadius("30%");
+        ((Pie) series1).setCenter("30%", "50%").setRadius("30%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series1);
@@ -109,7 +109,7 @@ public class OController {
 
         }
 
-        ((Pie) series1).setCenter("40%", "50%").setRadius("30%");
+        ((Pie) series1).setCenter("30%", "50%").setRadius("30%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series1);
@@ -154,7 +154,7 @@ public class OController {
 
         }
 
-        ((Pie) series1).setCenter("40%", "50%").setRadius("30%");
+        ((Pie) series1).setCenter("30%", "50%").setRadius("30%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series1);
@@ -198,7 +198,7 @@ public class OController {
 
         }
 
-        ((Pie) series1).setCenter("40%", "50%").setRadius("30%");
+        ((Pie) series1).setCenter("30%", "50%").setRadius("30%");
 
         option.setTitle(title).setTooltip(tooltip).setLegend(legend)
                 .addSeries(series1);
@@ -340,7 +340,7 @@ public class OController {
             series1.addData(new Pie.PieData<Integer>(data.getX(), Integer.valueOf(data.getValue())));
         }
 
-        ((Pie) series1).setCenter("40%", "50%").setRadius("30%");
+        ((Pie) series1).setCenter("20%", "50%").setRadius("30%");
 
 
         option.setTitle(title1).setTooltip(tooltip1).setLegend(legend1)

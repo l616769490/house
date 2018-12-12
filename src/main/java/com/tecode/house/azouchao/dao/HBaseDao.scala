@@ -12,7 +12,7 @@ trait HBaseDao {
     * @param page      查询页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForRent(tableName: String, filter: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForRent(tableName: String, filter: String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
   /**
@@ -24,7 +24,7 @@ trait HBaseDao {
     * @param page      查询页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForValue(tableName: String, build: String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForValue(tableName: String, build: String, city: String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
   /**
@@ -36,7 +36,7 @@ trait HBaseDao {
     * @param page      查询页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForRom(tableName: String, build: String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForRom(tableName: String, build: String, city: String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
 }

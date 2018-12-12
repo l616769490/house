@@ -19,7 +19,7 @@ import scala.collection.JavaConverters._
 class HBaseDaoImpl extends HBaseDao {
 
 
-  override def getForRent(tableName: String, filter: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+  override def getForRent(tableName: String, filter: String, page: Int): (Long, util.List[util.ArrayList[String]]) = {
 
     //    val conf = new SparkConf().setAppName("getForRent").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
@@ -110,7 +110,7 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(BEDRMS)
       list
     })
-    rowRDD.count()
+    val l: Long = rowRDD.count()
 
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
@@ -121,11 +121,11 @@ class HBaseDaoImpl extends HBaseDao {
     var rows: util.List[util.ArrayList[String]] = java.subList(count - 10, java.size());
 
     //    sc.stop()
-    (count, rows)
+    (l, rows)
   }
 
 
-  override def getForValue(tableName: String, builds: String, citys: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+  override def getForValue(tableName: String, builds: String, citys: String, page: Int): (Long, util.List[util.ArrayList[String]]) = {
     //    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
@@ -193,6 +193,7 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(BEDRMS)
       list
     })
+    val l: Long = rowRDD.count()
     //    将RDD转换为List
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
 
@@ -207,10 +208,10 @@ class HBaseDaoImpl extends HBaseDao {
     }
     val rows: util.List[util.ArrayList[String]] = java.subList(count - 10, java.size())
     //    sc.stop()
-    (count, rows)
+    (l, rows)
   }
 
-  override def getForRom(tableName: String, builds: String, citys: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+  override def getForRom(tableName: String, builds: String, citys: String, page: Int): (Long, util.List[util.ArrayList[String]]) = {
     //    val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
@@ -264,7 +265,7 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(PER)
       list
     })
-
+    val l: Long = rowRDD.count()
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
     var count = java.size()
@@ -273,7 +274,7 @@ class HBaseDaoImpl extends HBaseDao {
     }
     val rows = java.subList(count - 10, java.size())
     //    sc.stop()
-    (count, rows)
+    (l, rows)
   }
 
 

@@ -10,7 +10,7 @@ import com.tecode.house.libo.dao.impl.MysqlDaoImpl
 import com.tecode.house.libo.util.DBUtil
 import com.tecode.house.lijin.utils.SparkUtil
 import com.tecode.table
-import com.tecode.table.{Page, Table}
+import com.tecode.table.{Page, Search, Table}
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -27,13 +27,13 @@ object RoomByCity02 {
   def main(args: Array[String]): Unit = {
     val room = new RoomByCity02
     //room.RoomAndBedRom("2013")
-    //room.selfOrRent("2013")
-  //  println("1::success")
-    // println("===============")
-    //room.RoomAndBedRom("2013")
-    // println("1::success")
-   // println("----------------")
-    //room. SingleBuildByYear("2013");
+    room.selfOrRent("thads:2013",2013)
+      println("1::success")
+      println("===============")
+    room.RoomAndBedRom("thads:2013",2013)
+      println("1::success")
+      println("----------------")
+    room. SingleBuildByYear("thads:2013",2013);
     //print("asdcvc".split(";")(0))
     //room.selfRentTable("2013","租赁")
     //room.roomsTable("2013","5","6")
@@ -49,14 +49,11 @@ case class Rooms(city: Int, room: Int, bedrom: Int)
 
 class RoomByCity02 extends Analysis {
 
-//  val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
-////  val sc = new SparkContext(sparkConf)
-val sc = SparkUtil.getSparkContext
+  val sparkConf = new SparkConf().setMaster("local").setAppName("selectData")
+  val sc = SparkUtil.getSparkContext
   val spark = SparkSession.builder().config(sc.getConf).getOrCreate()
 
 
-
-  //链接hbase
 
 
 
@@ -91,7 +88,7 @@ val sc = SparkUtil.getSparkContext
   /**
     * 自住\租赁     插入mysql
     */
-    def setIntoMysqlTable(tenureMap: Map[String, Int], year: Int): Unit = {
+  def setIntoMysqlTable(tenureMap: Map[String, Int], year: Int): Unit = {
 
     val msconn1: sql.Connection = DBUtil.getConn
     val table = new MysqlDaoImpl
@@ -108,7 +105,7 @@ val sc = SparkUtil.getSparkContext
       msconn1.setAutoCommit(false)
 
       //插入report表
-      val rName: String = "住房自住、租赁分析"
+      val rName: String = "住房自住租赁分析"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
       val rGroup: String = "基础分析"
@@ -117,15 +114,15 @@ val sc = SparkUtil.getSparkContext
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //饼图
-      val dName = "自住、租赁"
+      val dName = "自住租赁"
       val dText = "居住状态图"
       diagramId = table.insertIntoDiagram(dName, 2, reportId, dText)
 
       //图例
-      legendId = table.insertIntoLegend("自住、租赁图例", "自住", diagramId)
+      legendId = table.insertIntoLegend("自住租赁图例", "自住", diagramId)
 
       //插入X轴
-      val xName: String = "自住\\租赁"
+      val xName: String = "自住租赁"
       xId = table.insertIntoXAxis(xName, diagramId, "111")
 
       //插入Y轴
@@ -134,11 +131,11 @@ val sc = SparkUtil.getSparkContext
 
 
       //插入数据集表
-      val ddId: Int = table.insertIntoDimension("basic", "自住、租赁状态", "TENURE")
+      val ddId: Int = table.insertIntoDimension("basic", "自住租赁状态", "TENURE")
 
       //数据表   tenureMap：Map
       for (elem <- tenureMap) {
-        table.insertIntoData(elem._2.toString, xId, legendId, elem._1, "自住、租赁图例")
+        table.insertIntoData(elem._2.toString, xId, legendId, elem._1, "自住租赁图例")
       }
       //插入搜索表
       searchId = table.insertIntoSearch("居住状态","自住",reportId)
@@ -194,9 +191,9 @@ val sc = SparkUtil.getSparkContext
     val rdd1 = dataFrame.rdd.map(x => (x.get(0).toString, x.get(1) + "_" + x.get(2)))
 
     rdd1.collect().foreach(RoomAndBedRom += (_))
-//    for (elem <- RoomAndBedRom) {
-//      println(elem)
-//    }
+    //    for (elem <- RoomAndBedRom) {
+    //      println(elem)
+    //    }
 
     //导入mysql
     RoomAndBedRomToMysql(RoomAndBedRom, year)
@@ -221,7 +218,7 @@ val sc = SparkUtil.getSparkContext
       var ddId = 0;
       msconn.setAutoCommit(false)
       //插入report表
-      val rName: String = "房间数、卧室数分析"
+      val rName: String = "房间数卧室数分析"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
       val rGroup: String = "基础分析"
@@ -230,12 +227,12 @@ val sc = SparkUtil.getSparkContext
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
 
       //饼图
-      val dName = "房间数、卧室数"
+      val dName = "房间数卧室数"
       val dText = "房间状态图"
       diagramId = table.insertIntoDiagram(dName, 1, reportId, dText)
 
       //图例
-      legendId = table.insertIntoLegend("总房间数、卧室数", "总房间数", diagramId)
+      legendId = table.insertIntoLegend("总房间数卧室数", "总房间数", diagramId)
 
       //插入X轴
       val xName: String = "房屋类型"
@@ -246,7 +243,7 @@ val sc = SparkUtil.getSparkContext
 
 
       //插入数据集表
-      ddId = table.insertIntoDimension("basic", "总房数、卧室数分布", "ROOMS")
+      ddId = table.insertIntoDimension("基础分析", "总房数、卧室数分布", "ROOMS")
 
       searchId = table.insertIntoSearch("房间卧室数","房间数",reportId)
       table.insertIntoSearch("城市等级","1",reportId)
@@ -258,7 +255,7 @@ val sc = SparkUtil.getSparkContext
 
     } catch {
       case e: Exception => {
-        println("=====b=====")
+        //println("=====b=====")
         //回滚事务
         try {
           msconn.rollback();
@@ -286,11 +283,11 @@ val sc = SparkUtil.getSparkContext
       classOf[org.apache.hadoop.hbase.client.Result])
     var msconn: sql.Connection = DBUtil.getConn
     var singleMap = Map[String, Int]()
-//    //链接hbase
-//    val hconf = HBaseConfiguration.create()
-//    //val tableName = "2013"
-//    hconf.set(TableInputFormat.INPUT_TABLE, tableName)
-//    hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
+    //    //链接hbase
+    //    val hconf = HBaseConfiguration.create()
+    //    //val tableName = "2013"
+    //    hconf.set(TableInputFormat.INPUT_TABLE, tableName)
+    //    hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
 
 
 
@@ -362,7 +359,7 @@ val sc = SparkUtil.getSparkContext
       //插入X表   XAxis(String name,int diagramId,String dimGroupName)
       val xname = "年份区间"
       val xdig = digID
-      val xdgn = "111"
+      val xdgn = "建成年份"
       xID = table.insertIntoXAxis(xname, xdig, xdgn)
 
       //插入Y轴    insertIntoYAxis(String name,int diagramId)
@@ -406,7 +403,7 @@ val sc = SparkUtil.getSparkContext
     }
 
   }
-//============================================插入表格数据==============================================
+  //============================================插入表格数据==============================================
 
   /**
     * 查询表格中需要的数据
@@ -432,16 +429,23 @@ val sc = SparkUtil.getSparkContext
     }
     }.filter(x => x._2.toInt>0&&x._3.toInt>0&&x._4.toInt>0&&x._5.toInt>0)
 
-
-    //过滤自住、租赁
-    if(select.equals("自住")){
-      //("自住",x._1+"_"+x._2+"_"+x._3+"_"+x._4)
-     values =  values.filter(_._5.equals("1"))
+    if(select==null){
+      values
     }else{
-      values = values.filter(_._5.equals("2"))
+      //过滤自住、租赁
+      if(select.equals("自住")){
+        //("自住",x._1+"_"+x._2+"_"+x._3+"_"+x._4)
+        values =  values.filter(_._5.equals("1"))
+      }else if (select.equals("租赁")){
+        values = values.filter(_._5.equals("2"))
+      }else{
+        values
+      }
     }
 
-     val v = values.map{x=>{
+
+
+    val v = values.map{x=>{
       if(x._5.toInt==1){
         //Map中   相同key 会覆盖  取房屋编号为key:(x._1)
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4+"_"+"自住")
@@ -464,19 +468,39 @@ val sc = SparkUtil.getSparkContext
 
 
     val p = new Page;
-    p.setThisPage(page);
-    var list1= new ArrayBuffer[Integer]()
-    for(i <- 1 to l.toInt){
-      p.addData(i)
+
+    if(page == null){
+       val page1 = 1
+      p.setThisPage(page1)
     }
     table.setPage(p)
+
+    if(page+10>l.toInt){
+      for(i <- l.toInt-10 to l.toInt ){
+        p.addData(i)
+      }
+    }else{
+      for(i <- page to page+10){
+        p.addData(i)
+      }
+    }
+
+
+
+//    for(i <- 1 to l.toInt){
+//      if(i<=10){
+//        p.addData(i)
+//      }else{
+//      }
+//    }
+   //table.setPage(p).addSearchs(search)
 
     while(value.hasNext){
       val str = value.next()
       list:+=(l.toString,str._2)
     }
-  list
-}
+    list
+  }
 
   /**
     * 截取方法
@@ -517,41 +541,77 @@ val sc = SparkUtil.getSparkContext
     }).filter(x=>x._4.toInt>0)
     //(499434810242,499434810242_2_5_3)
     //过滤输入的城市等级
-    if(city .equals("1") ){
-      value = value.filter(_._2.equals("1"))
-    }else if(city .equals("2")){
-      value = value.filter(_._2.equals("2"))
-    }else if(city .equals("3")){
-      value = value.filter(_._2.equals("3"))
-    }else if(city .equals("4")){
-      value = value.filter(_._2.equals("4"))
-    }else if(city .equals("5")){
-      value = value.filter(_._2.equals("5"))
-    }else if(city ==null){
-      value
+
+    if(city==null){
+      value = value
     }else{
-      value
+      if(city .equals("1") ){
+        value = value.filter(_._2.equals("1"))
+      }else if(city .equals("2")){
+        value = value.filter(_._2.equals("2"))
+      }else if(city .equals("3")){
+        value = value.filter(_._2.equals("3"))
+      }else if(city .equals("4")){
+        value = value.filter(_._2.equals("4"))
+      }else if(city .equals("5")){
+        value = value.filter(_._2.equals("5"))
+      }else{
+        value
+      }
     }
 
-     val v = value.map{x=>{
+
+
+    val v = value.map{x=>{
       (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
     }}
 
 
-      var jlist:List[(String,String)] = List()
-      val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
-      val l1: Long = v.count()
-       val tuples = subString(page,l1.toInt,l)
+    var jlist:List[(String,String)] = List()
+    val l1: Long = v.count()
+
+    //val l111: util.List[Integer]  =  v.take(l1.toInt).toList.asJava
+    val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
+
+    val tuples = subString(page,l1.toInt,l)
     val value1 = tuples.iterator()
 
 
     //获取所有页码
     val p = new Page;
-    p.setThisPage(page);
-    var list1= new ArrayBuffer[Integer]()
-    for(i <- 1 to l1.toInt){
-      p.addData(i)
+
+
+    if(page == null){
+      val page1 = 1
+      p.setThisPage(page1)
     }
+    table.setPage(p)
+
+
+
+
+    //  private List<Integer> data = new ArrayList<>();
+    //var lll:util.List[Integer] = util.List[Integer]  //new util.ArrayList[Int]()
+
+   var lll:List[Integer] = List()
+    var sb = new StringBuilder
+
+//    var list1= new ArrayBuffer[Integer]()
+
+    if(page*10+10>l1.toInt){
+      for(i <- l1.toInt-10 to l1.toInt ){
+        //sb.append(i)
+        p.addData(i)
+      }
+    }else{
+      for(i <- (page-1)*10 to page*10){
+       //sb.append(i)
+        p.addData(i)
+      }
+    }
+
+//    val list = sb.toList
+//    p.setData(list)
     table.setPage(p)
 
     while(value1.hasNext){
@@ -568,6 +628,7 @@ val sc = SparkUtil.getSparkContext
     * CONTROL METRO3 BUILT STRUCTURETYPE
     */
   def singleTable(tableName:String,year:String,page:Int,table:Table):List[(String,String)]  ={
+    //获取hbase配置信息
     val hconf = HBaseConfiguration.create()
     hconf.set(TableInputFormat.INPUT_TABLE, tableName)
     hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
@@ -576,34 +637,42 @@ val sc = SparkUtil.getSparkContext
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
+    //RDD操作
     var singleMap = Map[String,String]()
     var values = hbaseRDD.map{x=>{
+      //获取列的数据    一行一行
       (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
         Bytes.toString(x._2.getValue("info".getBytes(),"METRO3".getBytes())),
         Bytes.toString(x._2.getValue("info".getBytes(),"BUILT".getBytes())),
         Bytes.toString(x._2.getValue("info".getBytes(),"STRUCTURETYPE".getBytes())))
     }}
-    //年份判断
-    if(year.equals("1900-2000")){
-      values = values.filter(x=>{x._3.toInt>=1900&&x._3.toInt<=2000})
-    }else if(year.equals("2000-2010")){
-      values = values.filter(x=>{x._3.toInt>2000&&x._3.toInt<=2010})
-    }else if(year.equals("1900-2000")){
-      values = values.filter(x=>{x._3.toInt>2010&&x._3.toInt<=2018})
-    }else{
+
+    //条件筛选  年份判断
+    if(year ==null){
       values = values
+    }else{
+      if(year.equals("1900-2000")){
+        values = values.filter(x=>{x._3.toInt>=1900&&x._3.toInt<=2000})
+      }else if(year.equals("2000-2010")){
+        values = values.filter(x=>{x._3.toInt>2000&&x._3.toInt<=2010})
+      }else if(year.equals("1900-2000")){
+        values = values.filter(x=>{x._3.toInt>2010&&x._3.toInt<=2018})
+      }else{
+        values
+      }
     }
 
 
+
     //独栋判断
-//    if(ifSingleBuild.equals("是")){
-//      values = values.filter(_._4.toInt==1)
-//    }else if(ifSingleBuild.equals("否")){
-//      values = values.filter(_._4.toInt==2)
-//    }else{
-//      values = values
-//    }
-    //拼接成Map
+    //    if(ifSingleBuild.equals("是")){
+    //      values = values.filter(_._4.toInt==1)
+    //    }else if(ifSingleBuild.equals("否")){
+    //      values = values.filter(_._4.toInt==2)
+    //    }else{
+    //      values = values
+    //    }
+    //拼接成Map,自定义组装
     val v=values.map(x=>{
       if(x._4.toInt==1){
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"是")
@@ -611,23 +680,43 @@ val sc = SparkUtil.getSparkContext
         (x._1,x._1+"_"+x._2+"_"+x._3+"_"+"否")
       }
     })
+
+
     var jlist:List[(String,String)] = List()
+    //获得符合条件的数据的数量，既总条数
+    val len: Long = v.count()
+    //println("l1长度：："+l1.toInt)
+    //取到page页*10，装换成java的list    截取     asJava需要导包
     val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
-    val l1: Long = v.count()
-    println("长度:"+l)
-    val tuples = subString(page,l1.toInt,l)
+
+    val tuples = subString(page,len.toInt,l)
     val value1 = tuples.iterator()
 
 
 
     val p = new Page;
-    p.setThisPage(page);
-    var list1= new ArrayBuffer[Integer]()
-    for(i <- 1 to l1.toInt){
-      p.addData(i)
+
+
+    if(page == null){
+      p.setThisPage(1)
     }
     table.setPage(p)
 
+    for(i <- page to page+10){
+      println(i)
+      p.addData(i)
+    }
+//    if(page+10>l1.toInt){
+//      for(i <- l1.toInt-10 to l1.toInt-1 ){
+//        println(i)
+//        p.addData(i)
+//      }
+//    }else{
+//      for(i <- page to page+10){
+//        println(i)
+//        p.addData(i)
+//      }
+//    }
 
     while(value1.hasNext){
       val str = value1.next()
@@ -644,9 +733,6 @@ val sc = SparkUtil.getSparkContext
     SingleBuildByYear(tableName, tableName.split(":")(1).toInt)
   }
 
-
-
-
   /**
     * 数据分析接口
     *
@@ -655,7 +741,7 @@ val sc = SparkUtil.getSparkContext
     */
   override def analysis(tableName: String): Boolean = {
     insertIntoMysql(tableName:String)
-      return true
+    return true
 
   }
 }

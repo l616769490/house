@@ -47,6 +47,14 @@ public class InsertToTable implements InsertTable {
         String tableName = "thads:"+tablePost.getYear().toString();
         //建表
         Table table = new Table();
+        String filter = null;
+        for (Search search : tablePost.getSearches()) {
+            for (String value : search.getValues()) {
+                filter = value;
+            }
+        }
+
+       // Search search = tablePost.getSearches().get(0);
 
         Integer pp = tablePost.getPage();
         table.addSearchs(new Search().setTitle("居住状态").addValue("自住").addValue("租赁"));
@@ -56,12 +64,9 @@ public class InsertToTable implements InsertTable {
                 .addTop("建筑结构").addTop("自住\\租赁");
 
        // System.out.println(tablePost.getSearches().get(0));
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.selfRentTable(tableName, tablePost.getSearches().get(0).getValues().get(0), pp,table);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.selfRentTable(tableName, filter, pp,table);
 
-//        List<Integer> list = new ArrayList<>();
-//        for(int i = 0;i<m.size();i++){
-//            list.add(i+1);
-//        }
+
 
 
         long size = m.size();
@@ -80,18 +85,20 @@ public class InsertToTable implements InsertTable {
 
         }
 
-        //Page p = new Page();
-       // p.setThisPage(tablePost.getPage());
-        //p.setData(list);
-       // table.setPage(p);
 
 
 
-        System.out.println("查询年份："+table.getYear());
-        System.out.println("当前页："+table.getPage().getThisPage());
-        System.out.println("所有页："+size);
-        System.out.println(table.getTop());
-        table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
+
+//        System.out.println("查询年份："+table.getYear());
+//        //System.out.println("当前页："+table.getPage().getThisPage());
+//        System.out.println("所有页："+size);
+//        System.out.println(table.getTop());
+       // table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
+        if(m.size()>=10){
+            table.getData().subList(0,10);
+        }else{
+            table.getData();
+        }
         return table;
 
     }
@@ -127,12 +134,18 @@ public class InsertToTable implements InsertTable {
         table.setYear(tablePost.getYear()).addTop("ID").addTop("城市等级").addTop("房间数")
                 .addTop("卧室数");
 
+        String filter = null;
+        for (Search search : tablePost.getSearches()) {
+            for (String value : search.getValues()) {
+                filter = value;
+            }
+        }
 
 
         Page p = new Page();
         table.setPage(p.setThisPage(tablePost.getPage()));
         // System.out.println(tablePost.getSearches().get(0));
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable("thads:"+tableName, tablePost.getSearches().get(0).getValues().get(0), 3,table);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable("thads:"+tableName, filter, 3,table);
         int pages = m.size();
         Iterator<Tuple2<String, String>> iter = m.iterator();
 
@@ -151,14 +164,14 @@ public class InsertToTable implements InsertTable {
 
         //showUtil(m,table,p,s);
 
-        for (Search s1 : table.getSearch()) {
-            System.out.println(s1.getTitle());
-        }
+//        for (Search s1 : table.getSearch()) {
+//            System.out.println(s1.getTitle());
+//        }
 
-        System.out.println("查询年份："+table.getYear());
-        System.out.println("当前页："+table.getPage().getThisPage());
-        System.out.println("所有页："+table.getPage().getData().size());
-        System.out.println(table.getTop());
+//        System.out.println("查询年份："+table.getYear());
+//       // System.out.println("当前页："+table.getPage().getThisPage());
+//        System.out.println("所有页："+table.getPage().getData().size());
+//        System.out.println(table.getTop());
         if(m.size()>=10){
             table.getData().subList(0,10);
         }else{
@@ -229,9 +242,16 @@ public class InsertToTable implements InsertTable {
         RoomByCity02 r = new RoomByCity02();
         //建表
         Table table = new Table();
-        table.setYear(2011);
+        String year = table.setYear(tablePost.getYear()).toString();
         //  表头
-        Integer page1 = tablePost.getPage();
+       // Integer page1 = tablePost.getPage();
+        String filter = null;
+        for (Search search : tablePost.getSearches()) {
+            for (String value : search.getValues()) {
+                filter = value;
+            }
+        }
+
        // Page p = new Page();
         //当前页
        // p.setThisPage(5);
@@ -244,7 +264,7 @@ public class InsertToTable implements InsertTable {
         //数据   Row
         //List<String> row1 = new ArrayList<>();
         //调用获取self表格所需字段的方法
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable("thads:"+tablePost.getYear().toString(), tablePost.getSearches().get(0).getValues().get(0),tablePost.getPage() ,table);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable("thads:"+year, filter,tablePost.getPage() ,table);
         int size = m.size();
         int page = size/10+1;
         Iterator<Tuple2<String, String>> iter = m.iterator();
@@ -265,15 +285,15 @@ public class InsertToTable implements InsertTable {
                 .addSearchs(s);
         //System.out.println(table.getData()+table.getPage()+table.getSearch()+table.getTop()+table.getYear());
         // System.out.println("============"+table.getData());
-        System.out.println("总条数"+size);
-        System.out.println("总页数"+page);
-        System.out.println("当前页"+table.getPage().getThisPage());
-        System.out.println(table.getTop());
+//        System.out.println("总条数"+size);
+//        System.out.println("总页数"+page);
+//       // System.out.println("当前页"+table.getPage().getThisPage());
+//        System.out.println(table.getTop());
         //System.out.println(table.getData().subList(0,10));
         if(m.size()>=10){
-            table.getData().subList(0,10).forEach(e->System.out.println(e.getRow()));
+            table.getData().subList(0,10);//.forEach(e->System.out.println(e.getRow()));
         }else{
-            table.getData().forEach(e->System.out.println(e.getRow()));
+            table.getData();//.forEach(e->System.out.println(e.getRow()));
         }
 
 

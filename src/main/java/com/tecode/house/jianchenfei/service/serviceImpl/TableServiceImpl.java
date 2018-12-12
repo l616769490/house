@@ -1,5 +1,6 @@
 package com.tecode.house.jianchenfei.service.serviceImpl;
 
+import com.tecode.house.jianchenfei.bean.Dimension;
 import com.tecode.house.jianchenfei.dao.HBaseDao;
 import com.tecode.house.jianchenfei.dao.impl.DimensionImpl;
 import com.tecode.house.jianchenfei.dao.impl.HbaseDaoImpl;
@@ -258,10 +259,17 @@ public class TableServiceImpl implements TableSerivce {
             for (com.tecode.house.jianchenfei.bean.Search search : searchs) {
                 Search s = new Search();
                 s.setTitle(search.getName());
-                List<String> tableDimension = mysqlDaoDimension.findByColums(new String[]{"groupname"},new String[]{search.getDimgroupname()});
-                s.setValues(tableDimension);
+                List<String> l = new ArrayList<>();
+                List<Dimension> tableDimension = mysqlDaoDimension.findByColums(new String[]{"groupname"},new String[]{search.getDimgroupname()});
+                for(Dimension dimension:tableDimension){
+                    String d = dimension.getDimname();
+                    l.add(d);
+                }
+               s.setValues(l);
                 list.add(s);
+
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

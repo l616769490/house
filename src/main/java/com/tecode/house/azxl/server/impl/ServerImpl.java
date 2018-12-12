@@ -148,7 +148,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
         }else if(searches.size()==1){
             search = searches.get(0).getValues().get(0);
-            if (!search.contains("人")) {
+            if (search.contains("人")) {
                 List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson("thads:" + year, search, thisPage);
                 setTable2(person,table,p,thisPage);
 
@@ -197,7 +197,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
         }else if(searches.size()==1){
             search = searches.get(0).getValues().get(0);
-            if (!search.contains("万")) {
+            if (search.contains("万")) {
                 List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome("thads:" + year, search, thisPage);
                 setTable2(income,table,p,thisPage);
 

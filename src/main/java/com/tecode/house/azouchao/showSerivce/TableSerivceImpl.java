@@ -35,16 +35,19 @@ public class TableSerivceImpl implements TableSerivce {
         int page = tablePost.getPage();
         //获取数据
         Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForRent(tableName, filter, page);
-        int i = (int) Rows._1;
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
+        long pa = i / 10 + 1;
+        if (i % 10 == 0) {
+            pa--;
+        }
+
         List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
             for (int ii = 1; ii <= pa; ii++) {
                 list.add(ii);
             }
         } else {
-
             if (page - 2 <= 1) {
                 list.add(1);
                 list.add(2);
@@ -52,7 +55,7 @@ public class TableSerivceImpl implements TableSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int) pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {
@@ -126,9 +129,15 @@ public class TableSerivceImpl implements TableSerivce {
         Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForValue(tableName, build, city, page);
 
 
-        int i = (int) Rows._1;
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
+        long pa = i / 10 + 1;
+
+        if (i % 10 == 0) {
+            pa--;
+        }
+
+
         List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
             for (int ii = 1; ii <= pa; ii++) {
@@ -143,7 +152,7 @@ public class TableSerivceImpl implements TableSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int)pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {
@@ -204,9 +213,12 @@ public class TableSerivceImpl implements TableSerivce {
         }
         Tuple2<Object, List<ArrayList<String>>> Rows = Rows = hBaseDao.getForRom(tableName, build, city, page);
 
-        int i = (int) Rows._1;
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
+        long pa = i / 10 + 1;
+        if (i % 10 == 0) {
+            pa --;
+        }
         List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
             for (int ii = 1; ii <= pa; ii++) {
@@ -221,7 +233,7 @@ public class TableSerivceImpl implements TableSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int)pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {

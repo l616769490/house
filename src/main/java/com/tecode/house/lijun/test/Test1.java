@@ -73,7 +73,7 @@ public class Test1 {
         //ls.add(se1);
         ls.add(se2);
         tp.setSearches(ls);
-        Table table = t.price(tp);
+        Table table = t.priceFRM(tp);
 
 
 /*  System.out.println("year:   "+table.getYear());

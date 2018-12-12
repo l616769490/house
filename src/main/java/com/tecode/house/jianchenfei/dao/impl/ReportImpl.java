@@ -61,6 +61,7 @@ public class ReportImpl implements MysqlDao<Report> {
                 String group = rs.getString("group");
                 int status = rs.getInt("status");
                 String url = rs.getString("url");
+                int id = rs.getInt("id");
 
                 Report report = new Report();
                 report.setName(name);
@@ -69,6 +70,7 @@ public class ReportImpl implements MysqlDao<Report> {
                 report.setGroup(group);
                 report.setStatus(status);
                 report.setUrl(url);
+                report.setId(id);
 
                 return report;
             }

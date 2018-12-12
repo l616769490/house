@@ -294,17 +294,15 @@ class HbaseDaoImpl extends HBaseDao {
 
     //    将scala的List转换为java的List
     val java: util.List[util.ArrayList[String]] = list.asJava
-    var rows: util.List[util.ArrayList[String]] = null;
+
     //    获取数据的总条数
-    val count = java.size()
+    var count = java.size()
+    if (count < 10) {
+      count = 10
+    }
     //    截取需要的页码的数据
     //    判断页数是否为最后一页（最后一页的下标算法可能造成下标越界）
-    if (page * 10 > count) {
-      //      如果越界则将其换为List的长度
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
-    }
+    val rows: util.List[util.ArrayList[String]] = java.subList(count - 10, java.size())
 
     (count, rows)
   }
