@@ -137,7 +137,7 @@ class PriceByCity extends Analysis {
     report.setStatus(1);
     report.setUrl("/price_city");
     val reportId: Int = dao.putInTableReport(conn, report)
-    println("插入中..........")
+//    println("插入中..........")
 
     //柱状图
     //建筑单元数柱状图
@@ -192,7 +192,7 @@ class PriceByCity extends Analysis {
       data.setLegend("平均价格")
       dao.putInTableData(conn, data)
     }
-    println("插入中.......")
+//    println("插入中.......")
 
     //搜索表
     val citySearch: Search = new Search()
@@ -210,7 +210,7 @@ class PriceByCity extends Analysis {
     priceSearch.setDimGroupName("价格")
     priceSearch.setReportId(reportId)
     dao.putInTableSearch(conn, priceSearch)
-    println("正在插入.......")
+//    println("正在插入.......")
     conn.commit()
     //回滚事务
     conn.rollback();

@@ -3,6 +3,7 @@ package com.tecode.house.chenyong.dao.impl
 import java.util
 
 import com.tecode.house.chenyong.dao.GetDataToTable
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -203,7 +204,8 @@ class GetDataToTableImpl extends GetDataToTable{
   }
   def param(tableName: String, ageInterval: String, page: Int):RDD[Result] = {
     val conf = new SparkConf().setAppName("getDataToTable").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+    //val sc = new SparkContext(conf)
+    val sc = SparkUtil.getSparkContext
     //配置HBase参数
     val hconf = HBaseConfiguration.create()
     //设置表名

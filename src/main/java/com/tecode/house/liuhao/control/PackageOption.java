@@ -199,7 +199,7 @@ public class PackageOption {
      */
     /**
      *
-     * @param tablename hbase的表名
+     * @param
       * @return
      */
     @ResponseBody

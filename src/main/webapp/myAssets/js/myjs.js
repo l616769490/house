@@ -95,8 +95,6 @@ function toChart(url) {
  * @param  url [请求地址，已经加上了“_table”]
  */
 function toTable(url) {
-    let tableDiv = $('#house-table-div');
-    tableDiv.empty();
 
     // 获取年份
     let year = $('#year').text();
@@ -129,6 +127,9 @@ function toTable(url) {
     }
 
     tablePost += "}";
+
+    let tableDiv = $('#house-table-div');
+    tableDiv.empty();
 
     $.ajax({
         url: url,

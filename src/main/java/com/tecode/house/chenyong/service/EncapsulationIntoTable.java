@@ -17,7 +17,7 @@ public class EncapsulationIntoTable {
 
     //将获得到的原始数据封装进年龄分布age表对象中
     public Table intoTableAge(TablePost tablePost){
-        String tableName = "thads:"+tablePost.getYear();
+        String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
         String ageInterval = searches.get(0).getValues().get(0);
         Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableAge = getDataService.getFromHbaseToTableAge(tableName,ageInterval , tablePost.getPage());
@@ -86,7 +86,7 @@ public class EncapsulationIntoTable {
     }
     //将获得到的原始数据封装进通过年龄查询房间数和卧室数表对象中
     public Table intoTableRooms(TablePost tablePost){
-        String tableName = "thads:"+tablePost.getYear();
+        String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
         String ageInterval = searches.get(0).getValues().get(0);
         Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableRooms = getDataService.getFromHbaseToTableRooms(tableName, ageInterval, tablePost.getPage());
@@ -156,7 +156,7 @@ public class EncapsulationIntoTable {
     }
     //将获得到的原始数据封装进通过年龄查询水电费表对象中
     public Table intoTableUtility(TablePost tablePost){
-        String tableName = "thads:"+tablePost.getYear();
+        String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
         String ageInterval = searches.get(0).getValues().get(0);
         Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableUtility = getDataService.getFromHbaseToTableUtility(tableName, ageInterval, tablePost.getPage());

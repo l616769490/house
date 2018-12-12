@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+    <!-- 报表名 -->
+    <name>基础-家庭收入分析</name>
+    <!-- 报表组名 -->
+    <group>基础分析</group>
+    <!-- 报表请求地址 -->
+    <url>/basics_family_money</url>
+    <!-- 图表 -->
+    <diagrams>
+        <diagram name="家庭收入分布图" subName="家庭收入分布趋势">
+            <!-- y轴 -->
+            <yAxes>
+                <yAxis name="数量"/>
+            </yAxes>
+            <!-- x轴 -->
+            <xAxes>
+                <xAxis>
+                    <name>分类</name>
+                    <dimGroupName>家庭收入</dimGroupName>
+                </xAxis>
+            </xAxes>
+            <!-- 图例 -->
+            <legends>
+                <legend>
+                    <name>家庭收入</name>
+                    <dimGroupName>空维度</dimGroupName>
+                </legend>
+            </legends>
+        </diagram>
+    </diagrams>
+</report>

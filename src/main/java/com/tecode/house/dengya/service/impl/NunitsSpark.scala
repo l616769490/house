@@ -76,7 +76,7 @@ class NunitsSpark extends Analysis{
     val count: Long = rdd.count()
     println(count)
     val unit: RDD[(Int, Int)] = rdd.map((_,1)).reduceByKey(_+_)
-    unit.foreach(println)
+//    unit.foreach(println)
       val value =  unit.map( x => {
         val Units = x._2 / count.toDouble
 
@@ -118,7 +118,7 @@ class NunitsSpark extends Analysis{
       report.setStatus(1);
       report.setUrl("/units_option");
       val reportId: Int = dao.putInTableReport(conn, report)
-      println("插入中..........")
+//      println("插入中..........")
 
       //饼状图
       //建筑单元数饼状图
@@ -156,14 +156,14 @@ class NunitsSpark extends Analysis{
       for (elem <- unitList) {
         val data: Data = new Data()
         data.setValue(elem._2.toString)
-        println(elem._2.toString)
+//        println(elem._2.toString)
         data.setxId(xaxisId)
         data.setLegendId(legendId)
         data.setX(elem._1.toString)
         data.setLegend("空维度")
         dao.putInTableData(conn, data)
       }
-      println("插入中.......")
+//      println("插入中.......")
 
       //搜索表
       val search: Search = new Search()
@@ -171,7 +171,7 @@ class NunitsSpark extends Analysis{
       search.setDimGroupName("单元数")
       search.setReportId(reportId)
       val searchId: Int = dao.putInTableSearch(conn, search)
-      println("正在插入.......")
+//      println("正在插入.......")
       conn.commit()
       //回滚事务
       conn.rollback();

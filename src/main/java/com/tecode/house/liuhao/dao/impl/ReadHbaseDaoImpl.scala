@@ -1,4 +1,5 @@
 package com.tecode.house.liuhao.dao.impl
+
 import scala.collection.JavaConverters._
 import java.util
 
@@ -70,20 +71,21 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     * @return
     */
   override def readCityTaxData(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])= {
+    print(city)
     var citys =
-      if(city.equals("一线城市")){
+      if(city.equals("1")){
       1
-    }else if(city.equals("二线城市")){
+    }else if(city.equals("2")){
       2
-    }else if(city.equals("三线城市")) {
+    }else if(city.equals("3")) {
       3
-    }else if(city.equals("四线城市")) {
+    }else if(city.equals("4")) {
       4
     }else {
       5
     }
     val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
-    val sc = new SparkContext(con)
+    val sc = SparkUtil.getSparkContext
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)
     conf.set(TableInputFormat.SCAN_COLUMNS, "info")
@@ -98,12 +100,12 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
         ))
-      if(value._1.equals(citys.toString)){
+      //if(value._1.equals(citys.toString)){
         list.add(value._1)
         list.add(value._2)
         list.add(value._3)
         list.add(value._4)
-      }
+     // }
 
       list
     })

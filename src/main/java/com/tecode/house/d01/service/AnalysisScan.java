@@ -14,7 +14,6 @@ public class AnalysisScan {
         AnalysisScan a = new AnalysisScan("thads:2013");
         List<File> files = a.getClassFile(file);
         a.classLoader(files);
-        System.out.println("分析完成！");
     }
 
     private String tableName = "thads:2013";
@@ -71,6 +70,7 @@ public class AnalysisScan {
                         Object obj = aClass.newInstance();
                         Method method = aClass.getMethod("analysis", String.class);
                         method.invoke(obj,tableName);
+                        System.out.println("完成分析");
                     }
                 }
             }

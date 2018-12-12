@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ReadMyqslDao {
     List ReadTableData(Connection conn, String where);
-    City ReadCityTax(Connection conn );
+    City ReadCityTax(Connection conn);
 
 
 }

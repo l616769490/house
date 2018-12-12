@@ -30,7 +30,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.(id);
 
         }
         return id;
@@ -117,7 +117,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.println(id);
         }
         return id;
     }
@@ -149,7 +149,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.println(id);
         }
 
         return id;
@@ -194,7 +194,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.println(id);
         }
         return id;
     }
@@ -236,7 +236,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.println(id);
         }
         return id;
     }
@@ -273,7 +273,7 @@ public class MySQLDaoImpl implements MySQLDao {
         int id = 0;
         if (len > 0) {
             id = getId(ps);
-            System.out.println(id);
+//            System.out.println(id);
         }
         return id;
     }

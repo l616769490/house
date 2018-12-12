@@ -110,6 +110,8 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(BEDRMS)
       list
     })
+    rowRDD.count()
+
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
     var count = java.size()
