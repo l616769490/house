@@ -83,7 +83,7 @@
 <script>
     function getTable1() {
         $.ajax({
-            url: "/basic-vacancy-table",
+            url: "/basic_vacancy_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -100,7 +100,7 @@
 
     function getTable2() {
         $.ajax({
-            url: "/city-singleBuilding-table",
+            url: "/city_singleBuilding_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',
@@ -119,7 +119,7 @@
 
     function getTable3() {
         $.ajax({
-            url: "/city-houseDuty-table",
+            url: "/city_houseDuty_table",
             type: "POST",
             dataType: "json",
             contentType: 'application/json',

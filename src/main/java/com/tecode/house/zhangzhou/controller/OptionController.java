@@ -21,7 +21,7 @@ public class OptionController {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/city-singleBuilding", method = RequestMethod.POST)
+    @RequestMapping(value = "/city_singleBuilding", method = RequestMethod.POST)
     public Option testBar(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -92,7 +92,7 @@ public class OptionController {
      * @return 柱状图
      */
     @ResponseBody
-    @RequestMapping(value = "/city-houseDuty", method = RequestMethod.POST)
+    @RequestMapping(value = "/city_houseDuty", method = RequestMethod.POST)
     public Option testHouseDuty(String year) {
         System.out.println(year);
         Option option = new Option();
@@ -171,7 +171,7 @@ public class OptionController {
      * @return 饼图
      */
     @ResponseBody
-    @RequestMapping(value = "/basic-vacancy", method = RequestMethod.POST)
+    @RequestMapping(value = "/basic_vacancy", method = RequestMethod.POST)
     public Option testPie() {
         Option option = new Option();
         // 标题

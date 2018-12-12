@@ -18,7 +18,7 @@ public class TableController {
      * @return 请求结果
      */
     @ResponseBody
-    @RequestMapping(value = "/basic-vacancy-table", method = RequestMethod.POST)
+    @RequestMapping(value = "/basic_vacancy_table", method = RequestMethod.POST)
     public Table vacancyTable(@RequestBody TablePost tablePost) {
         /*if (tablePost == null) {
             return showTables.showHouseDutyTable(null);
@@ -29,7 +29,7 @@ public class TableController {
      * @return 请求结果
      */
     @ResponseBody
-    @RequestMapping(value = "/city-singleBuilding-table", method = RequestMethod.POST)
+    @RequestMapping(value = "/city_singleBuilding_table", method = RequestMethod.POST)
     public Table singleBuildingTable(@RequestBody TablePost tablePost) {
         /*if (tablePost == null) {
             return showTables.showHouseDutyTable(null);
@@ -40,7 +40,7 @@ public class TableController {
      * @return 请求结果
      */
     @ResponseBody
-    @RequestMapping(value = "/city-houseDuty-table", method = RequestMethod.POST)
+    @RequestMapping(value = "/city_houseDuty_table", method = RequestMethod.POST)
     public Table testTable(@RequestBody TablePost tablePost) {
         /*if (tablePost == null) {
             return showTables.showHouseDutyTable(null);

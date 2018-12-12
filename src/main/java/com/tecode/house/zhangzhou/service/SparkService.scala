@@ -2,6 +2,7 @@ package com.tecode.house.zhangzhou.service
 
 import java.sql.{Connection, SQLException}
 import java.util
+
 import scala.collection.JavaConverters._
 import com.tecode.house.zhangzhou.mysqlDao.impl.MysqlDaoImpl
 import com.tecode.house.zhangzhou.zzUtil.MySQLUitl
@@ -10,6 +11,7 @@ import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.storage.StorageLevel
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -360,7 +362,8 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("AGE1"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED"))))).persist(StorageLevel.MEMORY_ONLY)
+
     if(search.equals("空置")){
       clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
     }
@@ -403,7 +406,7 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BUILT"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BEDRMS"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0)
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0).cache()
 
     if(search.equals("一线城市")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
@@ -463,7 +466,7 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ZSMHC"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))),
-      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0)
+      Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0).cache()
 
     if(search.equals("一线城市")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
