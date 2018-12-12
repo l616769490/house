@@ -156,9 +156,10 @@ class NunitsSpark extends Analysis{
       for (elem <- unitList) {
         val data: Data = new Data()
         data.setValue(elem._2.toString)
+        println(elem._2.toString)
         data.setxId(xaxisId)
         data.setLegendId(legendId)
-        data.setX("空维度")
+        data.setX(elem._1)
         data.setLegend(elem._1.toString)
         dao.putInTableData(conn, data)
       }

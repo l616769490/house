@@ -1,4 +1,5 @@
 package com.tecode.house.dengya.dao
+
 import java.util
 trait HbaseDao {
   /**

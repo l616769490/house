@@ -11,23 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySQLDaoImpl implements MySQLDao {
-    private PreparedStatement ps ;
+    private PreparedStatement ps;
     private ResultSet rs;
+
     @Override
     public int putInTableData(Connection conn, Data data) throws SQLException {
         String dataSql = "insert into data(`value`,xId,legendId,x,legend) values(?,?,?,?,?)";
         //占位符赋值
-        ps = conn.prepareStatement(dataSql,new String[]{"id"});
-        ps.setString(1,data.getValue());
-        ps.setInt(2,data.getxId());
-        ps.setInt(3,data.getLegendId());
-        ps.setString(4,data.getX());
-        ps.setString(5,data.getLegend());
+        ps = conn.prepareStatement(dataSql, new String[]{"id"});
+        ps.setString(1, data.getValue());
+        ps.setInt(2, data.getxId());
+        ps.setInt(3, data.getLegendId());
+        ps.setString(4, data.getX());
+        ps.setString(5, data.getLegend());
         //执行
         long len = ps.executeLargeUpdate();
         //获取新生成的主键的值
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
 
@@ -41,17 +42,23 @@ public class MySQLDaoImpl implements MySQLDao {
         List<Data> list = new ArrayList<>();
         String sql = "select * from data where legendId = ? and xId = ?";
         ps = conn.prepareStatement(sql);
-        ps.setInt(1,legendId);
-        ps.setInt(2,xId);
+        ps.setInt(1, legendId);
+        ps.setInt(2, xId);
         rs = ps.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             /*  private int id;
              private String value;
              private int xId;
              private int legendId;
             private String x;
             private String legend;*/
-            Data data = new Data(rs.getInt(1),rs.getString(2),rs.getInt(3),rs.getInt(4),rs.getString(5),rs.getString(6));
+             int id = rs.getInt(1);
+             String value =  rs.getString(2);
+             int xd = rs.getInt(3);
+             int legendd =  rs.getInt(4);
+             String x =  rs.getString(5);
+             String legend = rs.getString(6);
+            Data data = new Data(id,value,xd ,legendd,x, legend);
             list.add(data);
         }
         return list;
@@ -62,15 +69,15 @@ public class MySQLDaoImpl implements MySQLDao {
     public int putInTableDiagram(Connection conn, Diagram diagram) throws SQLException {
         String diagramSql = "insert into diagram(`name`,`type`,reportId,subtext) value(?,?,?,?)";
         //占位符赋值
-        ps = conn.prepareStatement(diagramSql,new String[]{"id"});
-        ps.setString(1,diagram.getName());
-        ps.setInt(2,diagram.getType());
-        ps.setInt(3,diagram.getReportId());
-        ps.setString(4,diagram.getSubtext());
+        ps = conn.prepareStatement(diagramSql, new String[]{"id"});
+        ps.setString(1, diagram.getName());
+        ps.setInt(2, diagram.getType());
+        ps.setInt(3, diagram.getReportId());
+        ps.setString(4, diagram.getSubtext());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
 
         }
@@ -82,9 +89,9 @@ public class MySQLDaoImpl implements MySQLDao {
         List<Diagram> list = new ArrayList<>();
         String sql = "select * from diagram where reportId = ?";
         ps = conn.prepareStatement(sql);
-        ps.setInt(1,reportId);
+        ps.setInt(1, reportId);
         rs = ps.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             /*private int id;
             private String name;
             private int type;
@@ -101,14 +108,14 @@ public class MySQLDaoImpl implements MySQLDao {
     public int putInTableDimension(Connection conn, Dimension dimension) throws SQLException {
         String dimensionSql = "insert into dimension(groupName,dimName,dimNameEN) value(?,?,?)";
         //占位符赋值
-        ps = conn.prepareStatement(dimensionSql,new String[] {"id"});
-        ps.setString(1,dimension.getGroupName());
-        ps.setString(2,dimension.getDimName());
-        ps.setString(3,dimension.getGetDimNameEN());
+        ps = conn.prepareStatement(dimensionSql, new String[]{"id"});
+        ps.setString(1, dimension.getGroupName());
+        ps.setString(2, dimension.getDimName());
+        ps.setString(3, dimension.getGetDimNameEN());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len >0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
         }
@@ -120,9 +127,9 @@ public class MySQLDaoImpl implements MySQLDao {
         List<String> list = new ArrayList<>();
         String sql = "select * from dimension where groupName = ?";
         ps = conn.prepareStatement(sql);
-        ps.setString(1,groupName);
+        ps.setString(1, groupName);
         rs = ps.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             list.add(rs.getString(3));
         }
         return list;
@@ -132,15 +139,15 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public int putInTableLegend(Connection conn, Legend legend) throws SQLException {
         String legendSql = "insert into legend(`name`,dimGroupName,diagramId) value(?,?,?)";
-        ps = conn.prepareStatement(legendSql,new String[]{"id"});
+        ps = conn.prepareStatement(legendSql, new String[]{"id"});
         //给占位符赋值
-        ps.setString(1,legend.getName());
-        ps.setString(2,legend.getDimGroupName());
-        ps.setInt(3,legend.getDiagramId());
+        ps.setString(1, legend.getName());
+        ps.setString(2, legend.getDimGroupName());
+        ps.setInt(3, legend.getDiagramId());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
         }
@@ -151,16 +158,20 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public List<Legend> getByTableLegend(Connection conn, int diagramId) throws SQLException {
         List<Legend> list = new ArrayList<>();
-        String sql = "select * from diagram where diagramId = ?";
+        String sql = "select * from legend where diagramId = ?";
         ps = conn.prepareStatement(sql);
-        ps.setInt(1,diagramId);
+        ps.setInt(1, diagramId);
         rs = ps.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
         /* private int id;
            private String name;
            private String dimGroupName;
            private int diagramId;*/
-            Legend legend = new Legend(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4));
+            int id = rs.getInt(1);
+            String name = rs.getString(2);
+            String dimGroupName = rs.getString(3);
+            int dId = rs.getInt(4);
+            Legend legend = new Legend(id, name, dimGroupName, dId);
             list.add(legend);
         }
         return list;
@@ -170,18 +181,18 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public int putInTableReport(Connection conn, Report report) throws SQLException {
         String reportSql = "insert into report(`name`,`create`,`year`,`group`,status,url) value(?,?,?,?,?,?)";
-        ps = conn.prepareStatement(reportSql,new String[]{"id"});
+        ps = conn.prepareStatement(reportSql, new String[]{"id"});
         //给占位符赋值
-        ps.setString(1,report.getName());
-        ps.setLong(2,report.getCreate());
-        ps.setInt(3,report.getYear());
-        ps.setString(4,report.getGroup());
-        ps.setInt(5,report.getStatus());
-        ps.setString(6,report.getUrl());
+        ps.setString(1, report.getName());
+        ps.setLong(2, report.getCreate());
+        ps.setInt(3, report.getYear());
+        ps.setString(4, report.getGroup());
+        ps.setInt(5, report.getStatus());
+        ps.setString(6, report.getUrl());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
         }
@@ -189,15 +200,15 @@ public class MySQLDaoImpl implements MySQLDao {
     }
 
     @Override
-    public Report getByTableReport(Connection conn, String name, int year,String group) throws SQLException {
+    public Report getByTableReport(Connection conn, String name, int year, String group) throws SQLException {
         Report report = null;
         String sql = "select * from report where name = ? and year = ? and `group` = ?";
         ps = conn.prepareStatement(sql);
-        ps.setString(1,name);
-        ps.setInt(2,year);
-        ps.setString(3,group);
+        ps.setString(1, name);
+        ps.setInt(2, year);
+        ps.setString(3, group);
         rs = ps.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
             /* private int id;
                private String name;
                private Long create;
@@ -215,15 +226,15 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public int putInTableSearch(Connection conn, Search search) throws SQLException {
         String searchSql = "insert into search(`name`,dimGroupName,reportId) value(?,?,?)";
-        ps = conn.prepareStatement(searchSql,new String[]{"id"});
+        ps = conn.prepareStatement(searchSql, new String[]{"id"});
         //给占位符赋值
-        ps.setString(1,search.getName());
-        ps.setString(2,search.getDimGroupName());
-        ps.setInt(3,search.getReportId());
+        ps.setString(1, search.getName());
+        ps.setString(2, search.getDimGroupName());
+        ps.setInt(3, search.getReportId());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
         }
@@ -235,9 +246,9 @@ public class MySQLDaoImpl implements MySQLDao {
         List<Search> list = new ArrayList<>();
         String sql = "select * from search where reportId = ?";
         ps = conn.prepareStatement(sql);
-        ps.setInt(1,reportId);
+        ps.setInt(1, reportId);
         rs = ps.executeQuery();
-        while(rs.next()){
+        while (rs.next()) {
             /*private int id;
             private String name;
             private String dimGroupName;
@@ -252,15 +263,15 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public int putInTableXaxis(Connection conn, Xaxis xaxis) throws SQLException {
         String xAaxisSql = "insert into xaxis(`name`,diagramId,dimGroupName) value(?,?,?)";
-        ps = conn.prepareStatement(xAaxisSql,new String[]{"id"});
+        ps = conn.prepareStatement(xAaxisSql, new String[]{"id"});
         //给占位符赋值
-        ps.setString(1,xaxis.getName());
-        ps.setInt(2,xaxis.getDiagramId());
-        ps.setString(3,xaxis.getDimGroupName());
+        ps.setString(1, xaxis.getName());
+        ps.setInt(2, xaxis.getDiagramId());
+        ps.setString(3, xaxis.getDimGroupName());
         //执行
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
             System.out.println(id);
         }
@@ -271,15 +282,15 @@ public class MySQLDaoImpl implements MySQLDao {
     public Xaxis getByTableXaxis(Connection conn, int diagramId) throws SQLException {
         Xaxis xaxis = null;
         String sql = "select * from xaxis where diagramId = ?";
-        ps =conn.prepareStatement(sql);
-        ps.setInt(1,diagramId);
+        ps = conn.prepareStatement(sql);
+        ps.setInt(1, diagramId);
         rs = ps.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
             /* private int id;
                 private String name;
                 private int diagramId;
                 private String dimGroupName;*/
-             xaxis = new Xaxis(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4));
+            xaxis = new Xaxis(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getString(4));
         }
         return xaxis;
     }
@@ -288,13 +299,13 @@ public class MySQLDaoImpl implements MySQLDao {
     @Override
     public int putInTableYaxis(Connection conn, Yaxis yaxis) throws SQLException {
         String yAxisSql = "insert into yaxis(`name`,diagramId) value(?,?)";
-        ps = conn.prepareStatement(yAxisSql,new String[]{"id"});
+        ps = conn.prepareStatement(yAxisSql, new String[]{"id"});
         //给占位符赋值
-        ps.setString(1,yaxis.getName());
-        ps.setInt(2,yaxis.getDiagramId());
+        ps.setString(1, yaxis.getName());
+        ps.setInt(2, yaxis.getDiagramId());
         long len = ps.executeLargeUpdate();
         int id = 0;
-        if(len > 0){
+        if (len > 0) {
             id = getId(ps);
 
         }
@@ -308,13 +319,13 @@ public class MySQLDaoImpl implements MySQLDao {
         Yaxis yaxis = null;
         String sql = "select * from yaxis where diagramId = ?";
         ps = conn.prepareStatement(sql);
-        ps.setInt(1,diagramId);
+        ps.setInt(1, diagramId);
         rs = ps.executeQuery();
-        if(rs.next()){
+        if (rs.next()) {
             /* private int id;
             private String name;
             private int diagramId;*/
-          yaxis = new Yaxis(rs.getInt(1),rs.getString(2),rs.getInt(3));
+            yaxis = new Yaxis(rs.getInt(1), rs.getString(2), rs.getInt(3));
         }
         return yaxis;
     }
@@ -324,7 +335,7 @@ public class MySQLDaoImpl implements MySQLDao {
     public int getId(PreparedStatement ps) throws SQLException {
         int id = -1;
         ResultSet rs = ps.getGeneratedKeys();
-        if(rs.next()){
+        if (rs.next()) {
             id = rs.getInt(1);
         }
         return id;
