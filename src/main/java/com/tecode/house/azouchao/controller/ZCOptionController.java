@@ -53,7 +53,7 @@ public class ZCOptionController {
         ////折线图
         //
         //
-        List<Data> lineData = showSerivce.getData(year, "公平市场租金", 1,"基础分析");
+        List<Data> lineData = showSerivce.getData(year, "公平市场租金", 0,"基础分析");
         String Max = null;
         String Min = null;
         String Avg = null;
@@ -103,14 +103,14 @@ public class ZCOptionController {
     @ResponseBody
     @RequestMapping(value = "/priceByBuild", method = RequestMethod.POST)
     public Option priceByBuild(String year) {
-        Option option = showSerivce.select(year, "价格统计","年份统计");
+        Option option = showSerivce.select(year, "价格统计","建成年份");
         return option;
     }
 
     @ResponseBody
     @RequestMapping(value = "/roomsByBuild", method = RequestMethod.POST)
     public Option roomByBuild(String year) {
-        Option option = showSerivce.select(year, "房间数统计","年份统计");
+        Option option = showSerivce.select(year, "房间数统计","建成年份");
         return option;
     }
 

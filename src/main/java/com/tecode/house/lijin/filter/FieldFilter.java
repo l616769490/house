@@ -17,7 +17,7 @@ public class FieldFilter implements HBaseFilter {
 
     @Override
     public boolean filter(Map<String, String> map, FilterBean filterBean, List<Search> searchs) {
-        if (searchs == null || searchs.size() == 0) {
+        if (searchs == null || searchs.size() == 0 || "".equals(searchs.get(0).getValues().get(0))) {
             return true;
         }
 

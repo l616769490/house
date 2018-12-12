@@ -47,7 +47,7 @@
         // let menuStr = '{"year":[2011,2013],"group":[{"name":"基础分析","report":[{"name":"空置状态","url":"/basic-vacancy"},{"name":"公平市场租金","url":"/rent"},{"name":"市场价","url":"/zxl_value"}]},{"name":"城市规模","report":[{"name":"独栋建筑比例","url":"/city-singleBuilding"},{"name":"房产税","url":"/city-houseDuty"},{"name":"家庭人数","url":"/zxl_person"},{"name":"家庭收入","url":"/zxl_income"}]},{"name":"户主年龄","report":[{"name":"房间数统计","url":"/roomsAnalysisByAge"},{"name":"水电费统计","url":"/utilityAnalysisByAge"}]}]}';
         // let menuObj = JSON.parse(menuStr);
         $.ajax({
-            url: "/test-page-list",
+            url: "/menu",
             type: "POST",
             success: function (result) {
                 loadMenu.loadFromJson(result);

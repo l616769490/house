@@ -159,7 +159,7 @@ public class TableSerivceImpl implements TableSerivce {
         p.setThisPage(page);
         p.setData(list);
         table.setPage(p);
-        List<Search> search = getSearch(tablePost.getYear(), "价格统计", "年份统计");
+        List<Search> search = getSearch(tablePost.getYear(), "价格统计", "建成年份");
         table.setSearch(search);
         List<String> l = new ArrayList<>();
         l.add("建成年份");
@@ -237,7 +237,7 @@ public class TableSerivceImpl implements TableSerivce {
         p.setThisPage(page);
         p.setData(list);
         table.setPage(p);
-        List<Search> search = getSearch(tablePost.getYear(), "房间数统计", "年份统计");
+        List<Search> search = getSearch(tablePost.getYear(), "房间数统计", "建成年份");
         table.setSearch(search);
         List<String> l = new ArrayList<>();
         l.add("建成年份");

@@ -51,7 +51,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         Map<String, Object> vmap = hd.getValueDistribution(tableName);
         Iterator<Tuple2<String, Object>> vIt = vmap.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("市场价", "基础分析", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
+        return sd.into("市场价分布", "基础分析", "/zxl_value", "市场价", "价格", "市场价", vIt, "统计价格区间", year);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
         List<Tuple2<Object, Tuple3<String, Object, Object>>> value = hd.getValue("thads:"+year, search, tablePost.getPage());
 
-        setTable2(value, table, p);
+        setTable2(value, table, p,tablePost.getPage());
 
         return table;
     }
@@ -170,7 +170,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
             }
         } else if (searches.size() == 2) {
             List<Tuple2<Object, Tuple3<String, Object, Object>>> person = hd.getPerson("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
-            setTable2(person, table, p);
+            setTable2(person, table, p,tablePost.getPage());
         }
 
 
@@ -232,7 +232,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
         } else if (searches.size() == 2) {
             List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome("thads:"+year, searches.get(0).getValues().get(0), searches.get(1).getValues().get(0), tablePost.getPage());
-            setTable2(income, table,p);
+            setTable2(income, table,p,tablePost.getPage());
         }
 
 
@@ -279,7 +279,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
         }
     }
 
-    private  void  setTable2( List<Tuple2<Object, Tuple3<String, Object, Object>>> income,Table table,Page p){
+    private  void  setTable2( List<Tuple2<Object, Tuple3<String, Object, Object>>> income,Table table,Page p,int thisPage){
         Iterator<Tuple2<Object, Tuple3<String, Object, Object>>> iterator = income.iterator();
         int size=0;
         while (iterator.hasNext()){
@@ -291,8 +291,39 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
         }
         int page = size / 10 + 1;
-        for (int i = 1; i < page; i++) {
-            table.setPage(p.addData(i));
+        setPage(table,p,page,thisPage);
+
+
+    }
+    private void setPage(Table table,Page page,int size,int thisPage){
+        if(size>5&&thisPage>5){
+            if(size>(thisPage+2)){
+            table.setPage(page.addData(1).addData(thisPage-2).addData(thisPage-1).addData(thisPage).addData(thisPage+1).addData(size));
+            }else if(size==(thisPage+1)){
+                table.setPage(page.addData(1).addData(thisPage-2).addData(thisPage-1).addData(thisPage).addData(size));
+            }
+            else if(thisPage>=size||size==thisPage){
+                table.setPage(page.addData(1).addData(size-2).addData(size-1).addData(size));
+            }
+        }else if(thisPage==4&&size>5){
+            table.setPage(page.addData(1).addData(thisPage-1).addData(thisPage).addData(thisPage+1).addData(size));
+        }else if(thisPage==3&&size>5){
+            table.setPage(page.addData(1).addData(2).addData(thisPage).addData(4).addData(size));
+        }else if(thisPage==2&&size>5){
+            table.setPage(page.addData(1).addData(thisPage).addData(3).addData(size));
+        }else if(thisPage==1&&size>5){
+            table.setPage(page.addData(thisPage).addData(2).addData(size));
+        }else if(size<=5&&thisPage<=5){
+            if(size>=thisPage) {
+                for (int i = 1; i <= size; i++) {
+                    table.setPage(page.addData(i));
+                }
+            }else{
+                for (int i = 1; i <= thisPage; i++) {
+                    table.setPage(page.addData(i));
+                }
+            }
+
         }
 
     }
