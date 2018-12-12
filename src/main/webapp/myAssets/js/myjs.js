@@ -95,6 +95,9 @@ function toChart(url) {
  * @param  url [请求地址，已经加上了“_table”]
  */
 function toTable(url) {
+    let tableDiv = $('#house-table-div');
+    tableDiv.empty();
+
     // 获取年份
     let year = $('#year').text();
     // 获取页码
@@ -115,6 +118,10 @@ function toTable(url) {
                 searches += ",";
             }
         }
+    }
+
+    if(searches.substr(searches.length - 1, 1) == ',') {
+        searches = searches.substr(0, searches.length-1);
     }
 
     if (searches != "") {
@@ -140,9 +147,8 @@ function toTable(url) {
  * @param result    [服务器传来的数据]
  */
 function showTable(result) {
-    console.log(result);
-    let tableDiv = $('#house-table-div');
-    tableDiv.empty();
+    // let tableDiv = $('#house-table-div');
+    // tableDiv.empty();
     showSearch(result);
     showHousetable(result);
     showHousePage(result);

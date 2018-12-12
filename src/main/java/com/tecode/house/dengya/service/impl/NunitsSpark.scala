@@ -159,8 +159,8 @@ class NunitsSpark extends Analysis{
         println(elem._2.toString)
         data.setxId(xaxisId)
         data.setLegendId(legendId)
-        data.setX(elem._1)
-        data.setLegend(elem._1.toString)
+        data.setX(elem._1.toString)
+        data.setLegend("空维度")
         dao.putInTableData(conn, data)
       }
       println("插入中.......")

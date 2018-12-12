@@ -116,9 +116,9 @@ public class TableSerivceImpl implements TableSerivce {
 
         for (Search search : tablePost.getSearches()) {
             String title = search.getTitle();
-            if (title.equals("建成年份")) {
+            if (title.equals("建成年份区间搜索")) {
                 build = search.getValues().get(0);
-            } else if (title.equals("城市规模")) {
+            } else if (title.equals("城市规模搜索")) {
                 city = search.getValues().get(0);
             }
 
@@ -196,9 +196,9 @@ public class TableSerivceImpl implements TableSerivce {
 
         for (Search search : tablePost.getSearches()) {
             String title = search.getTitle();
-            if (title.equals("建成年份")) {
+            if (title.equals("建成年份区间搜索")) {
                 build = search.getValues().get(0);
-            } else if (title.equals("城市规模")) {
+            } else if (title.equals("城市规模搜索")) {
                 city = search.getValues().get(0);
             }
         }

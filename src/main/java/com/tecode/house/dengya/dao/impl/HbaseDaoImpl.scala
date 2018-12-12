@@ -3,6 +3,7 @@ package com.tecode.house.dengya.dao.impl
 import java.util
 
 import com.tecode.house.dengya.dao.HbaseDao
+import com.tecode.house.lijin.utils.SparkUtil
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.hadoop.hbase.client.Result
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
@@ -10,6 +11,7 @@ import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
+
 import scala.collection.JavaConverters._
 import org.springframework.stereotype.Repository
 @Repository
@@ -22,8 +24,8 @@ class HbaseDaoImpl extends HbaseDao {
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
   override def getAllForUnits(tableName: String,filter:String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-    val conf = new SparkConf().setAppName("getAllForRent").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+
+    val sc =SparkUtil.getSparkContext
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名
     hconf.set(TableInputFormat.INPUT_TABLE, tableName)
@@ -135,8 +137,8 @@ class HbaseDaoImpl extends HbaseDao {
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
   override def getForValue(tableName: String, citys: String, rents: String, prices: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
-    val sc = new SparkContext(conf)
+//    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
+    val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
     //    配置读取的表名
