@@ -20,7 +20,7 @@ public class TSerivceImpl implements TSerivce {
         //构建HBAse表名
         String tableName =  tablePost.getYear().toString();
         //获取搜索条件
-        String filter = tablePost.getSearches().get(0).getValues().get(0);
+       // String filter = tablePost.getSearches().get(0).getValues().get(0);
         //获取要查询的页码
         int page = tablePost.getPage();
         //获取数据
