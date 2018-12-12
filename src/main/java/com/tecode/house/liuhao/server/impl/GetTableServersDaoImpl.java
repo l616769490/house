@@ -86,7 +86,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         String arr = "";
         ReadHbaseDao read = new ReadHbaseDaoImpl();
         read.readData(tablename,page,arr);
-        Tuple2<Integer, List<ArrayList<String>>> data = read.readCityTaxData(tablename, page, search);
+        Tuple2<Integer, List<ArrayList<String>>> data = read.readData(tablename, page, search);
         int i = data._1;
         //封装页面列表
         int pa = i/10 +1;

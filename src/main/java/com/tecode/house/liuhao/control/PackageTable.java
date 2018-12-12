@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PackageTable {
     private getTableServersDao tableserver = new GetTableServersDaoImpl();
     @ResponseBody
-    @RequestMapping(value = "/cityTax_table", method = RequestMethod.POST)
+    @RequestMapping(value = "/CitySize_Tax_Avg_bar_table", method = RequestMethod.POST)
     public Table getCityTable(TablePost tablePost){
         return tableserver.getCityTax(tablePost);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/structureType_table", method = RequestMethod.POST)
+    @RequestMapping(value = "/basics_structuretype_num_bar_table", method = RequestMethod.POST)
     public Table getStructuceTypeTable(TablePost tablePost){
         return tableserver.getStructureType(tablePost);
     }

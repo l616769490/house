@@ -109,12 +109,11 @@ function toTable(url) {
     for (let i = 0; i < labels.length; i++) {
         let labelValue = $('#' + labels[i].id + '').text();
         let selectValue = $('#' + selects[i].id + '').text();
-        if (selectValue == "全部") {
-            selectValue = "";
-        }
-        searches += '{"title": "' + labelValue + '", "values": ["' + selectValue + '"]}';
-        if (i != labels.length - 1) {
-            searches += ",";
+        if (selectValue != "全部") {
+            searches += '{"title": "' + labelValue + '", "values": ["' + selectValue + '"]}';
+            if (i != labels.length - 1) {
+                searches += ",";
+            }
         }
     }
 

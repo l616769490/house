@@ -118,7 +118,7 @@ class HbaseDaoImpl extends HbaseDao {
     val java: util.List[util.ArrayList[String]] = list.asJava
     val count = java.size();
     var rows: util.List[util.ArrayList[String]] = java.subList(count - 10,count);
-    sc.stop()
+//    sc.stop()
     (count,rows)
   }
 
@@ -201,7 +201,7 @@ class HbaseDaoImpl extends HbaseDao {
     } else {
       rows = java.subList((page - 1) * 10, page * 10)
     }
-    sc.stop()
+//    sc.stop()
     (count, rows)
 
   }

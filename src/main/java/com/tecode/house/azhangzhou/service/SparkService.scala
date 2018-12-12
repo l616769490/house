@@ -101,8 +101,8 @@ class SparkService{
       //插入Y轴
       yId = table.insertIntoYAxis("空置状态", diagramId)
       //插入数据集表（维度表）
-      dId1 = table.insertIntoDimension("空置", "是", "VACANCY")
-      dId2 = table.insertIntoDimension("空置", "否", "VACANCY")
+     /* dId1 = table.insertIntoDimension("空置", "是", "VACANCY")
+      dId2 = table.insertIntoDimension("空置", "否", "VACANCY")*/
       //插入数据表
       for (elem <- mmap) {
         table.insertIntoData(elem._2.toString,xId,legendId,elem._1,"空置状态图例")
@@ -206,13 +206,13 @@ class SparkService{
       yId = table.insertIntoYAxis("建筑数量", diagramId)
 
       //插入数据集表（维度表）
-      dId1 = table.insertIntoDimension("城市规模", "一线城市", "METRO3")
+     /* dId1 = table.insertIntoDimension("城市规模", "一线城市", "METRO3")
       dId2 = table.insertIntoDimension("城市规模", "二线城市", "METRO3")
       dId3 = table.insertIntoDimension("城市规模", "三线城市", "METRO3")
       dId4 = table.insertIntoDimension("城市规模", "四线城市", "METRO3")
       dId5 = table.insertIntoDimension("城市规模", "五线城市", "METRO3")
       dId6 = table.insertIntoDimension("独栋", "是", "STRUCTURETYPE")
-      dId7 = table.insertIntoDimension("独栋", "否", "STRUCTURETYPE")
+      dId7 = table.insertIntoDimension("独栋", "否", "STRUCTURETYPE")*/
       //插入数据表
       for (elem <- mmap) {
         table.insertIntoData(elem._2.toString,xId,legendId,elem._1.split("-")(0),elem._1.split("-")(1))
@@ -315,9 +315,9 @@ class SparkService{
       yId = table.insertIntoYAxis("房产税", diagramId)
 
       //插入数据集表（维度表）
-      dId1 = table.insertIntoDimension("数学", "avg", "ZSMHC")
+      /*dId1 = table.insertIntoDimension("数学", "avg", "ZSMHC")
       dId2 = table.insertIntoDimension("数学", "max", "ZSMHC")
-      dId3 = table.insertIntoDimension("数学", "min", "ZSMHC")
+      dId3 = table.insertIntoDimension("数学", "min", "ZSMHC")*/
       //插入数据表
       for (elem <- mmap) {
         table.insertIntoData(elem._2.split("-")(0),xId,legendId,elem._1,"min")
@@ -366,10 +366,10 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
 
-    if(search.equals("空置")){
+    if(search.equals("是")){
       clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
     }
-    if(search.equals("居住")){
+    if(search.equals("否")){
       clumnRDD = clumnRDD.filter(_._5.equals("-6"))
     }
     var list= clumnRDD.take(page*10).toList
@@ -417,19 +417,19 @@ class SparkService{
         (x._1, x._2, x._3, "其他", x._5, x._6)
       }
     }*/
-    if(search.equals("一线城市")){
+    if(search.equals("1")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
-    if(search.equals("二线城市")){
+    if(search.equals("2")){
       clumnRDD = clumnRDD.filter(_._2.equals("2"))
     }
-    if(search.equals("三线城市")){
+    if(search.equals("3")){
       clumnRDD = clumnRDD.filter(_._2.equals("3"))
     }
-    if(search.equals("四线城市")){
+    if(search.equals("4")){
       clumnRDD = clumnRDD.filter(_._2.equals("4"))
     }
-    if(search.equals("五线城市")){
+    if(search.equals("5")){
       clumnRDD = clumnRDD.filter(_._2.equals("5"))
     }
     if(search2.equals("独栋")){
@@ -483,19 +483,19 @@ class SparkService{
         (x._1,x._2,x._3,"其他",x._5,x._6,x._7)
       }
     }*/
-    if(search.equals("一线城市")){
+    if(search.equals("1")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
-    if(search.equals("二线城市")){
+    if(search.equals("2")){
       clumnRDD = clumnRDD.filter(_._2.equals("2"))
     }
-    if(search.equals("三线城市")){
+    if(search.equals("3")){
       clumnRDD = clumnRDD.filter(_._2.equals("3"))
     }
-    if(search.equals("四线城市")){
+    if(search.equals("4")){
       clumnRDD = clumnRDD.filter(_._2.equals("4"))
     }
-    if(search.equals("五线城市")){
+    if(search.equals("5")){
       clumnRDD = clumnRDD.filter(_._2.equals("5"))
     }
     if(search2.equals("独栋")){

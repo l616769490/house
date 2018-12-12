@@ -27,7 +27,7 @@ public class ZCTableController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roomByBuild_table", method = RequestMethod.POST)
+    @RequestMapping(value = "/roomsByBuild_table", method = RequestMethod.POST)
     public Table RoomByBuild(@RequestBody TablePost tablePost) {
         return tableSerivce.getTableForRoom(tablePost);
     }

@@ -21,7 +21,7 @@ class HBaseDaoImpl extends HBaseDao {
 
   override def getForRent(tableName: String, filter: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
 
-//    val conf = new SparkConf().setAppName("getForRent").setMaster("local[*]")
+    //    val conf = new SparkConf().setAppName("getForRent").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
@@ -110,18 +110,21 @@ class HBaseDaoImpl extends HBaseDao {
       list.add(BEDRMS)
       list
     })
-    val list: List[util.ArrayList[String]] = rowRDD.take(page*10).toList
+    val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
-    val count = java.size()
-    var rows: util.List[util.ArrayList[String]] = java.subList(count - 10, count);
+    var count = java.size()
+    if (count < 10) {
+      count = 10
+    }
+    var rows: util.List[util.ArrayList[String]] = java.subList(count - 10, java.size());
 
-//    sc.stop()
+    //    sc.stop()
     (count, rows)
   }
 
 
   override def getForValue(tableName: String, builds: String, citys: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-//    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
+    //    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
@@ -189,27 +192,24 @@ class HBaseDaoImpl extends HBaseDao {
       list
     })
     //    将RDD转换为List
-    val list: List[util.ArrayList[String]] = rowRDD.take(page*10).toList
+    val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
 
     //    将scala的List转换为java的List
     val java: util.List[util.ArrayList[String]] = list.asJava
-    var rows: util.List[util.ArrayList[String]] = null;
     //    获取数据的总条数
-    val count = java.size()
+    var count = java.size()
     //    截取需要的页码的数据
     //    判断页数是否为最后一页（最后一页的下标算法可能造成下标越界）
-    if (page * 10 > count) {
-      //      如果越界则将其换为List的长度
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
+    if (count < 10) {
+      count = 10
     }
-//    sc.stop()
+    val rows: util.List[util.ArrayList[String]] = java.subList(count - 10, java.size())
+    //    sc.stop()
     (count, rows)
   }
 
   override def getForRom(tableName: String, builds: String, citys: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-//    val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
+    //    val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
@@ -263,16 +263,14 @@ class HBaseDaoImpl extends HBaseDao {
       list
     })
 
-    val list: List[util.ArrayList[String]] = rowRDD.take(page*10).toList
+    val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
-    val count = java.size()
-    var rows: util.List[util.ArrayList[String]] = null;
-    if (page * 10 > count) {
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
+    var count = java.size()
+    if (count < 10) {
+      count = 10
     }
-//    sc.stop()
+    val rows = java.subList(count - 10, java.size())
+    //    sc.stop()
     (count, rows)
   }
 
