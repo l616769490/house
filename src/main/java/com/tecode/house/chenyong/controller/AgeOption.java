@@ -26,6 +26,138 @@ import java.util.List;
 public class AgeOption {
 
 
+//
+//    //获取年龄分布参数的方法
+//    public List<Param> getTablePostAge(TablePost tablePost){
+//        List<Param> list = new ArrayList<>();
+//        Integer year = tablePost.getYear();
+//        try {
+//            Report byTableReport = getDataFromMysql.getByTableReport(MySQLUtil.getConn(), "户主年龄分布","户主年龄分布图", year);
+//            List<Diagram> byTableDiagram = getDataFromMysql.getByTableDiagram(MySQLUtil.getConn(), byTableReport.getId());
+//            List<com.tecode.house.chenyong.bean.Legend> byTableLegend = null;
+//            for (Diagram diagram : byTableDiagram) {
+//                int diagramId = diagram.getId();
+//                byTableLegend = getDataFromMysql.getByTableLegend(MySQLUtil.getConn(), diagramId);
+//                XAxis xAxis = getDataFromMysql.getByTableXaxis(MySQLUtil.getConn(), diagramId);
+//                for (com.tecode.house.chenyong.bean.Legend legend : byTableLegend) {
+//                    int legenId = legend.getId();
+//                    Param param = new Param();
+//                    param.setLegendId(legenId);
+//                    param.setxId(xAxis.getId());
+//                    list.add(param);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+//
+//    //获取年龄极值分布参数的方法
+//    public List<Param> getTablePostExtreme(TablePost tablePost){
+//        List<Param> list = new ArrayList<>();
+//        Integer year = tablePost.getYear();
+//        try {
+//            Report byTableReport = getDataFromMysql.getByTableReport(MySQLUtil.getConn(), "户主年龄极值分布","户主年龄极值分布图", year);
+//            List<Diagram> byTableDiagram = getDataFromMysql.getByTableDiagram(MySQLUtil.getConn(), byTableReport.getId());
+//            List<com.tecode.house.chenyong.bean.Legend> byTableLegend = null;
+//            for (Diagram diagram : byTableDiagram) {
+//                int diagramId = diagram.getId();
+//                byTableLegend = getDataFromMysql.getByTableLegend(MySQLUtil.getConn(), diagramId);
+//                XAxis xAxis = getDataFromMysql.getByTableXaxis(MySQLUtil.getConn(), diagramId);
+//                for (com.tecode.house.chenyong.bean.Legend legend : byTableLegend) {
+//                    int legenId = legend.getId();
+//                    Param param = new Param();
+//                    param.setLegendId(legenId);
+//                    param.setxId(xAxis.getId());
+//                    list.add(param);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+//
+//    //获取房间分布参数的方法
+//    public List<Param> getTablePostRooms(TablePost tablePost){
+//        List<Param> list = new ArrayList<>();
+//        Integer year = tablePost.getYear();
+//        try {
+//            Report byTableReport = getDataFromMysql.getByTableReport(MySQLUtil.getConn(), "房间数统计","房间统计", year);
+//            List<Diagram> byTableDiagram = getDataFromMysql.getByTableDiagram(MySQLUtil.getConn(), byTableReport.getId());
+//            List<com.tecode.house.chenyong.bean.Legend> byTableLegend = null;
+//            for (Diagram diagram : byTableDiagram) {
+//                int diagramId = diagram.getId();
+//                byTableLegend = getDataFromMysql.getByTableLegend(MySQLUtil.getConn(), diagramId);
+//                XAxis xAxis = getDataFromMysql.getByTableXaxis(MySQLUtil.getConn(), diagramId);
+//                for (com.tecode.house.chenyong.bean.Legend legend : byTableLegend) {
+//                    int legenId = legend.getId();
+//                    Param param = new Param();
+//                    param.setLegendId(legenId);
+//                    param.setxId(xAxis.getId());
+//                    list.add(param);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+
+//    //获取卧室分布参数的方法
+//    public List<Param> getTablePostBedrms(TablePost tablePost){
+//        Param param = new Param();
+//        List<Param> list = new ArrayList<>();
+//        Integer year = tablePost.getYear();
+//        try {
+//            Report byTableReport = getDataFromMysql.getByTableReport(MySQLUtil.getConn(), "卧室数统计","卧室统计", year);
+//            List<Diagram> byTableDiagram = getDataFromMysql.getByTableDiagram(MySQLUtil.getConn(), byTableReport.getId());
+//            List<com.tecode.house.chenyong.bean.Legend> byTableLegend = null;
+//            for (Diagram diagram : byTableDiagram) {
+//                int diagramId = diagram.getId();
+//                byTableLegend = getDataFromMysql.getByTableLegend(MySQLUtil.getConn(), diagramId);
+//                XAxis xAxis = getDataFromMysql.getByTableXaxis(MySQLUtil.getConn(), diagramId);
+//                for (com.tecode.house.chenyong.bean.Legend legend : byTableLegend) {
+//                    int legenId = legend.getId();
+//                    param.setLegendId(legenId);
+//                    param.setxId(xAxis.getId());
+//                }
+//                list.add(param);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+//
+//
+//    //获取水电费分布参数的方法
+//    public List<Param> getTablePostUtility(TablePost tablePost){
+//        Param param = new Param();
+//        List<Param> list = new ArrayList<>();
+//        Integer year = tablePost.getYear();
+//        try {
+//            Report byTableReport = getDataFromMysql.getByTableReport(MySQLUtil.getConn(), "水电费统计","水电费统计", year);
+//            List<Diagram> byTableDiagram = getDataFromMysql.getByTableDiagram(MySQLUtil.getConn(), byTableReport.getId());
+//            List<com.tecode.house.chenyong.bean.Legend> byTableLegend = null;
+//            for (Diagram diagram : byTableDiagram) {
+//                int diagramId = diagram.getId();
+//                byTableLegend = getDataFromMysql.getByTableLegend(MySQLUtil.getConn(), diagramId);
+//                XAxis xAxis = getDataFromMysql.getByTableXaxis(MySQLUtil.getConn(), diagramId);
+//                for (com.tecode.house.chenyong.bean.Legend legend : byTableLegend) {
+//                    int legenId = legend.getId();
+//                    param.setLegendId(legenId);
+//                    param.setxId(xAxis.getId());
+//                }
+//                list.add(param);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+
     @Autowired
     GetDataFromMysqlToFigure gftf = new GetDataFromMysqlToFigure();
 
@@ -75,7 +207,7 @@ public class AgeOption {
         Series series = new Pie().setName("年龄区间");
             for (Data byTableDatum : ageData) {
                 legend.setAlign(Align.left).addData(byTableDatum.getX());
-                series.addData(new Pie.PieData<Integer>(byTableDatum.getX(), (int)Double.parseDouble(byTableDatum.getValue())));
+                series.addData(new Pie.PieData<Integer>(byTableDatum.getX(), Integer.parseInt(byTableDatum.getValue())));
             }
         ((Pie)series).setCenter("65%", "30%").setRadius("30%");
 

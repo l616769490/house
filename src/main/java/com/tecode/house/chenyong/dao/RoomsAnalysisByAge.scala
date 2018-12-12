@@ -114,7 +114,7 @@ class RoomsAnalysisByAge extends Analysis{
       //房间数统计
       //插入报表表
       val roomReport: Report = new Report()
-      roomReport.setName("房间卧室数统计")
+      roomReport.setName("房间数统计")
       roomReport.setCreate(System.currentTimeMillis())
       roomReport.setYear(Integer.valueOf(tableName.split(":")(1)))
       roomReport.setGroup("户主年龄")
@@ -158,20 +158,20 @@ class RoomsAnalysisByAge extends Analysis{
       }
 
       //卧室数统计
-//      val bedroomsReport: Report = new Report()
-//      bedroomsReport.setName("卧室数统计")
-//      bedroomsReport.setCreate(System.currentTimeMillis())
-//      bedroomsReport.setYear(Integer.valueOf(tableName.split(":")(1)))
-//      bedroomsReport.setGroup("户主年龄")
-//      bedroomsReport.setStatus(1)
-//      bedroomsReport.setUrl("/roomsAnalysisByAge")
-//      val reportId: Int = msDao.putInTableReport(conn, bedroomsReport)
+      val bedroomsReport: Report = new Report()
+      bedroomsReport.setName("卧室数统计")
+      bedroomsReport.setCreate(System.currentTimeMillis())
+      bedroomsReport.setYear(Integer.valueOf(tableName.split(":")(1)))
+      bedroomsReport.setGroup("户主年龄")
+      bedroomsReport.setStatus(1)
+      bedroomsReport.setUrl("/roomsAnalysisByAge")
+      val reportId: Int = msDao.putInTableReport(conn, bedroomsReport)
 
       //房间数饼图
       val bedroomsDiagram: Diagram = new Diagram()
       bedroomsDiagram.setName("各年龄区间卧室数")
       bedroomsDiagram.setType(2)
-      bedroomsDiagram.setReportId(roomReportId)
+      bedroomsDiagram.setReportId(reportId)
       bedroomsDiagram.setSubtext("统计各年龄区间卧室数")
 
       val bedroomsDiagramId: Int = msDao.putInTableDiagram(conn, bedroomsDiagram)
@@ -202,7 +202,7 @@ class RoomsAnalysisByAge extends Analysis{
         msDao.putInTableData(conn,bedroomsData)
       }
 
-      val search = new Search("年龄区间搜索", "年龄", roomReportId)
+      val search = new Search("年龄区间搜索", "年龄", reportId)
       msDao.putInTableSearch(conn, search)
 
       conn.commit()

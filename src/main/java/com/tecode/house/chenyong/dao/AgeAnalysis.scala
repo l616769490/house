@@ -101,24 +101,24 @@ class AgeAnalysis extends Analysis {
         msDao.putInTableData(conn, pieData)
       }
 
-//      val search = new Search("年龄区间搜索", "年龄", reportId)
-      ////      msDao.putInTableSearch(conn, search)
+      val search = new Search("年龄区间搜索", "年龄", reportId)
+      msDao.putInTableSearch(conn, search)
 
-      /*val columnarReport: Report = new Report()
+      val columnarReport: Report = new Report()
       columnarReport.setName("户主年龄极值分布")
       columnarReport.setCreate(System.currentTimeMillis())
       columnarReport.setYear(Integer.valueOf(tableName.split(":")(1)))
       columnarReport.setGroup("基础分析")
       columnarReport.setStatus(1)
       columnarReport.setUrl("/ageAnalysis")
-      val columnarReportId: Int = msDao.putInTableReport(conn, columnarReport)*/
+      val columnarReportId: Int = msDao.putInTableReport(conn, columnarReport)
 
 
       //插入数据表，柱状图
       val columnarDiagram: Diagram = new Diagram()
       columnarDiagram.setName("年龄最大最小值")
       columnarDiagram.setType(1)
-      columnarDiagram.setReportId(reportId)
+      columnarDiagram.setReportId(columnarReportId)
       columnarDiagram.setSubtext("年龄最大最小平均值统计")
 
       val columnarDiagramId: Int = msDao.putInTableDiagram(conn, columnarDiagram)
@@ -167,7 +167,7 @@ class AgeAnalysis extends Analysis {
       val columnarAvgData = new Data(age.getAvgAge.toString, columnarXAxisId, columnarAvgLegenId, "avgAge", "avgAge")
       msDao.putInTableData(conn, columnarAvgData)
 
-      val columnarSearch = new Search("年龄区间搜索", "年龄极值", reportId)
+      val columnarSearch = new Search("年龄区间搜索", "年龄极值", columnarReportId)
       msDao.putInTableSearch(conn, columnarSearch)
       conn.commit()
     } catch {
