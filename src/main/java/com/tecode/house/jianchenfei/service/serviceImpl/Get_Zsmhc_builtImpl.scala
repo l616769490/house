@@ -162,7 +162,7 @@ class Get_Zsmhc_built extends service.Analysis {
     rate.setReportid(reportId)
     daoSearch.insert(rate)
     val built = new Search()
-    built.setDimgroupname("建成年份搜索")
+    built.setDimgroupname("建成年份")
     built.setName("按建成年份搜索")
     built.setReportid(reportId)
     daoSearch.insert(built)

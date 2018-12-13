@@ -23,7 +23,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param page      查询的页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  override def getAllForUnits(tableName: String,filter:String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+  override def getAllForUnits(tableName: String,filter:String, page: Int): (Long, util.List[util.ArrayList[String]]) = {
 
     val sc =SparkUtil.getSparkContext
     val hconf = HBaseConfiguration.create()
@@ -116,12 +116,16 @@ class HbaseDaoImpl extends HbaseDao {
       list
     })
     //将RDD装换成scala的list
+    val l: Long = rowRDD.count()
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
-    val count = java.size();
-    var rows: util.List[util.ArrayList[String]] = java.subList(count - 10,count);
+    var count = java.size();
+    if(count < 10){
+      count = 10
+    }
+    var rows: util.List[util.ArrayList[String]] = java.subList(count - 10,java.size());
 //    sc.stop()
-    (count,rows)
+    (l,rows)
   }
 
 
@@ -136,7 +140,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param page      查询页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  override def getForValue(tableName: String, citys: String, rents: String, prices: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
+  override def getForValue(tableName: String, citys: String, rents: String, prices: String, page: Int): (Long, util.List[util.ArrayList[String]]) = {
 //    val conf = new SparkConf().setAppName("getForValue").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
@@ -149,7 +153,7 @@ class HbaseDaoImpl extends HbaseDao {
     val valuess: RDD[(ImmutableBytesWritable, Result)] = sc.newAPIHadoopRDD(hconf, classOf[TableInputFormat], classOf[ImmutableBytesWritable], classOf[Result])
     val v: RDD[Result] = valuess.map(x => x._2)
     //调用过滤方法，获取符合传入条件的数据
-    val results: RDD[Result] = filter(v, citys, rents, prices)
+    val results: RDD[Result] = fiter(v, citys, rents, prices)
 
     //取出result结果中需要的列的值
     val rowRDD: RDD[util.ArrayList[String]] = results.map(x => {
@@ -193,18 +197,23 @@ class HbaseDaoImpl extends HbaseDao {
       list.add(BUILT)
       list
 
-    })
+  })
+    val l: Long = rowRDD.count()
     val list: List[util.ArrayList[String]] = rowRDD.take(page * 10).toList
     val java: util.List[util.ArrayList[String]] = list.asJava
-    var rows: util.List[util.ArrayList[String]] = null;
-    val count = java.size()
-    if (page * 10 > count) {
-      rows = java.subList((page - 1) * 10, count)
-    } else {
-      rows = java.subList((page - 1) * 10, page * 10)
+    //var rows: util.List[util.ArrayList[String]] = null;
+    var count = java.size()
+    if(count < 10){
+      count = 10
     }
+   // if (page * 10 > count) {
+     // rows = java.subList((page - 1) * 10, count)
+   // } else {
+      //rows = java.subList((page - 1) * 10, page * 10)
+   // }
 //    sc.stop()
-    (count, rows)
+    val rows = java.subList(count - 10,java.size())
+    (l, rows)
 
   }
 
@@ -216,7 +225,7 @@ class HbaseDaoImpl extends HbaseDao {
     * @param prices   价格区间的过滤条件
     * @return
     */
-  def filter(v:RDD[Result],citys:String,rents:String,prices:String):RDD[Result] = {
+  def fiter(v:RDD[Result],cityss:String,rents:String,prices:String):RDD[Result] = {
     //根据城市规模、租金区间和价格区间讲result转换为（城市规模，租金区间，价格区间，result）的RDD
     val vvv: RDD[(String, String, String, Result)] = v.map(x => {
       //      遍历每个Result对象，获取数据
@@ -234,7 +243,7 @@ class HbaseDaoImpl extends HbaseDao {
           rent = Integer.parseInt(value)
         }
         if (name.equals("VALUE")) {
-          price = Integer.valueOf(value)
+          price = Integer.valueOf(value)/10000
         }
       }
       //将具体的城市规模、租金及价格数据替换为（城市规模，租金，价格，Result）的元祖
@@ -676,25 +685,25 @@ class HbaseDaoImpl extends HbaseDao {
       case(x:String,y:String,z:String,r:Result) =>{
         //判断搜索条件为三个还是两个或者没有
         //三个搜索条件
-        if(citys != null && rents != null&& prices != null){
-          x.equals(citys) && y.equals(rents)&&z.equals(prices)
+        if(cityss != null && rents != null&& prices != null){
+          x.equals(cityss) && y.equals(rents)&&z.equals(prices)
           //两个搜索条件（city和rents）
-        }else if(citys != null && rents !=null &&prices ==null){
-          x.equals(citys) && y.equals(rents)
+        }else if(cityss != null && rents !=null &&prices ==null){
+          x.equals(cityss) && y.equals(rents)
           //两个搜索条件（city 和 prices）
-        }else if(citys != null && rents ==null && prices != null){
-          x.equals(citys) && z.equals( prices)
+        }else if(cityss != null && rents ==null && prices != null){
+          x.equals(cityss) && z.equals( prices)
           //两个搜索条件（rent和price）
-        }else if(citys == null && rents != null && prices != null){
+        }else if(cityss == null && rents != null && prices != null){
           y.equals(rents) && z.equals(prices)
         //一个搜索条件(citys)
-        }else if(citys != null && rents == null&& prices == null){
-          z.equals(citys)
+        }else if(cityss != null && rents == null&& prices == null){
+          x.equals(cityss)
           //一个搜索条件（rent）
-        }else if(citys == null && rents != null && prices == null){
+        }else if(cityss == null && rents != null && prices == null){
           y.equals(rents)
           //一个搜索条件（prices）
-        }else if(citys == null && rents == null && prices != null){
+        }else if(cityss == null && rents == null && prices != null){
           z.equals(prices)
         }else{
           //没有搜索条件

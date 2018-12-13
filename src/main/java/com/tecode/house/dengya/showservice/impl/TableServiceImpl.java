@@ -28,14 +28,18 @@ public class TableServiceImpl implements TableService {
                 filter = value;
             }
         }
-        System.out.println(filter);
+
         //获取要查询的页码
         int page = tablePost.getPage();
         //获取数据
         Tuple2<Object, List<ArrayList<String>>> rows = hbaseDao.getAllForUnits(tableName, filter, page);
-        int i = (int)rows._1;
+        long i = (long)rows._1;
+
         //封装页数列
-        int pa = i/10+1;
+        long pa = i/10+1;
+        if(i % 10 ==0){
+            pa--;
+        }
         List<Integer> list = new ArrayList<>();
         if(pa <= 5){
             for(int ii = 1;ii <= pa;ii++){
@@ -49,11 +53,11 @@ public class TableServiceImpl implements TableService {
                 list.add(4);
                 list.add(5);
             }else if(page + 2 >= pa){
-                for(int ii = pa -4;ii <= pa; ii++){
+                for(int ii = (int)pa -4;ii <= pa; ii++){
                     list.add(ii);
                 }
             }else{
-                for (int ii= pa -2;ii <= page + 2;ii++){
+                for (int ii= page-2;ii <= page + 2;ii++){
                     list.add(ii);
                 }
             }
@@ -65,6 +69,7 @@ public class TableServiceImpl implements TableService {
         p.setThisPage(tablePost.getPage());
         p.setData(list);
         table.setPage(p);
+
 
 
         List<Search> search = getSearch(tablePost.getYear(),"建筑单元分布图","基础分析");
@@ -100,21 +105,24 @@ public class TableServiceImpl implements TableService {
         String price =null;
         for(Search search:tablePost.getSearches()){
             String title = search.getTitle();
-            if(title.equals("城市规模")){
+            if(title.equals("城市规模搜索")){
                 city = search.getValues().get(0);
-            }else if(title.equals("租金")){
+            }else if(title.equals("住房租金区间搜索")){
                 rent = search.getValues().get(0);
-            }else if(title.equals("价格")){
+            }else if(title.equals("住房售价区间搜索")){
                 price = search.getValues().get(0);
             }
         }
-        System.out.println(city);
-        System.out.println(rent);
-        System.out.println(price);
         Tuple2<Object, List<ArrayList<String>>> Rows = hbaseDao.getForValue(tableName,city,rent,price,page);
-        int i = (int)Rows._1;
+        long i = (long)Rows._1;
         //封装页数列
-        int pa = i/10+1;//总页数
+        long pa = i/10+1;//总页数
+        /*if(i == 0){
+            pa--;
+        }*/
+        if(i % 10 ==0){
+            pa--;
+        }
         List<Integer> list = new ArrayList<>();
         if(pa <= 5){
             for(int ii = 1;ii <= pa;ii++){
@@ -128,11 +136,11 @@ public class TableServiceImpl implements TableService {
                 list.add(4);
                 list.add(5);
             }else if((page + 2)>= pa){
-                for(int ii = pa -4;ii <= pa; ii++){
+                for(int ii =(int) pa -4;ii <= pa; ii++){
                     list.add(ii);
                 }
             }else{
-                for (int ii= pa -2;ii <= page + 2;ii++){
+                for (int ii= page -2;ii <= page + 2;ii++){
                     list.add(ii);
                 }
             }
@@ -142,46 +150,9 @@ public class TableServiceImpl implements TableService {
         table.setYear(tablePost.getYear());
         //构建Page对象
         Page p = new Page();
-        p.setThisPage(page);
+        p.setThisPage(tablePost.getPage());
         p.setData(list);
         table.setPage(p);
-        // 构建 城市规模Search对象
-       /* Search citySerch = new Search();
-        citySerch.setTitle("城市规模");
-        List<String> cityTit = new ArrayList<>();
-        cityTit.add("一级城市");
-        cityTit.add("二级城市");
-        cityTit.add("三级城市");
-        cityTit.add("四级城市");
-        cityTit.add("五级城市");
-        citySerch.setValues(cityTit);
-        //构建 租金区间Search对象
-        Search rentSearch = new Search();
-        rentSearch.setTitle("租金区间");
-        List<String> rentTit = new ArrayList<>();
-        rentTit.add("0-1000");
-        rentTit.add("1000-1500");
-        rentTit.add("1500-2000");
-        rentTit.add("2000-2500");
-        rentTit.add("2500-3000");
-        rentTit.add("3000+");
-        rentSearch.setValues(rentTit);
-        //构建 价格区间Search对象
-        Search priceSearch = new Search();
-        priceSearch.setTitle("价格区间");
-        List<String> priceTit = new ArrayList<>();
-        priceTit.add("0-50");
-        priceTit.add("50-100");
-        priceTit.add("100-150");
-        priceTit.add("150-200");
-        priceTit.add("200-250");
-        priceTit.add("250-300");
-        priceSearch.setValues(priceTit);
-        List<Search> ls = new ArrayList<>();
-        ls.add(citySerch);
-        ls.add(rentSearch);
-        ls.add(priceSearch);
-        table.setSearch(ls);*/
        List<Search> search = getSearch(tablePost.getYear(),"市场价格分布图","城市规模统计");
        table.setSearch(search);
         //表头
@@ -210,9 +181,6 @@ public class TableServiceImpl implements TableService {
         try {
             conn = MySQLUtil.getConn();
             int reportId = mySQLDao.getByTableReport(conn,name,year,group).getId();
-            System.out.println(reportId);
-
-
             //根据报表id获取搜索表对象
             List<com.tecode.house.dengya.bean.Search> searchs = mySQLDao.getByTableSearch(conn, reportId);
             //根据搜索条件封装Search对象

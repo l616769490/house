@@ -73,10 +73,10 @@ class GetDataToTableImpl extends GetDataToTable{
     //获取数据的总数量
     val sumCount = jlist.size()
     //获取需要查询的页码的数据
-    if(page*20 > sumCount){
-      fin = jlist.subList((page-1)*20, sumCount)
+    if(page*10 > sumCount){
+      fin = jlist.subList(sumCount-10, sumCount)
     }else{
-      fin = jlist.subList((page-1)*20, page*20)
+      fin = jlist.subList((page-1)*10, page*10)
     }
     (sumCount,fin)
   }
@@ -139,10 +139,10 @@ class GetDataToTableImpl extends GetDataToTable{
     //获取数据的总数量
     val sumCount = jlist.size()
     //获取需要查询的页码的数据
-    if(page*20 > sumCount){
-      fin = jlist.subList((page-1)*20, sumCount)
+    if(page*10 > sumCount){
+      fin = jlist.subList(sumCount-10, sumCount)
     }else{
-      fin = jlist.subList((page-1)*20, page*20)
+      fin = jlist.subList((page-1)*10, page*10)
     }
     (sumCount,fin)
   }
@@ -196,9 +196,9 @@ class GetDataToTableImpl extends GetDataToTable{
     val sumCount = jlist.size()
     //获取需要查询的页码的数据
     if(page*10 > sumCount){
-      fin = jlist.subList((page-1)*20, sumCount)
+      fin = jlist.subList(sumCount-10, sumCount)
     }else{
-      fin = jlist.subList((page-1)*20, page*20)
+      fin = jlist.subList((page-1)*10, page*10)
     }
     (sumCount,fin)
   }

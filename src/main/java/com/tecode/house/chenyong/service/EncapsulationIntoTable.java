@@ -19,8 +19,13 @@ public class EncapsulationIntoTable {
     public Table intoTableAge(TablePost tablePost){
         String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
-        String ageInterval = searches.get(0).getValues().get(0);
-        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableAge = getDataService.getFromHbaseToTableAge(tableName,ageInterval , tablePost.getPage());
+        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableAge;
+        if(searches.size() == 0){
+            fromHbaseToTableAge = getDataService.getFromHbaseToTableAge(tableName,"18以下" , tablePost.getPage());
+        }else {
+            String ageInterval = searches.get(0).getValues().get(0);
+            fromHbaseToTableAge = getDataService.getFromHbaseToTableAge(tableName, ageInterval, tablePost.getPage());
+        }
         Table table = new Table();
         Page page = new Page();
         Search search = new Search();
@@ -42,12 +47,12 @@ public class EncapsulationIntoTable {
             for(int j = 1; j <= 5; j ++){
                 pages.add(j);
             }
-        }else if (tablePost.getPage() >= ((count/20) + 1)){
-            for(int i = ((count/20) + 1)-4; i <= (count/20) + 1;i ++){
+        }else if (tablePost.getPage() >= ((count/10) + 1)){
+            for(int i = ((count/10) + 1)-4; i <= (count/10) + 1;i ++){
                 pages.add(i);
             }
-        }else if ((tablePost.getPage() <= ((count/20) + 1) - 2) && (tablePost.getPage() >= ((count/20) + 1) - 5) ){
-            for(int l = ((count/20) + 1)-4; l <= (count/20) + 1;l ++){
+        }else if ((tablePost.getPage() <= ((count/10) + 1) - 2) && (tablePost.getPage() >= ((count/10) + 1) - 5) ){
+            for(int l = ((count/10) + 1)-4; l <= (count/10) + 1;l ++){
                 pages.add(l);
             }
         }else {
@@ -88,8 +93,14 @@ public class EncapsulationIntoTable {
     public Table intoTableRooms(TablePost tablePost){
         String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
-        String ageInterval = searches.get(0).getValues().get(0);
-        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableRooms = getDataService.getFromHbaseToTableRooms(tableName, ageInterval, tablePost.getPage());
+        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableRooms;
+        if(searches.size() == 0){
+            fromHbaseToTableRooms = getDataService.getFromHbaseToTableRooms(tableName, "18以下", tablePost.getPage());
+        }else{
+            String ageInterval = searches.get(0).getValues().get(0);
+            fromHbaseToTableRooms = getDataService.getFromHbaseToTableRooms(tableName, ageInterval, tablePost.getPage());
+        }
+
         Table table = new Table();
         Page page = new Page();
         Search search = new Search();
@@ -111,12 +122,12 @@ public class EncapsulationIntoTable {
             for(int j = 1; j <= 5; j ++){
                 pages.add(j);
             }
-        }else if (tablePost.getPage() >= ((count/20) + 1)){
-            for(int i = ((count/20) + 1)-4; i <= (count/20) + 1;i ++){
+        }else if (tablePost.getPage() >= ((count/10) + 1)){
+            for(int i = ((count/10) + 1)-4; i <= (count/10) + 1;i ++){
                 pages.add(i);
             }
-        }else if ((tablePost.getPage() <= ((count/20) + 1) - 2) && (tablePost.getPage() >= ((count/20) + 1) - 5) ){
-            for(int l = ((count/20) + 1)-4; l <= (count/20) + 1;l ++){
+        }else if ((tablePost.getPage() <= ((count/10) + 1) - 2) && (tablePost.getPage() >= ((count/10) + 1) - 5) ){
+            for(int l = ((count/10) + 1)-4; l <= (count/10) + 1;l ++){
                 pages.add(l);
             }
         }else {
@@ -158,8 +169,14 @@ public class EncapsulationIntoTable {
     public Table intoTableUtility(TablePost tablePost){
         String tableName = "thads:"+tablePost.getYear().toString();
         List<Search> searches = tablePost.getSearches();
-        String ageInterval = searches.get(0).getValues().get(0);
-        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableUtility = getDataService.getFromHbaseToTableUtility(tableName, ageInterval, tablePost.getPage());
+        Tuple2<Object, List<ArrayList<String>>> fromHbaseToTableUtility;
+        if(searches.size() == 0){
+            fromHbaseToTableUtility = getDataService.getFromHbaseToTableUtility(tableName, "18以下", tablePost.getPage());
+        }else{
+            String ageInterval = searches.get(0).getValues().get(0);
+            fromHbaseToTableUtility = getDataService.getFromHbaseToTableUtility(tableName, ageInterval, tablePost.getPage());
+        }
+
         Table table = new Table();
         Page page = new Page();
         //添加搜索对象并封装
@@ -182,12 +199,12 @@ public class EncapsulationIntoTable {
             for(int j = 1; j <= 5; j ++){
                 pages.add(j);
             }
-        }else if (tablePost.getPage() >= ((count/20) + 1)){
-            for(int i = ((count/20) + 1)-4; i <= (count/20) + 1;i ++){
+        }else if (tablePost.getPage() >= ((count/10) + 1)){
+            for(int i = ((count/10) + 1)-4; i <= (count/10) + 1;i ++){
                 pages.add(i);
             }
-        }else if ((tablePost.getPage() <= ((count/20) + 1) - 2) && (tablePost.getPage() >= ((count/20) + 1) - 5) ){
-            for(int l = ((count/20) + 1)-4; l <= (count/20) + 1;l ++){
+        }else if ((tablePost.getPage() <= ((count/10) + 1) - 2) && (tablePost.getPage() >= ((count/10) + 1) - 5) ){
+            for(int l = ((count/10) + 1)-4; l <= (count/10) + 1;l ++){
                 pages.add(l);
             }
         }else {

@@ -76,8 +76,8 @@ class HbaseDaoImpl extends HBaseDao {
         } else {
           true
         }
-      }
-    }).map (_._2)
+}
+}).map (_._2)
 
     //获取所需列的数据
     val rowRDD: RDD[util.ArrayList[String]] = va.map(x => {
@@ -270,13 +270,13 @@ class HbaseDaoImpl extends HBaseDao {
         if (str.equals("ZINC2")) {
           ZINC2 = value
         }
-        if (str.equals("VALUE")) {
+        if (str.equals("ROOMS")) {
           ROOMS = value
         }
-        if (str.equals("ZSMHC")) {
+        if (str.equals("REGION")) {
           REGION = value
         }
-        if (str.equals("BUILT")) {
+        if (str.equals("NUNITS")) {
           NUNITS = value
         }
       }

@@ -145,12 +145,12 @@ class Get_Single_Region extends service.Analysis {
     }
     val daoSearch:MysqlDao[Search] = new SearchImpl
     val single = new Search()
-    single.setDimgroupname("是否独栋")
-    single.setName("独栋比例搜索")
+    single.setDimgroupname("单元数")
+    single.setName("单元数搜索")
     single.setReportid(reportId)
     daoSearch.insert(single)
     val region = new Search()
-    region.setDimgroupname("区域搜索")
+    region.setDimgroupname("区域")
     region.setName("按区域搜索")
     region.setReportid(reportId)
     daoSearch.insert(region)

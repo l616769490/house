@@ -107,9 +107,9 @@ public class TableServiceImpl implements TableSerivce {
 
         for (Search search : tablePost.getSearches()) {
             String title = search.getTitle();
-            if (title.equals("建成年份")) {
+            if (title.equals("按建成年份搜索")) {
                 build = search.getValues().get(0);
-            } else if (title.equals("房产税")) {
+            } else if (title.equals("房产税区间搜索")) {
                 rate = search.getValues().get(0);
             }
 
@@ -150,7 +150,7 @@ public class TableServiceImpl implements TableSerivce {
         p.setThisPage(page);
         p.setData(list);
         table.setPage(p);
-        List<Search> search = getSearch(tablePost.getYear(), "房产税统计", "年份统计");
+        List<Search> search = getSearch(tablePost.getYear(), "房产税统计", "建成年份");
         table.setSearch(search);
         List<String> l = new ArrayList<>();
         l.add("编号");
@@ -184,9 +184,9 @@ public class TableServiceImpl implements TableSerivce {
 
         for (Search search : tablePost.getSearches()) {
             String title = search.getTitle();
-            if (title.equals("区域统计")) {
+            if (title.equals("按区域搜索")) {
                 region = search.getValues().get(0);
-            } else if (title.equals("独栋比例")) {
+            } else if (title.equals("单元数搜索")) {
                 single = search.getValues().get(0);
             }
         }
@@ -225,7 +225,7 @@ public class TableServiceImpl implements TableSerivce {
         p.setThisPage(page);
         p.setData(list);
         table.setPage(p);
-        List<Search> search = getSearch(tablePost.getYear(), "独栋比例统计", "按区域统计");
+        List<Search> search = getSearch(tablePost.getYear(), "独栋比例统计", "普查区域");
         table.setSearch(search);
         List<String> l = new ArrayList<>();
         l.add("编号");
@@ -233,7 +233,7 @@ public class TableServiceImpl implements TableSerivce {
         l.add("家庭收入");
         l.add("房间数");
         l.add("区域");
-        l.add("是否独栋");
+        l.add("单元数");
         table.setTop(l);
         List<Row> lll = new ArrayList<>();
         for (ArrayList<String> strings : Rows._2) {

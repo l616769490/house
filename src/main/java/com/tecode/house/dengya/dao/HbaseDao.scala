@@ -9,7 +9,7 @@ trait HbaseDao {
     * @param page      查询的页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getAllForUnits(tableName: String,filter:String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getAllForUnits(tableName: String,filter:String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
   /**
@@ -22,7 +22,7 @@ trait HbaseDao {
     * @param page      查询页码
     * @return (Int,util.List[util.ArrayList[String]])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForValue(tableName: String, rent: String,price:String, city: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForValue(tableName: String, rent: String,price:String, city: String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
 

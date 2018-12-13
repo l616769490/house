@@ -115,6 +115,7 @@ public class DimensionImpl implements MysqlDao<Dimension>{
                 }
                 if (stat != null) {
                     stat.close();
+                    conn.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

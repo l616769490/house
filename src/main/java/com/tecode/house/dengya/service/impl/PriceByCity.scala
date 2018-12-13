@@ -133,7 +133,7 @@ class PriceByCity extends Analysis {
     report.setName("市场价格分布图");
     report.setCreate(System.currentTimeMillis());
     report.setYear(Integer.parseInt(tableName.split(":")(1)));
-    report.setGroup("城市规模统计");
+    report.setGroup("城市规模");
     report.setStatus(1);
     report.setUrl("/price_city");
     val reportId: Int = dao.putInTableReport(conn, report)

@@ -35,7 +35,7 @@ public class MyGraf {
         // 标题
         Title title = new Title()
                 .setText("年收入分布情况")
-                .setSubtext("副标题");
+                .setSubtext("年收入："+year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -148,7 +148,7 @@ public class MyGraf {
         // 标题
         Title title = new Title()
                 .setText("市场价")
-                .setSubtext("副标题");
+                .setSubtext("市场价："+year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -206,7 +206,7 @@ public class MyGraf {
 
         Title title = new Title()
                 .setText("家庭人数")
-                .setSubtext("副标题");
+                .setSubtext("家庭人数："+year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()

@@ -21,7 +21,7 @@ public class ShowTablesImpl implements ShowTables{
     public  Table showVacancyTable(TablePost tp) {
         Table table = new Table();
         table.setYear(tp.getYear());
-        table.addTop("CONTROL").addTop("METRO3").addTop("BUILT").addTop("AGE1").addTop("VACANCY").addTop("ASSISTED");
+        table.addTop("房屋编号").addTop("城市规模").addTop("建成年份").addTop("户主年龄").addTop("空置状态").addTop("是否辅助用房");
         Page page = new Page();
         page.setThisPage(tp.getPage());
         SparkService sc = new SparkService();
@@ -121,7 +121,7 @@ public class ShowTablesImpl implements ShowTables{
         list.add(search2);
         table.setSearch(list);
         table.setYear(tp.getYear());
-        table.addTop("CONTROL").addTop("METRO3").addTop("BUILT").addTop("STRUCTURETYPE").addTop("BEDRMS").addTop("ROOMS");
+        table.addTop("房屋编号").addTop("城市规模").addTop("建成年份").addTop("建筑结构类型").addTop("卧室数").addTop("房间数");
         Page page = new Page();
         page.setThisPage(tp.getPage());
         SparkService sc = new SparkService();
@@ -181,7 +181,7 @@ public class ShowTablesImpl implements ShowTables{
         list.add(search2);
         table.setSearch(list);
         table.setYear(tp.getYear());
-        table.addTop("CONTROL").addTop("METRO3").addTop("BUILT").addTop("STRUCTURETYPE").addTop("ZSMHC").addTop("ROOMS").addTop("VALUE");
+        table.addTop("房屋编号").addTop("城市规模").addTop("建成年份").addTop("建筑结构类型").addTop("房产税").addTop("房间数").addTop("市场价");
         Page page = new Page();
         page.setThisPage(tp.getPage());
 
