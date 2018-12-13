@@ -72,7 +72,7 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     */
   override def readCityTaxData(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])= {
 
-    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
+//    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     val conf = HBaseConfiguration.create()
     conf.set(TableInputFormat.INPUT_TABLE, tablename)

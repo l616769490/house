@@ -50,6 +50,8 @@
             url: "/menu",
             type: "POST",
             success: function (result) {
+                // var myChart = echarts.init(document.getElementById('house-chart'));
+                // $('#house-chart').addClass('img-class');
                 loadMenu.loadFromJson(result);
             }
         });

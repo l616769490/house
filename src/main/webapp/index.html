@@ -31,13 +31,16 @@
                 <ul class="nav" id="left-menu">
                     <!-- 第一组数据 -->
                     <li>
-                        <a class="active-menu" href="#"><i class="fa fa-bar-chart-o"></i>基础分析<span class="fa arrow"></span></a>
+                        <a class="active-menu" href="#"><i class="fa fa-bar-chart-o"></i>暂无报表<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="#">报表一</a>
+                                <a href="#">点击右上方上传数据</a>
                             </li>
                             <li>
-                                <a href="#">报表二</a>
+                                <a href="#">上传完成后自动分析报表</a>
+                            </li>
+                            <li>
+                                <a href="#">报表分析完成即可在此处查看</a>
                             </li>
                         </ul>
                     </li>
@@ -53,7 +56,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h1 class="page-header" id="report-title">
-                            房产税统计
+                            Welcome
                         </h1>
                     </div>
                     <!-- 年份选择 -->
@@ -74,8 +77,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <div id="house-chart" style="height: 400px">
-                                
+                            <div id="house-chart" style="height: 450px;background:url('myAssets/img/index.png') no-repeat;">
                             </div>
                         </div>
                     </div>
@@ -89,23 +91,23 @@
                         <!-- 搜索 -->
                         <div class="col-md-2">
                             <div class="panel-heading">
-                                <label class="my-css" id="label1">区域</label>
-                                <div class="btn-group">
-                                    <button class="btn btn-success my-css" id="select1">全部</button>
-                                    <button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#" onclick="showSelect('select1', $(this).text())">1</a></li>
-                                        <li><a href="#" onclick="showSelect('select1', $(this).text())">2</a></li>
-                                        <li><a href="#" onclick="showSelect('select1', $(this).text())">3</a></li>
-                                        <li><a href="#" onclick="showSelect('select1', $(this).text())">4</a></li>
-                                    </ul>
-                                </div>
+                                <!--<label class="my-css" id="label1">区域</label>-->
+                                <!--<div class="btn-group">-->
+                                    <!--<button class="btn btn-success my-css" id="select1">全部</button>-->
+                                    <!--<button data-toggle="dropdown" class="btn btn-success dropdown-toggle"><span class="caret"></span></button>-->
+                                    <!--<ul class="dropdown-menu">-->
+                                        <!--<li><a href="#" onclick="showSelect('select1', $(this).text())">1</a></li>-->
+                                        <!--<li><a href="#" onclick="showSelect('select1', $(this).text())">2</a></li>-->
+                                        <!--<li><a href="#" onclick="showSelect('select1', $(this).text())">3</a></li>-->
+                                        <!--<li><a href="#" onclick="showSelect('select1', $(this).text())">4</a></li>-->
+                                    <!--</ul>-->
+                                <!--</div>-->
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="panel-heading">
-                                <button class="btn btn-success" onclick="searchBtn()">检索</button>
-                            </div>
+                            <!--<div class="panel-heading">-->
+                                <!--<button class="btn btn-success" onclick="searchBtn()">检索</button>-->
+                            <!--</div>-->
                         </div>
                         <!-- 搜索结束 -->
                         <!-- 表格 -->

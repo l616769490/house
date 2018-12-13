@@ -12,21 +12,11 @@
 <head>
     <title>文件上传</title>
 
-    <script src="../js/jquery-1.12.4.min.js">
-
-    </script>
-
-    <link href="../bootstrap-3.3.7-dist/css/bootstrap.min.css"
-          rel="stylesheet"/>
-    <script src="../bootstrap-3.3.7-dist/js/bootstrap.min.js">
-
-    </script>
-    <script src="../js/jquery.form.js">
-    </script>
-
-    <!-- 引入 ECharts 文件 -->
-    <script src="../js/echarts.js">
-    </script>
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="../assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <link href="../assets/css/custom-styles.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <body>
 <div class="container-fluid">

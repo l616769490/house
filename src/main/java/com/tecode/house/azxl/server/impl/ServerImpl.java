@@ -263,7 +263,7 @@ public class ServerImpl implements MaketPriceServer, Analysis {
 
 
     private void setPage(Table table,Page page,int size,int thisPage){
-        if(size>5&&thisPage>5){
+        if(size>=5&&thisPage>=5){
             if(size>(thisPage+2)){
             table.setPage(page.addData(1).addData(thisPage-2).addData(thisPage-1).addData(thisPage).addData(thisPage+1).addData(size));
             }else if(size==(thisPage+1)){

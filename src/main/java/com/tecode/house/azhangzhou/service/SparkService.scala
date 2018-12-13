@@ -109,9 +109,7 @@ class SparkService{
         dataId+=1
       }
       //插入搜索表
-      searchId = table.insertIntoSearch("空置","空置",reportId)
-      table.insertIntoSearch("居住","空置",reportId)
-      table.insertIntoSearch("全部","空置",reportId)
+      searchId = table.insertIntoSearch("空置状态","空置",reportId)
       if(reportId>0 && diagramId>0 && legendId>0 && xId>0 && yId>0 && dId1>0 && dId2>0 && dataId==mmap.size && searchId>0){
         //提交事务
         msconn.commit()
@@ -219,8 +217,8 @@ class SparkService{
         dataId+=1
       }
       //插入搜索表
-      searchId = table.insertIntoSearch("独栋建筑比例","独栋",reportId)
-
+      searchId = table.insertIntoSearch("城市规模","城市规模",reportId)
+      table.insertIntoSearch("建筑结构类型","建筑结构类型",reportId)
       if(reportId>0 && diagramId>0 && legendId>0 && xId>0 && yId>0
         && dId1>0 && dId2>0 &&  dId3>0 && dId4>0 && dId5>0 && dId6>0
         && dId7>0 && dataId==mmap.size && searchId>0){
@@ -326,7 +324,8 @@ class SparkService{
         dataId+=1
       }
       //插入搜索表
-      table.insertIntoSearch("房产税","数学",reportId)
+      searchId = table.insertIntoSearch("城市规模","城市规模",reportId)
+      table.insertIntoSearch("建筑结构类型","建筑结构类型",reportId)
       if(reportId>0 && diagramId>0 && legendId>0 && xId>0 && yId>0 && dId1>0 && dId2>0 && dId3>0 && dataId==mmap.size && searchId>0){
         //提交事务
         msconn.commit()
@@ -366,24 +365,33 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VACANCY"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ASSISTED")))))
 
-    if(search.equals("是")){
+    if(search.equals("空置")){
       clumnRDD = clumnRDD.filter(!_._5.equals("-6"))
     }
-    if(search.equals("否")){
+    if(search.equals("居住")){
       clumnRDD = clumnRDD.filter(_._5.equals("-6"))
     }
-    var list= clumnRDD.take(page*10).toList
-    val end = clumnRDD.count().toInt/10 + 1
-    if(page!=1 && page !=2 && page !=end-1 &&page !=end){
-      val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
-      list:+=pageList
+    val size:Int = clumnRDD.count().toInt
+    var end:Int = -1
+    var list: List[(String, String, String, String, String, String)] = null
+    if(size%10 == 0){
+      list = clumnRDD.take(page*10).toList
+      end = size/10
     }else{
-      val pageList: (String,  String, String, String,String,String) = ("1","2","...",(end-1).toString,"...",end.toString)
-      list:+=pageList
+      end = size/10 +1
+      if(end == page){
+        list =  clumnRDD.collect().toList
+        for(i <- 1 to 10-size%10){
+          list:+=("","","","","","")
+        }
+      }else{
+        list = clumnRDD.take(page*10).toList
+      }
     }
+    val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
+    list:+=pageList
     var jList: util.List[(String, String, String, String, String, String)] = list.asJava
-    jList = jList.subList((page-1)*10+1,page*10+1)
-    spark.close()
+    jList = jList.subList((page-1)*10,page*10+1)
     return jList
   }
 
@@ -409,14 +417,7 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("STRUCTURETYPE"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("BEDRMS"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))))).filter(_._4.toInt>0)
-    /*clumnRDD = clumnRDD.map { x =>
-      val t = x._4
-      if (t.equals("1")) {
-        (x._1, x._2, x._3, "独栋", x._5, x._6)
-      } else {
-        (x._1, x._2, x._3, "其他", x._5, x._6)
-      }
-    }*/
+
     if(search.equals("1")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
@@ -438,18 +439,27 @@ class SparkService{
     if(search2.equals("其他")){
       clumnRDD = clumnRDD.filter(!_._4.equals("1"))
     }
-    var list: List[(String, String, String, String, String, String)] = clumnRDD.take(page*10).toList
-    val end = clumnRDD.count().toInt/10 + 1
-    if(page!=1 && page !=2 && page !=end-1 &&page !=end){
-      val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
-      list:+=pageList
+    val size:Int = clumnRDD.count().toInt
+    var end:Int = -1
+    var list: List[(String, String, String, String, String, String)] = null
+    if(size%10 == 0){
+      list = clumnRDD.take(page*10).toList
+      end = size/10
     }else{
-      val pageList: (String,  String, String, String,String,String) = ("1","2","...",(end-1).toString,"...",end.toString)
-      list:+=pageList
+      end = size/10 +1
+      if(end == page){
+        list =  clumnRDD.collect().toList
+        for(i <- 1 to 10-size%10){
+          list:+=("","","","","","")
+        }
+      }else{
+        list = clumnRDD.take(page*10).toList
+      }
     }
+    val pageList: (String, String, String, String, String, String) = ("1","2","...",page+"","...",end.toString)
+    list:+=pageList
     var jList: util.List[(String, String, String, String, String, String)] = list.asJava
-    jList = jList.subList((page-1)*10+1,page*10+1)
-    spark.close()
+    jList = jList.subList((page-1)*10,page*10+1)
     return jList
 
   }
@@ -476,13 +486,6 @@ class SparkService{
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ZSMHC"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("ROOMS"))),
       Bytes.toString(x._2.getValue(Bytes.toBytes("info"),Bytes.toBytes("VALUE"))))).filter(_._5.toInt>0)
-    /*clumnRDD = clumnRDD.map{x => val t=x._4
-      if(t.equals("1")){
-        (x._1,x._2,x._3,"独栋",x._5,x._6,x._7)
-      }else{
-        (x._1,x._2,x._3,"其他",x._5,x._6,x._7)
-      }
-    }*/
     if(search.equals("1")){
       clumnRDD = clumnRDD.filter(_._2.equals("1"))
     }
@@ -504,20 +507,27 @@ class SparkService{
     if(search2.equals("其他")){
       clumnRDD = clumnRDD.filter(!_._4.equals("1"))
     }
-
-    var list: List[(String, String, String, String, String, String, String)] = clumnRDD.take(page*10).toList
-
-    val end = clumnRDD.count()/10+1
-    if(page!=1 && page !=2 && page!=end-1 && page !=end){
-      val pageList: (String,  String, String, String,String,String,String) = ("1","2","...",page+"","...","",end.toString)
-      list:+=pageList
+    val size:Int = clumnRDD.count().toInt
+    var end:Int = -1
+    var list: List[(String, String, String, String, String, String, String)] = null
+    if(size%10 == 0){
+      list = clumnRDD.take(page*10).toList
+      end = size/10
     }else{
-      val pageList: (String,  String, String, String,String,String,String) = ("1","2","...",(end-1).toString,"...","",end.toString)
-      list:+=pageList
+      end = size/10 +1
+      if(end == page){
+       list =  clumnRDD.collect().toList
+        for(i <- 1 to 10-size%10){
+          list:+=("","","","","","","")
+        }
+      }else{
+        list = clumnRDD.take(page*10).toList
+      }
     }
+    val pageList: (String,  String, String, String,String,String,String) = ("1","2","...",page+"","...","",end.toString)
+    list:+=pageList
     var jList = list.asJava
-    jList = jList.subList((page-1)*10+1,page*10+1)
-    spark.close()
+    jList = jList.subList((page-1)*10,page*10+1)
     return jList
   }
 }

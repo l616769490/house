@@ -24,7 +24,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     */
   override def getForCOST(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-    val conf = new SparkConf().setAppName("getAllForRent").setMaster("local[*]")
+//    val conf = new SparkConf().setAppName("getAllForRent").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
@@ -103,7 +103,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     */
   override def getPrice(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-    val conf = new SparkConf().setAppName("getAllForValue").setMaster("local[*]")
+//    val conf = new SparkConf().setAppName("getAllForValue").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()
@@ -176,7 +176,7 @@ class GetHBaseDaoImpl extends GetHBaseDao {
   }
 
   override def getForIncome(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]]) = {
-    val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
+//    val conf = new SparkConf().setAppName("getForRom").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
     //    配置HBase参数
     val hconf = HBaseConfiguration.create()

@@ -29,7 +29,7 @@ public class RangeFilter implements HBaseFilter {
             // 首先判断是否是该字段， 如：要搜索1区属于L30的， 先判断该条记录是不是1区，不是则跳到下一个搜索条件
             String searchTitle = search.getTitle();
             String hBaseTitle = map.get(filterBean.getGroupName());
-            if(!searchTitle.equals(hBaseTitle)) {
+            if(hBaseTitle!=null && !searchTitle.equals(hBaseTitle)) {
                 continue;
             }
 

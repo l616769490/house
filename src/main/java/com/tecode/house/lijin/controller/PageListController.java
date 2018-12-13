@@ -25,53 +25,54 @@ public class PageListController {
     private ReportMapper reportMapper;
 
     // <年份， 报表组>
-    private Map<Integer, PageList> pageListMap;
+//    private Map<Integer, PageList> pageListMap;
     @ResponseBody
     @RequestMapping("/menu")
     public PageList getMenu(Integer year) {
-        if(year == null || year == 0) {
+        if (year == null || year == 0) {
             year = 2013;
         }
-        if(pageListMap == null) {
-            pageListMap = new HashedMap();
-            Set<Integer> yearSet = new HashSet<>();
-             // <年份， <报表组名, Group>>
-            Map<Integer, Map<String, Group>> groupOfYear = new TreeMap<>();
-            List<Report> reportList = reportMapper.selectByExample(new ReportExample());
-            for (Report report : reportList) {
-                yearSet.add(report.getYear());
-                // 取出当年的报表列表 <报表组名， Group>
-                Map<String, Group> map = groupOfYear.get(report.getYear());
-                if (map == null) {
-                    map = new HashedMap();
-                    groupOfYear.put(report.getYear(),map);
-                }
-                // 取出报表分组
-                Group group1 = map.get(report.getGroup());
-                if (group1 == null) {
-                    group1 = new Group(report.getGroup());
-                    map.put(report.getGroup(), group1);
-                }
-                group1.addReport(new com.tecode.pagelist.Report(report.getName(), report.getUrl()));
+        Map<Integer, PageList> pageListMap = new HashedMap();
+//        if(pageListMap == null) {
+//            pageListMap = new HashedMap();
+        Set<Integer> yearSet = new HashSet<>();
+        // <年份， <报表组名, Group>>
+        Map<Integer, Map<String, Group>> groupOfYear = new TreeMap<>();
+        List<Report> reportList = reportMapper.selectByExample(new ReportExample());
+        for (Report report : reportList) {
+            yearSet.add(report.getYear());
+            // 取出当年的报表列表 <报表组名， Group>
+            Map<String, Group> map = groupOfYear.get(report.getYear());
+            if (map == null) {
+                map = new HashedMap();
+                groupOfYear.put(report.getYear(), map);
             }
+            // 取出报表分组
+            Group group1 = map.get(report.getGroup());
+            if (group1 == null) {
+                group1 = new Group(report.getGroup());
+                map.put(report.getGroup(), group1);
+            }
+            group1.addReport(new com.tecode.pagelist.Report(report.getName(), report.getUrl()));
+        }
 
-            // 添加报表组
-            for (Map.Entry<Integer, Map<String, Group>> mapEntry : groupOfYear.entrySet()) {
+        // 添加报表组
+        for (Map.Entry<Integer, Map<String, Group>> mapEntry : groupOfYear.entrySet()) {
 
-                PageList pageList = pageListMap.get(mapEntry.getKey());
-                if(pageList == null) {
-                    pageList = new PageList();
-                    for (Integer y : yearSet) {
-                        pageList.addYear(y);
-                    }
-                    pageListMap.put(mapEntry.getKey(), pageList);
+            PageList pageList = pageListMap.get(mapEntry.getKey());
+            if (pageList == null) {
+                pageList = new PageList();
+                for (Integer y : yearSet) {
+                    pageList.addYear(y);
                 }
-                Map<String, Group> mapEntryValue = mapEntry.getValue();
-                for (Map.Entry<String, Group> groupEntry : mapEntryValue.entrySet()) {
-                    pageList.addGroup(groupEntry.getValue());
-                }
+                pageListMap.put(mapEntry.getKey(), pageList);
+            }
+            Map<String, Group> mapEntryValue = mapEntry.getValue();
+            for (Map.Entry<String, Group> groupEntry : mapEntryValue.entrySet()) {
+                pageList.addGroup(groupEntry.getValue());
             }
         }
+//        }
 
         return pageListMap.get(year);
     }

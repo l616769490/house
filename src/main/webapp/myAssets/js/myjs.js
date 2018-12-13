@@ -1,5 +1,5 @@
 // 基于准备好的dom，初始化echarts实例
-var myChart = echarts.init(document.getElementById('house-chart'));
+var myChart = null; //= echarts.init(document.getElementById('house-chart'));
 
 /**
  * [改变下拉列表显示的文字]
@@ -313,5 +313,10 @@ function onclickPage(page) {
  * @param  option [图表json]
  */
 function showChart(option) {
+    // $('#house-chart').empty();
+    if(myChart == null) {
+        myChart = echarts.init(document.getElementById('house-chart'));
+    }
+
     myChart.setOption(option, true);
 }
