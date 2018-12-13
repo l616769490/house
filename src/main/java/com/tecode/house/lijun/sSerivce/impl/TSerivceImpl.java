@@ -1,12 +1,17 @@
 package com.tecode.house.lijun.sSerivce.impl;
 
+import com.tecode.house.azouchao.util.MySQLUtil;
 import com.tecode.house.lijun.dao.GetHBaseDao;
+import com.tecode.house.lijun.dao.MySqlDao;
 import com.tecode.house.lijun.dao.impl.GetHBaseDaoImpl;
+import com.tecode.house.lijun.dao.impl.MySqlDaoImpl;
 import com.tecode.house.lijun.sSerivce.TSerivce;
 import com.tecode.table.*;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +25,11 @@ public class TSerivceImpl implements TSerivce {
         //构建HBAse表名
         String tableName =  tablePost.getYear().toString();
         //获取搜索条件
-       // String filter = tablePost.getSearches().get(0).getValues().get(0);
+        String filter = tablePost.getSearches().get(0).getValues().get(0);
         //获取要查询的页码
         int page = tablePost.getPage();
-        //获取数据
-        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForCOST("thads:"+tableName, page);
+        //获取数据                                                      "thads:"+tableName, page
+        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForCOST( "thads:"+tableName,filter, page);
         int i = (int) Rows._1;
         //封装页数列表
         int pa = i / 10 + 1;
@@ -80,6 +85,7 @@ public class TSerivceImpl implements TSerivce {
         l.add("其他费用");
         l.add("家庭收入");
         l.add("家庭人数");
+        l.add("总费用");
         table.setTop(l);
         List<Row> lll = new ArrayList<>();
         for (ArrayList<String> strings : Rows._2) {
@@ -263,6 +269,35 @@ public class TSerivceImpl implements TSerivce {
         }
         table.setData(lll);
         return table;
+    }
+
+    @Override
+    public List<Search> getSearch(Integer year, String name, String group) {
+        Connection conn = null;
+        MySqlDao mySQLDao=new MySqlDaoImpl();
+        List<Search> list = new ArrayList<>();
+        try {
+            conn = MySQLUtil.getConn();
+            //从mysql数据库获取报表id
+            int reportId = mySQLDao.getByTableReport(conn, name, year,group).getId();
+            //根据报表id获取搜索表对象
+            List<com.tecode.house.lijun.bean.Search> searchs = mySQLDao.getByTableSearch(conn, reportId);
+            //根据搜索条件封装Search对象
+            for (com.tecode.house.lijun.bean.Search search : searchs) {
+                Search s = new Search();
+                s.setTitle(search.getName());
+                List<String> tableDimension = mySQLDao.getByTableDimension(conn, search.getDimGroupName());
+                s.setValues(tableDimension);
+                list.add(s);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            MySQLUtil.close(conn);
+        }
+        return list;
     }
 
 }

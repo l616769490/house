@@ -1,6 +1,7 @@
 package com.tecode.house.lijun.controller;
 
-import com.tecode.house.lijin.controller.LJTableController;
+import com.tecode.house.azouchao.showSerivce.TableSerivce;
+import com.tecode.house.azouchao.showSerivce.TableSerivceImpl;
 import com.tecode.house.lijin.service.TableServer;
 import com.tecode.house.lijun.sSerivce.TSerivce;
 import com.tecode.house.lijun.sSerivce.impl.TSerivceImpl;
@@ -19,7 +20,7 @@ public class TController {
     @Autowired
     TableServer tableServer;
 
-
+    private TableSerivce tableSerivce1= new TableSerivceImpl();
     TSerivce tableSerivce = new TSerivceImpl();
 
     /**
@@ -31,7 +32,11 @@ public class TController {
     @RequestMapping(value = "/cost_table", method = RequestMethod.POST)
     public Table cost(@RequestBody TablePost tablePost) {
 
-     return tableSerivce.getTableForCost(tablePost);
+        return tableSerivce.getTableForCost(tablePost);
+       // return tableSerivce1.getTableForRent(tablePost);
+        //return tableServer.getTable("基础-房间数分析", tablePost, LJTableController.class.getResource("/table/basics-rooms.xml").getPath());
+
+
     }
     /**
      * 水电费用

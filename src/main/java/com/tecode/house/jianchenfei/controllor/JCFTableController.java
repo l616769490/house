@@ -23,13 +23,13 @@ public class JCFTableController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/build_rate_table", method = RequestMethod.POST)
+    @RequestMapping(value = "/zsmhc_built_table", method = RequestMethod.POST)
     public Table ratefrombuild(@RequestBody TablePost tablePost) {
         return tableSerivce.getTableRate(tablePost);
     }
 
     @ResponseBody
-    @RequestMapping(value = "/region_single_table", method = RequestMethod.POST)
+    @RequestMapping(value = "/single_region_table", method = RequestMethod.POST)
     public Table singlefromregion(@RequestBody TablePost tablePost) {
         return tableSerivce.getTableSingle(tablePost);
     }

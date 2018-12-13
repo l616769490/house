@@ -10,7 +10,7 @@ trait GetHBaseDao {
     * @param page      查询的页码
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForCOST(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForCOST(tableName: String, filter: String ,page: Int): (Int, util.List[util.ArrayList[String]])
 
 
   /**

@@ -1,7 +1,10 @@
 package com.tecode.house.lijun.sSerivce;
 
+import com.tecode.table.Search;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
+
+import java.util.List;
 
 public interface TSerivce {
     /**
@@ -24,6 +27,9 @@ public interface TSerivce {
      * @return
      */
     Table getTableForIncome(TablePost tablePost);
+
+
+    List<Search> getSearch(Integer year, String name, String group);
 
 
 }

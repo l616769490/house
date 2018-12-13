@@ -33,7 +33,7 @@ public interface MySqlDao {
     //操作报表表
     public int putInTableReport(Connection conn, Report report) throws SQLException;
 
-    public Report getByTableReport(Connection conn, String name, int year) throws SQLException;
+    public Report getByTableReport(Connection conn, String name, int year,String group) throws SQLException;
 
     //操作搜索表
     public int putInTableSearch(Connection conn, Search search) throws SQLException;

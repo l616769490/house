@@ -4,7 +4,6 @@ import com.tecode.house.libo.Service.InsertTable;
 import com.tecode.house.libo.Service.ServiceImpl.InsertToTable;
 import com.tecode.table.Table;
 import com.tecode.table.TablePost;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 @Controller
@@ -17,6 +16,8 @@ public class LBTableController {
      * 自住、租赁
      * @return 请求结果
      */
+
+
     @ResponseBody
     @RequestMapping(value = "/libo_self_table", method = RequestMethod.POST)
     public Table rentTable(@RequestBody TablePost tablePost) {
@@ -27,7 +28,7 @@ public class LBTableController {
     }
 
     /**
-     * 自住、租赁
+     *房间数卧室数
      * @return 请求结果
      */
     @ResponseBody
@@ -36,14 +37,15 @@ public class LBTableController {
 //        if (tablePost == null) {
 //            return testService.getTable();
 //        }
-        return insertTable.insertRoomTable(tablePost);
+        Table t = insertTable.insertRoomTable(tablePost);
+        return t;
     }
 
 
 
 
     /**
-     * 自住、租赁
+     * 独栋建筑
      * @return 请求结果
      */
     @ResponseBody

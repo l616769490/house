@@ -28,11 +28,7 @@ object RoomByCity02 {
     val room = new RoomByCity02
     //room.RoomAndBedRom("2013")
     room.selfOrRent("thads:2013",2013)
-      println("1::success")
-      println("===============")
     room.RoomAndBedRom("thads:2013",2013)
-      println("1::success")
-      println("----------------")
     room. SingleBuildByYear("thads:2013",2013);
     //print("asdcvc".split(";")(0))
     //room.selfRentTable("2013","租赁")
@@ -221,7 +217,7 @@ class RoomByCity02 extends Analysis {
       val rName: String = "房间数卧室数分析"
       val rtime: Long = System.currentTimeMillis()
       val rYear: Int = year
-      val rGroup: String = "基础分析"
+      val rGroup: String = "城市规模"
       val rStatus: Int = 0
       val url: String = "/libo_room"
       reportId = table.insertIntoReport(rName, rtime, rYear, rGroup, rStatus, url)
@@ -475,12 +471,15 @@ class RoomByCity02 extends Analysis {
     }
     table.setPage(p)
 
-    if(page+10>l.toInt){
-      for(i <- l.toInt-10 to l.toInt ){
+    //判断输入页码的条数是否大于总页数
+    if(page*10+10>l.toInt){
+      //总条数/10+1=页数
+      for(i <- l.toInt/10-10 to l.toInt/10 ){
         p.addData(i)
       }
     }else{
       for(i <- page to page+10){
+        //sb.append(i)
         p.addData(i)
       }
     }
@@ -587,24 +586,17 @@ class RoomByCity02 extends Analysis {
     }
     table.setPage(p)
 
+    // var lll:List[Integer] = List()
 
 
-
-    //  private List<Integer> data = new ArrayList<>();
-    //var lll:util.List[Integer] = util.List[Integer]  //new util.ArrayList[Int]()
-
-   var lll:List[Integer] = List()
-    var sb = new StringBuilder
-
-//    var list1= new ArrayBuffer[Integer]()
-
+    //判断输入页码的条数是否大于总页数
     if(page*10+10>l1.toInt){
-      for(i <- l1.toInt-10 to l1.toInt ){
-        //sb.append(i)
+      //总条数/10+1=页数
+      for(i <- l1.toInt/10-10 to l1.toInt/10 ){
         p.addData(i)
       }
     }else{
-      for(i <- (page-1)*10 to page*10){
+      for(i <- page to page+10){
        //sb.append(i)
         p.addData(i)
       }
@@ -684,7 +676,7 @@ class RoomByCity02 extends Analysis {
 
     var jlist:List[(String,String)] = List()
     //获得符合条件的数据的数量，既总条数
-    val len: Long = v.count()
+    val len= v.count()
     //println("l1长度：："+l1.toInt)
     //取到page页*10，装换成java的list    截取     asJava需要导包
     val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
@@ -700,10 +692,30 @@ class RoomByCity02 extends Analysis {
     if(page == null){
       p.setThisPage(1)
     }
+
+    //判断输入页码的条数是否大于总页数
+    if(page*10+10>len.toInt){
+      //总条数/10+1=页数
+      for(i <- len.toInt/10-10 to len.toInt/10 ){
+        p.addData(i)
+      }
+    }else{
+      for(i <- page to page+10){
+        //sb.append(i)
+        p.addData(i)
+      }
+    }
+
+
+
+
+
+
+
     table.setPage(p)
 
     for(i <- page to page+10){
-      println(i)
+      //println(i)
       p.addData(i)
     }
 //    if(page+10>l1.toInt){

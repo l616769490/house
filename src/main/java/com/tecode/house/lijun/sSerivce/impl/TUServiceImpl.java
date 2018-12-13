@@ -26,13 +26,13 @@ public class TUServiceImpl implements TUService {
     private Connection conn;
 
 
-    @Override
-    public Xaxis getX(String year, String reportName) {
+    /*@Override
+    public Xaxis getX(String year, String reportName, String group) {
         Xaxis x = null;
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
-            int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            int reportId = dao.getByTableReport(conn, reportName, yea,  group).getId();
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
             int diagramId = -1;
             for (Diagram diagram : diagrams) {
@@ -51,16 +51,16 @@ public class TUServiceImpl implements TUService {
             MySQLUtil.close(conn);
         }
         return x;
-    }
+    }*/
 
     @Override
-    public Option select(String year, String reportName) {
+    public Option select(String year, String reportName, String group) {
         Option option = new Option();
         try {
             int yea = Integer.parseInt(year);
             conn =MySQLUtil.getConn();
             //获取report
-            Report report = dao.getByTableReport(conn, reportName, yea);
+            Report report = dao.getByTableReport(conn, reportName, yea,  group);
             //获取diagrams表
             List<Diagram> diagrams = dao.getByTableDiagram(conn, report.getId());
             //获取xaxis表
@@ -160,12 +160,12 @@ public class TUServiceImpl implements TUService {
 
 
     @Override
-    public List<Data> getData(String year, String reportName) {
+    public List<Data> getData(String year, String reportName, String group) {
         List<Data> byTableDimension = new ArrayList<>();
         try {
             int yea = Integer.parseInt(year);
             conn = MySQLUtil.getConn();
-            int reportId = dao.getByTableReport(conn, reportName, yea).getId();
+            int reportId = dao.getByTableReport(conn, reportName, yea,  group).getId();
             List<Diagram> diagrams = dao.getByTableDiagram(conn, reportId);
             int diagramId = -1;
             for (Diagram diagram : diagrams) {

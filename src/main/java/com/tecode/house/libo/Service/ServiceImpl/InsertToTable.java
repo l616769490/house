@@ -24,16 +24,16 @@ public class InsertToTable implements InsertTable {
         t.setPage(5);
         List<Search> s = new ArrayList<>();
         Search ss = new Search();
-        s.add(ss.setTitle("城市等级").addValue("3"));
+        s.add(ss.setTitle("城市等级").addValue("1"));
        // s.add(ss.setTitle("房间数").addValue("1"));
         t.setSearches(s);
         //t.setSearches();
         InsertToTable s1= new InsertToTable();
         //s1.insertSelfTable(t);
-       s1. insertRoomTable(t);
+       //s1. insertRoomTable(t);
         //insertSelfTable("2013","自住");
-        //insertRoomTable("2013","45","15");
-       //s1. insertSingleTable(t);
+        s1.insertRoomTable(t);
+      //s1. insertSingleTable(t);
     }
 
     /**
@@ -54,8 +54,6 @@ public class InsertToTable implements InsertTable {
             }
         }
 
-       // Search search = tablePost.getSearches().get(0);
-
         Integer pp = tablePost.getPage();
         table.addSearchs(new Search().setTitle("居住状态").addValue("自住").addValue("租赁"));
 
@@ -63,13 +61,7 @@ public class InsertToTable implements InsertTable {
         table.setYear(tablePost.getYear()).addTop("ID").addTop("城市等级").addTop("简称年份")
                 .addTop("建筑结构").addTop("自住\\租赁");
 
-       // System.out.println(tablePost.getSearches().get(0));
         scala.collection.immutable.List<Tuple2<String, String>> m = r.selfRentTable(tableName, filter, pp,table);
-
-
-
-
-        long size = m.size();
 
         Iterator<Tuple2<String, String>> iter = m.iterator();
 
@@ -81,19 +73,10 @@ public class InsertToTable implements InsertTable {
                 row.addRow(s2);
             }
             table.addData(row);
-            //int size = iter.length();
 
         }
 
 
-
-
-
-//        System.out.println("查询年份："+table.getYear());
-//        //System.out.println("当前页："+table.getPage().getThisPage());
-//        System.out.println("所有页："+size);
-//        System.out.println(table.getTop());
-       // table.getData().subList(0,10).forEach(e-> System.out.println(e.getRow()));
         if(m.size()>=10){
             table.getData().subList(0,10);
         }else{
@@ -102,18 +85,6 @@ public class InsertToTable implements InsertTable {
         return table;
 
     }
-
-
-    /**
-     * 截取方法
-     */
-//    def subString(page:Int,count:Int,list:util.List[(String, String)]): util.List[(String, String)] ={
-//        if (page*10>count){
-//            list.subList(count-10,count)
-//        }else{
-//            list.subList((page-1)*10,page*10)
-//        }
-//    }
 
 
 
@@ -142,10 +113,10 @@ public class InsertToTable implements InsertTable {
         }
 
 
-        Page p = new Page();
-        table.setPage(p.setThisPage(tablePost.getPage()));
+        //Page p = new Page();
+        //table.setPage(p.setThisPage(tablePost.getPage()));
         // System.out.println(tablePost.getSearches().get(0));
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable("thads:"+tableName, filter, 3,table);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.roomsTable("thads:"+tableName, filter, tablePost.getPage(),table);
         int pages = m.size();
         Iterator<Tuple2<String, String>> iter = m.iterator();
 
@@ -157,7 +128,6 @@ public class InsertToTable implements InsertTable {
                 row.addRow(s2);
             }
             table.addData(row);
-            //int size = iter.length();
 
         }
 
@@ -242,38 +212,35 @@ public class InsertToTable implements InsertTable {
         RoomByCity02 r = new RoomByCity02();
         //建表
         Table table = new Table();
-        String year = table.setYear(tablePost.getYear()).toString();
-        //  表头
-       // Integer page1 = tablePost.getPage();
-        String filter = null;
-        for (Search search : tablePost.getSearches()) {
-            for (String value : search.getValues()) {
-                filter = value;
-            }
-        }
-
-       // Page p = new Page();
-        //当前页
-       // p.setThisPage(5);
-        //list存放总页数
-        //List<Integer> list = new ArrayList<>();
+        String tableName =tablePost.getYear().toString();
 
         Search s = new Search();
         s.setTitle("年份").addValue("1900-2000").addValue("2000-2010").addValue("2010-2018");
 
+       //处理搜索条件为空
+        String filter = null;
+        for (Search search : tablePost.getSearches()) {
+            for (String value : search.getValues()) {
+                filter = value;
+
+            }
+        }
+
+
+
         //数据   Row
         //List<String> row1 = new ArrayList<>();
         //调用获取self表格所需字段的方法
-        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable("thads:"+year, filter,tablePost.getPage() ,table);
+        scala.collection.immutable.List<Tuple2<String, String>> m = r.singleTable("thads:"+tableName, filter,tablePost.getPage() ,table);
         int size = m.size();
-        int page = size/10+1;
+        //int page = size/10+1;
         Iterator<Tuple2<String, String>> iter = m.iterator();
         while(iter.hasNext()){
             Tuple2<String, String> next = iter.next();
             Row row = new Row();
             String[] s1 = next._2.split("_");
             for (String s2 : s1) {
-                row.addRow(s2);
+                    row.addRow(s2);
             }
             table.addData(row);
             //int size = iter.length();
@@ -283,6 +250,7 @@ public class InsertToTable implements InsertTable {
         table.addTop("ID").addTop("城市等级").addTop("年份")
                 .addTop("独栋")
                 .addSearchs(s);
+
         //System.out.println(table.getData()+table.getPage()+table.getSearch()+table.getTop()+table.getYear());
         // System.out.println("============"+table.getData());
 //        System.out.println("总条数"+size);

@@ -233,7 +233,7 @@ public class MySqlDaoImpl implements MySqlDao {
     }
 
     @Override
-    public Report getByTableReport(Connection conn, String name, int year) throws SQLException {
+    public Report getByTableReport(Connection conn, String name, int year,String group) throws SQLException {
         Report report = null;
         String sql = "select * from report where name = ? and year = ? ";
         ps = conn.prepareStatement(sql);

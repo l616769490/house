@@ -31,7 +31,7 @@ public class OController {
      */
     @ResponseBody
     @RequestMapping(value = "/cost", method = RequestMethod.POST)
-    public Option testPie() throws SQLException, ClassNotFoundException {
+    public Option cost(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService=new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
@@ -52,7 +52,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("费用区间");
-        List<Data> dataList =showService.getData("2013","房屋费用");
+        List<Data> dataList =showService.getData(year,"房屋费用","基础分析");
 
        for (Data data : dataList) {
            legend.addData(data.getX());
@@ -80,7 +80,7 @@ public class OController {
      */
     @ResponseBody
     @RequestMapping(value = "/shuidian", method = RequestMethod.POST)
-    public Option testPie1() throws SQLException, ClassNotFoundException {
+    public Option shuidian(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
@@ -101,7 +101,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("费用区间");
-        List<Data> dataList = showService.getData("2013", "水电费用");
+        List<Data> dataList = showService.getData(year, "水电费用","基础分析");
 
         for (Data data : dataList) {
             legend.addData(data.getX());
@@ -125,7 +125,7 @@ public class OController {
      */
     @ResponseBody
     @RequestMapping(value = "/other", method = RequestMethod.POST)
-    public Option testPie2() throws SQLException, ClassNotFoundException {
+    public Option other(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
@@ -146,7 +146,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("费用区间");
-        List<Data> dataList = showService.getData("2013", "房屋其他费用");
+        List<Data> dataList = showService.getData(year, "房屋其他费用","基础分析");
 
         for (Data data : dataList) {
             legend.addData(data.getX());
@@ -169,7 +169,7 @@ public class OController {
      */
     @ResponseBody
     @RequestMapping(value = "/total", method = RequestMethod.POST)
-    public Option testPie4() throws SQLException, ClassNotFoundException {
+    public Option total(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
@@ -190,7 +190,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("费用区间");
-        List<Data> dataList = showService.getData("2013", "房屋总费用");
+        List<Data> dataList = showService.getData(year ,"房屋总费用","基础分析");
 
         for (Data data : dataList) {
             legend.addData(data.getX());
@@ -215,7 +215,7 @@ public class OController {
 
     @ResponseBody
     @RequestMapping(value = "/age_income", method = RequestMethod.POST)
-    public Option income() throws SQLException, ClassNotFoundException {
+    public Option income(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         Connection conn = MySQLUtil.getConn();
@@ -236,7 +236,7 @@ public class OController {
 
         // 数据
         Series series1 = new Pie().setName("收入区间");
-        List<Data> dataList = showService.getData("2013", "年龄家庭收入");
+        List<Data> dataList = showService.getData(year, "年龄家庭收入","户主年龄");
 
         for (Data data : dataList) {
             legend.addData(data.getX());
@@ -260,7 +260,7 @@ public class OController {
 
     @ResponseBody
     @RequestMapping(value = "/price_value", method = RequestMethod.POST)
-    public Option priceValue() throws SQLException, ClassNotFoundException {
+    public Option priceValue(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         // 标题
@@ -284,7 +284,7 @@ public class OController {
                 .setAlign(Align.left).setOrient(Orient.vertical);
         // 数据
         Series series1 = new Pie().setName("住房价格区间");
-        List<Data> dataList = showService.getData("2013", "住房价格");
+        List<Data> dataList = showService.getData(year, "住房价格","户主年龄");
 
 
         for (Data data : dataList) {
@@ -311,7 +311,7 @@ public class OController {
 
     @ResponseBody
     @RequestMapping(value = "/price_frm", method = RequestMethod.POST)
-    public Option priceFRM() throws SQLException, ClassNotFoundException {
+    public Option priceFRM(String year) throws SQLException, ClassNotFoundException {
         TUServiceImpl showService = new TUServiceImpl();
         Option option = new Option();
         // 标题
@@ -331,7 +331,7 @@ public class OController {
                 .setAlign(Align.left).setOrient(Orient.vertical);
         // 数据
         Series series1 = new Pie().setName("住房租金区间");
-        List<Data> dataList2 = showService.getData("2013", "住房租金");
+        List<Data> dataList2 = showService.getData(year, "住房租金","户主年龄");
 
 
 
