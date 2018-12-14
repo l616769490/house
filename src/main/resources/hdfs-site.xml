@@ -17,34 +17,26 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-	<!-- 配置数据的副本数量-->
-	<property>
-		<name>dfs.replication</name>
-		<value>3</value>
-	</property>
-	<!--设置辅助名称节点所在地址-->
-	<property>
-		<name>dfs.namenode.secondary.http-address</name>
-	        <value>hadoop002:50090</value>
-	    </property>
-	<!--配置多个存放namenode数据节点的目录-->
-	<property>
-		<name>dfs.namenode.name.dir</name>
-		<value>file:///${hadoop.tmp.dir}/dfs/name1,file:///${hadoop.tmp.dir}/dfs/name2</value>
-	</property>
-
-	<property>
-		    <name>dfs.namenode.heartbeat.recheck-interval</name>
-		    <value>30000</value>
-	</property>
-	<property>
-		    <name>dfs.heartbeat.interval </name>
-		    <value>3</value>
-	</property>
-
+<!-- 配置数据的副本数量-->
 <property>
-<name>dfs.datanode.data.dir</name>
-<value>file:///${hadoop.tmp.dir}/dfs/data1,file:///${hadoop.tmp.dir}/dfs/data2</value>
+	<name>dfs.replication</name>
+	<value>4</value>
+</property>
+<!--设置辅助名称节点所在地址,如果不配置该参数，则辅助名称节点默认和namenonde节点在一个服务器上-->
+<property>
+	<name>dfs.namenode.secondary.http-address</name>
+	<value>bigdata101:50090</value>
+</property>
+
+<!-- NameNode缓存路径 -->
+<property>
+	<name>dfs.namenode.name.dir</name>
+	<value>file:///home/bigdata/hadoop/dfs/name1,file:///home/bigdata/hadoop/dfs/name2</value>
+</property>
+<!-- 缓存文件目录 -->
+<property>
+	<name>dfs.datanode.data.dir</name>
+	<value>file:///home/bigdata/hadoop/dfs/data1,file:///home/bigdata/hadoop/dfs/data2</value>
 </property>
 
 </configuration>

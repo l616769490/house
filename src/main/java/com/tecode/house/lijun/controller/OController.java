@@ -38,7 +38,7 @@ public class OController {
         // 标题
         Title title = new Title()
                 .setText("房产税分布图")
-                .setSubtext("统计年份 :"+ 2013);
+                .setSubtext("统计年份 :"+ year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -87,7 +87,7 @@ public class OController {
         // 标题
         Title title = new Title()
                 .setText("水电费用分布图")
-                .setSubtext("统计年份 :" + 2013);
+                .setSubtext("统计年份 :" + year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -132,7 +132,7 @@ public class OController {
         // 标题
         Title title = new Title()
                 .setText("其他费用分布图")
-                .setSubtext("统计年份 :" + 2013);
+                .setSubtext("统计年份 :" + year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -176,7 +176,7 @@ public class OController {
         // 标题
         Title title = new Title()
                 .setText("房屋总费用分布图")
-                .setSubtext("统计年份 :" + 2013);
+                .setSubtext("统计年份 :" + year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -222,7 +222,7 @@ public class OController {
         // 标题
         Title title = new Title()
                 .setText("家庭收入分布图")
-                .setSubtext("统计年份 :" + 2013);
+                .setSubtext("统计年份 :" + year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()
@@ -266,7 +266,7 @@ public class OController {
         // 标题
         Title title1 = new Title()
                 .setText("住房价格分布图")
-                .setSubtext("统计年份 :" + 2013);
+                .setSubtext("统计年份 :" + year);
 
         // 提示框
         Tooltip tooltip1 = new Tooltip()
@@ -317,7 +317,7 @@ public class OController {
         // 标题
         Title title1 = new Title()
                 .setText("住房租金分布图")
-                .setSubtext("统计年份 :" + 2013);;
+                .setSubtext("统计年份 :" + year);;
 
         // 提示框
         Tooltip tooltip1 = new Tooltip()
