@@ -166,7 +166,7 @@ public class LLMySQLDaoImpl implements LLMySQLDao {
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 String s=rs.getString("x");
-                if("家庭人数".equals(s)) {
+                if("家庭总人数".equals(s)) {
                     map.put(rs.getString("legend"), Integer.valueOf(rs.getString("value")));
 
                 }

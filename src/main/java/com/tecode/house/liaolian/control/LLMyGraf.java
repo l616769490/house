@@ -37,8 +37,8 @@ public class LLMyGraf {
         Option option = new Option();
         // 标题
         Title title = new Title()
-                .setText("家庭人数分布情况")
-                .setSubtext("家庭人数："+year);
+                .setText("家庭总人数分布情况")
+                .setSubtext("家庭总人数："+year);
 
         // 提示框
         Tooltip tooltip = new Tooltip()

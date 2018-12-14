@@ -27,7 +27,6 @@ public class LLServerImpl implements LLMaketPriceServer, Analysis {
 
 
     /**
-     * 向mysql中插入统计家庭人数的结果
      *
      * @param tableName 要统计的表名
      * @return
@@ -36,7 +35,7 @@ public class LLServerImpl implements LLMaketPriceServer, Analysis {
         Map<String, Object> personDistribution = hd.getPersonDistribution(tableName);
         Iterator<Tuple2<String, Object>> pIt = personDistribution.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("税费统计", "普查区域", "/ll_person", "家庭", "税费", "税费统计", pIt, "统计税费", year);
+        return sd.into("按区域-税费统计", "普查区域", "/ll_person", "家庭", "税费", "税费统计", pIt, "统计税费", year);
     }
 
     /**
@@ -62,12 +61,11 @@ public class LLServerImpl implements LLMaketPriceServer, Analysis {
         Map<String, Object> incomeDistributionByCity = hd.getIncomeDistributionByCity(tableName);
         Iterator<Tuple2<String, Object>> cIt = incomeDistributionByCity.iterator();
         String year=tableName.split(":")[1];
-        return sd.into("家庭人数", "普查区域", "/ll_income", "区域", "人数", "家庭人数", cIt, "家庭人数统计", year);
+        return sd.into("按区域-家庭人数", "普查区域", "/ll_income", "区域", "总人数", "家庭总人数", cIt, "家庭总人数统计", year);
     }
 
 
-    /**
-     * 获取市场价的表格，有搜索条件
+    /*
      *
      * @param tablePost 封装了各种条件的对象
      * @return 符合条件的表格数据
@@ -177,7 +175,7 @@ public class LLServerImpl implements LLMaketPriceServer, Analysis {
     public Table getIncomeTable(TablePost tablePost) {
         Table table = new Table();
 
-        table.addSearchs(new Search().setTitle("家庭人数").addValue("2人以下").addValue("2人").addValue("3人").addValue("4人")
+        table.addSearchs(new Search().setTitle("家庭总人数").addValue("2人以下").addValue("2人").addValue("3人").addValue("4人")
         .addValue("5人").addValue("5人以上"));
         table.addSearchs(new Search().setTitle("区域").addValue("1").addValue("2").addValue("3").addValue("4").addValue("5"));
 
@@ -196,7 +194,7 @@ public class LLServerImpl implements LLMaketPriceServer, Analysis {
 
         }else if(searches.size()==1){
             search = searches.get(0).getValues().get(0);
-            if (search.contains("人")) {
+            if (search.contains("家庭总人数")) {
                 List<Tuple2<Object, Tuple3<String, Object, Object>>> income = hd.getIncome("thads:" + year, search, thisPage);
                 setTable2(income,table,p,thisPage);
 

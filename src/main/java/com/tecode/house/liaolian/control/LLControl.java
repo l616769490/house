@@ -25,9 +25,7 @@ public class LLControl {
 
     public static void main(String[] args) {
         if(as.analysis("thads:2013")){
-           // System.out.println("分析数据成功");
         }else{
-            //System.out.println("分析数据失败");
         }
     }
 
