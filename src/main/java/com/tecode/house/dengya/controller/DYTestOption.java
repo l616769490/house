@@ -29,7 +29,7 @@ public class DYTestOption {
     @ResponseBody
     @RequestMapping(value = "/price_city", method = RequestMethod.POST)
     public Option testBar(String year) {
-        Option option = pictureService.select(year,"市场价格分布图","城市规模统计");
+        Option option = pictureService.select(year,"市场价格分布图","城市规模");
         return option;
     }
 

@@ -2,6 +2,7 @@ package com.tecode.house.lijin.test;
 
 import com.tecode.fileimport.FileToHBase;
 import com.tecode.house.lijin.hbase.HBaseFromFile;
+import com.tecode.mysql.server.DelSQL;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -65,6 +66,10 @@ public class TestFile {
         if (b && !"on".equals(check)) {
             return "exists";
         }
+
+        // 清除数据库
+        DelSQL.delSqlByYear(year);
+
         try (InputStream inputStream = partFile.getInputStream()) {
             FileUtils.copyInputStreamToFile(inputStream, file);
             fileToHBase(path);

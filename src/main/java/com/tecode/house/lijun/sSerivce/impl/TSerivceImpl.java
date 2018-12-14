@@ -25,22 +25,29 @@ public class TSerivceImpl implements TSerivce {
         //构建HBAse表名
         String tableName =  tablePost.getYear().toString();
         //获取搜索条件
-        String filter = tablePost.getSearches().get(0).getValues().get(0);
+        String filter =null;
+        for (Search search : tablePost.getSearches()) {
+            for (String value : search.getValues()) {
+                filter=value;
+            }
+        }
         //获取要查询的页码
         int page = tablePost.getPage();
-        //获取数据                                                      "thads:"+tableName, page
+        //获取数据
         Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getForCOST( "thads:"+tableName,filter, page);
-        int i = (int) Rows._1;
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
-        List<Integer> list = new ArrayList<>();
+        long pa = i / 10 + 1;
+        if (i % 10 == 0) {
+            pa--;
+        }
 
+        List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
             for (int ii = 1; ii <= pa; ii++) {
                 list.add(ii);
             }
         } else {
-
             if (page - 2 <= 1) {
                 list.add(1);
                 list.add(2);
@@ -48,7 +55,7 @@ public class TSerivceImpl implements TSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int) pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {
@@ -98,13 +105,39 @@ public class TSerivceImpl implements TSerivce {
     }
 
     @Override
-    public Table getTablePrice(Integer page, Integer year) {
-        String tableName =  year.toString();
+    public Table getTablePrice(TablePost tablePost) {
+        //获取表名
+        String tableName =  tablePost.getYear().toString();
 
-        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getPrice("thads:"+tableName, page);
-        int i = (int) Rows._1;
+        int page = tablePost.getPage();
+
+        //获取年龄条件
+        String age = null;
+        //获取价格条件
+        String value = null;
+
+        for (Search search : tablePost.getSearches()) {
+            String title = search.getTitle();
+            if (title.equals("年龄")) {
+                age = search.getValues().get(0);
+            } else if (title.equals("住房价格")) {
+                value = search.getValues().get(0);
+            }
+
+        }
+
+        Tuple2<Object, List<ArrayList<String>>> Rows = hBaseDao.getPrice("thads:"+tableName,age,value, page);
+
+
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
+        long pa = i / 10 + 1;
+
+        if (i % 10 == 0) {
+            pa--;
+        }
+
+
         List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
             for (int ii = 1; ii <= pa; ii++) {
@@ -119,7 +152,7 @@ public class TSerivceImpl implements TSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int)pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {
@@ -129,7 +162,7 @@ public class TSerivceImpl implements TSerivce {
             }
         }
         Table table = new Table();
-        table.setYear(year);
+        table.setYear(tablePost.getYear());
         //构建Page对象
         Page p = new Page();
         p.setThisPage(page);
@@ -146,14 +179,16 @@ public class TSerivceImpl implements TSerivce {
         se1.setValues(va);
         //构建    城市规模Search对象
         Search se2 = new Search();
-        se2.setTitle("价格");
+        List<Search> search = getSearch(tablePost.getYear(), "住房价格", "建成年份");
+        table.setSearch(search);
+        se2.setTitle("住房价格");
         List<String> va1 = new ArrayList<>();
         va1.add("0-50");
         va1.add("50-100");
         va1.add("100-150");
         va1.add("150-200");
         va1.add("200-250");
-        va1.add("300+");
+        va1.add("250-300");
         se2.setValues(va1);
         List<Search> ls = new ArrayList<>();
         ls.add(se1);
@@ -185,23 +220,37 @@ public class TSerivceImpl implements TSerivce {
         //获取页码
         int page = tablePost.getPage();
 
-        //获取年份条件
-        String build = null;
-        //获取城市条件
-        String city = null;
+        //获取年龄条件
+        String age = null;
+        //获取家庭收入条件
+        String income = null;
 
+        for (Search search : tablePost.getSearches()) {
+            String title = search.getTitle();
+            if (title.equals("年龄")) {
+                age = search.getValues().get(0);
+            } else if (title.equals("家庭收入")) {
+                income = search.getValues().get(0);
+            }
+
+        }
         Tuple2<Object, List<ArrayList<String>>> Rows = null;
         //调用有搜索条件的方法获取数据
 
-        Rows = hBaseDao.getForIncome("thads:"+tableName,page);
+        Rows = hBaseDao.getForIncome("thads:"+tableName,age,income,page);
 
 
-        int i = (int) Rows._1;
+        long i = (long) Rows._1;
         //封装页数列表
-        int pa = i / 10 + 1;
+        long pa = i / 10 + 1;
+
+        if (i % 10 == 0) {
+            pa--;
+        }
+
+
         List<Integer> list = new ArrayList<>();
         if (pa <= 5) {
-
             for (int ii = 1; ii <= pa; ii++) {
                 list.add(ii);
             }
@@ -214,7 +263,7 @@ public class TSerivceImpl implements TSerivce {
                 list.add(4);
                 list.add(5);
             } else if (page + 2 >= pa) {
-                for (int ii = pa - 4; ii <= pa; ii++) {
+                for (int ii = (int)pa - 4; ii <= pa; ii++) {
                     list.add(ii);
                 }
             } else {
@@ -232,6 +281,8 @@ public class TSerivceImpl implements TSerivce {
         table.setPage(p);
         //构建    建成年份Search对象
         Search se1 = new Search();
+        List<Search> search = getSearch(tablePost.getYear(), "年龄家庭收入", "户主年龄");
+        table.setSearch(search);
         se1.setTitle("年龄");
         List<String> va = new ArrayList<>();
         va.add("0-18");

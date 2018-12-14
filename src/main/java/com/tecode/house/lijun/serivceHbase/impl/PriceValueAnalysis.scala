@@ -14,7 +14,7 @@ import org.apache.hadoop.hbase.mapreduce.TableInputFormat
 import org.apache.hadoop.hbase.util.Bytes
 import org.apache.hadoop.hbase.{Cell, CellUtil, HBaseConfiguration}
 import org.apache.spark.rdd.RDD
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.{ SparkContext}
 
 
 class PriceValueAnalysis extends Analysis {
@@ -29,7 +29,7 @@ class PriceValueAnalysis extends Analysis {
     val sc = SparkUtil.getSparkContext
     //    调用读取数据的方法
     val VALUERDD: RDD[Double] = read(tableName, sc)
-    //将具体的家庭收人转换为家庭收入区间并计数
+    //将具体的住房价格转换为家庭收入区间并计数
     val utility: RDD[(String, Int)] = VALUERDD.map(x => {
       if (x < 500000) {
         ("0-500000", 1)
@@ -154,6 +154,15 @@ class PriceValueAnalysis extends Analysis {
         val pieData = new Data(elem._2.toString, pieXaxisId, pieLegendId, elem._1, "住房价格")
         dao.putInTableData(conn, pieData)
       }
+
+
+      //    插入搜索表
+
+      val age = new Search("年龄区间", "年龄", reportId)
+      dao.putInTableSearch(conn, age)
+
+      val value = new Search("住房价格", "住房价格", reportId)
+      dao.putInTableSearch(conn, value)
 
       conn.commit
 

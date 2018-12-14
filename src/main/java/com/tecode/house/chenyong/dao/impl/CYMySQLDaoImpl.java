@@ -32,7 +32,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -70,7 +69,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -104,7 +102,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -137,7 +134,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -174,7 +170,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -211,7 +206,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -239,7 +233,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         ps.setInt(2, xAxis.getDiagramId());
         ps.setString(3, xAxis.getDimGroupName());
         //执行
-        System.out.println(xAxis.getDimGroupName());
         int len1 = ps.executeUpdate();
         //System.out.println(len1);
         //获取新生成的主键的值
@@ -247,7 +240,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }
@@ -279,7 +271,6 @@ public class CYMySQLDaoImpl implements CYMySQLDao {
         int id = 0;
         if (len1 > 0) {
             id = getId(ps);
-            System.out.println(id);
         }
         return id;
     }

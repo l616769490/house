@@ -84,7 +84,7 @@ public class TController {
     @ResponseBody
     @RequestMapping(value = "/price_value_table", method = RequestMethod.POST)
     public Table priceValue(@RequestBody TablePost tablePost){
-            Table table = tableSerivce.getTablePrice(tablePost.getPage(), tablePost.getYear());
+            Table table = tableSerivce.getTablePrice(tablePost);
             return table;
     }
 
@@ -96,7 +96,7 @@ public class TController {
     @ResponseBody
     @RequestMapping(value = "/price_frm_table", method = RequestMethod.POST)
     public Table priceFRM(@RequestBody TablePost tablePost){
-        Table table = tableSerivce.getTablePrice(tablePost.getPage(), tablePost.getYear());
+        Table table = tableSerivce.getTablePrice(tablePost);
         return table;
     }
 

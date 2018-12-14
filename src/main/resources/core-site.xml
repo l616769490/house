@@ -17,14 +17,29 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-	<!-- 指定HDFS中NameNode的地址 -->
+
 	<property>
+		<!--配置默认的文件系统的参数-->
 		<name>fs.defaultFS</name>
-        <value>hdfs://master</value>
+		<!--文件系统所在地-->
+		<value>hdfs://Hadoop001</value>
 	</property>
-<!-- 指定hadoop运行时产生文件的存储目录 -->
+	<!--配置hadoop的临时目录-->
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>/home/lijin/hadoop_tmp</value>
+		<!--存放的目录地址，一般可以防止$HADOOP_HOME/data/,或者当前启动进程的用户的家目录下-->
+		<value>/home/centos/hadoop</value>
 	</property>
+
+<!--启用回收站 存放时间为1分钟-->
+<property>
+<name>fs.trash.interval</name>
+<value>1</value>
+</property>
+
+<property>
+<name>hadoop.http.staticuser.user</name>
+<value>centos</value>
+</property>
+
 </configuration>

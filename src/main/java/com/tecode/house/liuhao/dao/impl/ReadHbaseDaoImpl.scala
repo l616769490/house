@@ -71,6 +71,22 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     * @return
     */
   override def readCityTaxData(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])= {
+    //println("filter:"+city)
+    var filter = ""
+    if(city==null||city=="aaa"){
+      ""
+    }else if (city.equals("一线城市")){
+      "1"
+    }else if (city.equals("二线城市")){
+      "2"
+    }else if (city.equals("三线城市")){
+      "3"
+    }else if (city.equals("四线城市")){
+     "4"
+    }else {
+      "5"
+    }
+    //println("数字:"+filter)
 
 //    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
     val sc = SparkUtil.getSparkContext
@@ -82,18 +98,16 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     val listrow = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
       classOf[ImmutableBytesWritable],
       classOf[Result]).map(x =>{
-      val list = new util.ArrayList[String]()
-      val value = (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))),
+      var list = new util.ArrayList[String]()
+      var value = (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))),
         Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
         ))
-      //if(value._1.equals(citys.toString)){
         list.add(value._1)
         list.add(value._2)
         list.add(value._3)
         list.add(value._4)
-     // }
 
       list
     })
@@ -117,6 +131,66 @@ class ReadHbaseDaoImpl extends  ReadHbaseDao{
     (size,showdata)
 
   }
+  override def readCityTaxDatas(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])= {
+    //println("filter:"+city)
+    var filter = ""
+    if(city==null){
+      ""
+    } else if (city.equals("一线城市")){
+      "1"
+    }else if (city.equals("二线城市")){
+      "2"
+    }else if (city.equals("三线城市")){
+      "3"
+    }else if (city.equals("四线城市")){
+      "4"
+    }else {
+      "5"
+    }
 
+    //    val con = new SparkConf().setAppName("hbase").setMaster("local[*]")
+    val sc = SparkUtil.getSparkContext
+    val conf = HBaseConfiguration.create()
+    conf.set(TableInputFormat.INPUT_TABLE, tablename)
+    conf.set(TableInputFormat.SCAN_COLUMNS, "info")
+    //读取hbase中数据并转换为rdd
+
+    val listrow = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat],
+      classOf[ImmutableBytesWritable],
+      classOf[Result]).map(x =>{
+      var list = new util.ArrayList[String]()
+      var value = (Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("METRO3"))),
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("ZSMHC"))),
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("UTILITY"))),
+        Bytes.toString(x._2.getValue(Bytes.toBytes("info"), Bytes.toBytes("OTHERCOST"))
+        ))
+      list.add(value._1)
+      list.add(value._2)
+      list.add(value._3)
+      list.add(value._4)
+
+      list
+    })
+
+
+    //将rdd转换成scala的list
+    val scalalist: List[util.ArrayList[String]] = listrow.collect().toList
+    //将scala的list转换成Javalist
+    val javalist: util.List[util.ArrayList[String]] = scalalist.asJava
+
+    var showdata:util.List[util.ArrayList[String]] = null
+    val size = javalist.size()
+
+
+
+    if(page*10>size){
+      showdata =javalist.subList((page-1)*10,size)
+    }else{
+      showdata = javalist.subList((page-1)*10,page*10)
+    }
+    println(size)
+    (size,showdata)
+
+  }
 
 }

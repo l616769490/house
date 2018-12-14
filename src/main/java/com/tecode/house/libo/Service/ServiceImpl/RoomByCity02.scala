@@ -463,26 +463,92 @@ class RoomByCity02 extends Analysis {
     val value = tuples.iterator()
 
 
+    //获取所有页码
     val p = new Page;
 
-    if(page == null){
-       val page1 = 1
+
+    if (page == null) {
+      val page1 = 1
       p.setThisPage(page1)
+    }
+    //table.setPage(p)
+
+    // var lll:List[Integer] = List()
+
+    //总页数
+    val ppage = l.toInt/10+1
+    //判断输入页码的条数是否大于总页数
+    //先输入页数 > 总页数判断
+    if(page>ppage){
+      //总页数大于10
+      if(ppage>10){
+        for(i <- ppage-9 to ppage-1){
+          p.addData(i)
+        }
+      //  p.addData(ppage)
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
+      }
+      //输入页数 < 总页数
+    }else{
+      if(ppage>10){
+        if(page<5){
+          var count = 0
+          while(count + page < 10){
+            p.addData(count + page)
+            count += 1
+          }
+        }else{
+          for(i <- page-4 to page +4){
+            p.addData(i)
+          }
+         // p.addData(ppage)
+        }
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
+      }
     }
     table.setPage(p)
 
-    //判断输入页码的条数是否大于总页数
-    if(page*10+10>l.toInt){
-      //总条数/10+1=页数
-      for(i <- l.toInt/10-10 to l.toInt/10 ){
-        p.addData(i)
-      }
-    }else{
-      for(i <- page to page+10){
-        //sb.append(i)
-        p.addData(i)
-      }
-    }
+//    if(l.toInt==0){
+//      p.addData(0)
+//    }else{
+//      if(page>0&&page<10){
+//        var count = 0
+//        while(count + page < 10){
+//          p.addData(page + count)
+//          count += 1
+//        }
+////        for (i <- 1 to page){
+////          p.addData(i)
+////        }
+//      }else if(page>= 10 && page <= ppage -10){
+//        for(i <- page-4 to page+4){
+//          p.addData(i)
+//        }
+//        p.addData(ppage)
+//      }else{
+//        for(i <- l.toInt/10-9 to l.toInt/10){
+//          p.addData(i)
+//        }
+//      }
+//    }
+
+//    if(page*10+10>l.toInt){
+//      //总条数/10+1=页数
+//      for(i <- l.toInt/10-10 to l.toInt/10 ){
+//        p.addData(i)
+//      }
+//    }else{
+//      for(i <- page to page+10){
+//        //sb.append(i)
+//        p.addData(i)
+//      }
+//    }
 
 
 
@@ -505,11 +571,16 @@ class RoomByCity02 extends Analysis {
     * 截取方法
     */
   def subString(page:Int,count:Int,list:util.List[(String, String)]): util.List[(String, String)] ={
-    if (page*10>count){
-      list.subList(count-10,count)
+    if(count <10){
+      list.subList(0,count)
     }else{
-      list.subList((page-1)*10,page*10)
+      if (page*10>count){
+        list.subList(count-10,count)
+      }else{
+        list.subList((page-1)*10,page*10)
+      }
     }
+
   }
 
 
@@ -521,7 +592,7 @@ class RoomByCity02 extends Analysis {
     *       条件：城市等级  房间数最大15
     *       ID  城市等级  房间数   卧室数
     */
-  def roomsTable(tableName:String,city:String,page:Int,table :Table):List[(String,String)]  ={
+  def roomsTable(tableName:String,city:String,rooms:String,page:Int,table :Table):List[(String,String)]  = {
     val hconf = HBaseConfiguration.create()
     hconf.set(TableInputFormat.INPUT_TABLE, tableName)
     hconf.set(TableInputFormat.SCAN_COLUMNS, "info")
@@ -530,49 +601,70 @@ class RoomByCity02 extends Analysis {
       classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable],
       classOf[org.apache.hadoop.hbase.client.Result])
 
-    var roomsMap = Map[String,String]();
+    var roomsMap = Map[String, String]();
     //取数据
-    var value = hbaseRDD.map(x=>{
-      (Bytes.toString(x._2.getValue("info".getBytes(),"CONTROL".getBytes())),
-        Bytes.toString(x._2.getValue("info".getBytes(),"METRO3".getBytes())),
-        Bytes.toString(x._2.getValue("info".getBytes(),"ROOMS".getBytes())),
-        Bytes.toString(x._2.getValue("info".getBytes(),"BEDRMS".getBytes())))
-    }).filter(x=>x._4.toInt>0)
+    var value = hbaseRDD.map(x => {
+      (Bytes.toString(x._2.getValue("info".getBytes(), "CONTROL".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(), "METRO3".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(), "ROOMS".getBytes())),
+        Bytes.toString(x._2.getValue("info".getBytes(), "BEDRMS".getBytes())))
+    }).filter(x => x._4.toInt > 0)
     //(499434810242,499434810242_2_5_3)
     //过滤输入的城市等级
 
-    if(city==null){
-      value = value
-    }else{
-      if(city .equals("1") ){
+    if (city != null) {
+      if (city.equals("1")) {
         value = value.filter(_._2.equals("1"))
-      }else if(city .equals("2")){
+      } else if (city.equals("2")) {
         value = value.filter(_._2.equals("2"))
-      }else if(city .equals("3")){
+      } else if (city.equals("3")) {
         value = value.filter(_._2.equals("3"))
-      }else if(city .equals("4")){
+      } else if (city.equals("4")) {
         value = value.filter(_._2.equals("4"))
-      }else if(city .equals("5")){
+      } else if (city.equals("5")) {
         value = value.filter(_._2.equals("5"))
-      }else{
-        value
+      }
+    }
+
+    if (rooms != null) {
+      if (rooms.equals("1")) {
+        value = value.filter(_._3.equals("1"))
+      } else if (rooms.equals("2")) {
+        value = value.filter(_._3.equals("2"))
+      } else if (rooms.equals("3")) {
+        value = value.filter(_._3.equals("3"))
+      } else if (rooms.equals("4")) {
+        value = value.filter(_._3.equals("4"))
+      } else if (rooms.equals("5")) {
+        value = value.filter(_._3.equals("5"))
+      } else if (rooms.equals("6")) {
+        value = value.filter(_._3.equals("6"))
+      } else if (rooms.equals("7")) {
+        value = value.filter(_._3.equals("7"))
+      } else if (rooms.equals("8")) {
+        value = value.filter(_._3.equals("8"))
+      } else if (rooms.equals("9")) {
+        value = value.filter(_._3.equals("9"))
+      } else if (rooms.equals("10+")) {
+        value = value.filter(_._3.toInt >= 10)
       }
     }
 
 
+      val v = value.map { x => {
+        (x._1, x._1 + "_" + x._2 + "_" + x._3 + "_" + x._4)
+      }
+    }
 
-    val v = value.map{x=>{
-      (x._1,x._1+"_"+x._2+"_"+x._3+"_"+x._4)
-    }}
 
-
-    var jlist:List[(String,String)] = List()
+    var jlist: List[(String, String)] = List()
     val l1: Long = v.count()
 
-    //val l111: util.List[Integer]  =  v.take(l1.toInt).toList.asJava
-    val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
 
-    val tuples = subString(page,l1.toInt,l)
+    //val l111: util.List[Integer]  =  v.take(l1.toInt).toList.asJava
+    val l: util.List[(String, String)] = v.take(page * 10).toList.asJava;
+
+    val tuples = subString(page, l1.toInt, l)
     val value1 = tuples.iterator()
 
 
@@ -580,46 +672,68 @@ class RoomByCity02 extends Analysis {
     val p = new Page;
 
 
-    if(page == null){
+    if (page == null) {
       val page1 = 1
       p.setThisPage(page1)
     }
-    table.setPage(p)
+    //table.setPage(p)
 
     // var lll:List[Integer] = List()
 
-
+    //总页数
+    val ppage = l1.toInt/10+1
     //判断输入页码的条数是否大于总页数
-    if(page*10+10>l1.toInt){
-      //总条数/10+1=页数
-      for(i <- l1.toInt/10-10 to l1.toInt/10 ){
-        p.addData(i)
+    //先输入页数 > 总页数判断
+    if(page>ppage){
+      //总页数大于10
+      if(ppage>10){
+        for(i <- ppage-9 to ppage-1){
+          p.addData(i)
+        }
+        //p.addData(ppage)
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
       }
+      //输入页数 < 总页数
     }else{
-      for(i <- page to page+10){
-       //sb.append(i)
-        p.addData(i)
+      if(ppage>10){
+        if(page<5){
+          var count = 0
+          while(count + page < 10){
+            p.addData(count + page)
+            count += 1
+          }
+        }else{
+          for(i <- page-4 to page +4){
+            p.addData(i)
+          }
+         // p.addData(ppage)
+        }
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
       }
     }
 
-//    val list = sb.toList
-//    p.setData(list)
-    table.setPage(p)
+      table.setPage(p)
 
-    while(value1.hasNext){
-      val str = value1.next()
-      jlist:+=(l.toString,str._2)
-    }
-    jlist
+      while (value1.hasNext) {
+        val str = value1.next()
+        jlist :+= (l.toString, str._2)
+      }
+      jlist
+
+
   }
-
-
   /**
     *按建成年份：统计独栋比例
     *   条件：年份区间    是否独栋
     * CONTROL METRO3 BUILT STRUCTURETYPE
     */
-  def singleTable(tableName:String,year:String,page:Int,table:Table):List[(String,String)]  ={
+  def singleTable(tableName:String,year:String,ifSingleBuild:String,page:Int,table:Table):List[(String,String)]  ={
     //获取hbase配置信息
     val hconf = HBaseConfiguration.create()
     hconf.set(TableInputFormat.INPUT_TABLE, tableName)
@@ -641,29 +755,28 @@ class RoomByCity02 extends Analysis {
 
     //条件筛选  年份判断
     if(year ==null){
-      values = values
+      values
     }else{
       if(year.equals("1900-2000")){
         values = values.filter(x=>{x._3.toInt>=1900&&x._3.toInt<=2000})
       }else if(year.equals("2000-2010")){
         values = values.filter(x=>{x._3.toInt>2000&&x._3.toInt<=2010})
-      }else if(year.equals("1900-2000")){
+      }else if(year.equals("2010-2018")){
         values = values.filter(x=>{x._3.toInt>2010&&x._3.toInt<=2018})
-      }else{
-        values
       }
     }
 
 
 
     //独栋判断
-    //    if(ifSingleBuild.equals("是")){
-    //      values = values.filter(_._4.toInt==1)
-    //    }else if(ifSingleBuild.equals("否")){
-    //      values = values.filter(_._4.toInt==2)
-    //    }else{
-    //      values = values
-    //    }
+    if(ifSingleBuild!=null){
+      if(ifSingleBuild.equals("是")){
+        values = values.filter(_._4.toInt==1)
+      }else if(ifSingleBuild.equals("否")){
+        values = values.filter(_._4.toInt==2)
+      }
+    }
+
     //拼接成Map,自定义组装
     val v=values.map(x=>{
       if(x._4.toInt==1){
@@ -677,7 +790,8 @@ class RoomByCity02 extends Analysis {
     var jlist:List[(String,String)] = List()
     //获得符合条件的数据的数量，既总条数
     val len= v.count()
-    //println("l1长度：："+l1.toInt)
+    //val ppage = len.toInt/10+1
+
     //取到page页*10，装换成java的list    截取     asJava需要导包
     val l: util.List[(String, String)]  = v.take(page*10).toList.asJava;
 
@@ -694,41 +808,46 @@ class RoomByCity02 extends Analysis {
     }
 
     //判断输入页码的条数是否大于总页数
-    if(page*10+10>len.toInt){
-      //总条数/10+1=页数
-      for(i <- len.toInt/10-10 to len.toInt/10 ){
-        p.addData(i)
+
+//总页数
+    val ppage = len.toInt/10+1
+    //判断输入页码的条数是否大于总页数
+    //先输入页数 > 总页数判断
+    if(page>ppage){
+      //总页数大于10
+      if(ppage>10){
+        for(i <- ppage-9 to ppage-1){
+          p.addData(i)
+        }
+       // p.addData(ppage)
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
       }
+      //输入页数 < 总页数
     }else{
-      for(i <- page to page+10){
-        //sb.append(i)
-        p.addData(i)
+      if(ppage>10){
+        if(page<5){
+          var count = 0
+          while(count + page < 10){
+            p.addData(count + page)
+            count += 1
+          }
+        }else{
+          for(i <- page-4 to page +4){
+            p.addData(i)
+          }
+        // p.addData(ppage)
+        }
+      }else{
+        for(i <- 1 to page){
+          p.addData(i)
+        }
       }
     }
-
-
-
-
-
-
 
     table.setPage(p)
-
-    for(i <- page to page+10){
-      //println(i)
-      p.addData(i)
-    }
-//    if(page+10>l1.toInt){
-//      for(i <- l1.toInt-10 to l1.toInt-1 ){
-//        println(i)
-//        p.addData(i)
-//      }
-//    }else{
-//      for(i <- page to page+10){
-//        println(i)
-//        p.addData(i)
-//      }
-//    }
 
     while(value1.hasNext){
       val str = value1.next()

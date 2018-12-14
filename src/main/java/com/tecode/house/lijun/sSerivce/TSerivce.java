@@ -19,7 +19,7 @@ public interface TSerivce {
      * @return
      */
 
-    Table getTablePrice(Integer page, Integer year);
+    Table getTablePrice(TablePost tablePost);
 
     /**
      * 获取数据（按建成年份统计房屋数量）

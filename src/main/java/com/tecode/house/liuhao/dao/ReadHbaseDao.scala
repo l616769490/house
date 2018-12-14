@@ -24,4 +24,6 @@ trait ReadHbaseDao {
     * @return
     */
   def readCityTaxData(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])
+
+  def readCityTaxDatas(tablename:String,page:Int,city:String):(Integer,util.List[util.ArrayList[String]])
 }

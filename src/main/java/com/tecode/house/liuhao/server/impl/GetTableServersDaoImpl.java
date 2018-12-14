@@ -1,11 +1,14 @@
 package com.tecode.house.liuhao.server.impl;
 
+import com.tecode.house.azouchao.showSerivce.TableSerivce;
+import com.tecode.house.azouchao.showSerivce.TableSerivceImpl;
 import com.tecode.house.liuhao.dao.ReadHbaseDao;
 import com.tecode.house.liuhao.dao.impl.ReadHbaseDaoImpl;
 import com.tecode.house.liuhao.server.getTableServersDao;
 import com.tecode.table.*;
 import org.springframework.stereotype.Service;
 import scala.Tuple2;
+import scala.Tuple4;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +40,10 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         if(page==null){
             page=1;
         }
-        //调用方法获得数据
         ReadHbaseDao read = new ReadHbaseDaoImpl();
-        Tuple2<Integer, List<ArrayList<String>>> data = read.readCityTaxData(tablename, page, filter);
+        Tuple2<Integer, List<ArrayList<String>>> data  = read.readCityTaxData(tablename, page, filter);
+        Tuple2<Integer, List<ArrayList<String>>> data2 = read.readCityTaxDatas(tablename, page, filter);
+
         int i = data._1;
         //封装页面列表
         int pa = i/10 +1;
@@ -74,10 +78,11 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         Page p = new Page();
         p.setThisPage(tablePost.getPage());
         p.setData(list);
+        TableSerivce ss = new TableSerivceImpl();
 
         //构建search对象
         Search s = new Search();
-        s.setTitle("各线城市的税务表");
+        s.setTitle("税务统计");
         List<String> l = new ArrayList<>();
         l.add("一线城市");
         l.add("二线城市");
@@ -85,7 +90,9 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         l.add("四线城市");
         l.add("五线城市");
         s.setValues(l);
-
+        List<Search> search =new ArrayList<>();
+        search.add(s);
+        table.setSearch(search);
         List<String> lz = new ArrayList<>();
         lz.add("城市规模");
         lz.add("房屋费用");
@@ -94,12 +101,24 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         table.setTop(lz);
         table.setPage(p);
         List<Row> row = new ArrayList<>();
-        for (ArrayList<String> rowdata : data._2()) {
-            Row r = new Row();
-            r.setRow(rowdata);
-            row.add(r);
+        List<Tuple4> rs = new ArrayList<>();
+        if(filter==null){
+            for (ArrayList<String> rowdata : data._2()) {
+                Row r = new Row();
+                r.setRow(rowdata);
+                row.add(r);
+            }
+            table.setData(row);
+        }else {
+            for (ArrayList<String> rowdata : data2._2()) {
+                Row r = new Row();
+                r.setRow(rowdata);
+                row.add(r);
+            }
+            table.setData(row);
         }
-        table.setData(row);
+
+
         return table;
     }
 
@@ -150,6 +169,7 @@ public class GetTableServersDaoImpl implements getTableServersDao {
         Table table = new Table();
         //封装年份
         table.setYear(tablePost.getYear());
+
         //否建page对象
         Page p = new Page();
         p.setThisPage(tablePost.getPage());

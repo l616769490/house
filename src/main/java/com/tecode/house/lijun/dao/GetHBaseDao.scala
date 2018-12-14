@@ -10,7 +10,7 @@ trait GetHBaseDao {
     * @param page      查询的页码
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     **/
-  def getForCOST(tableName: String, filter: String ,page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForCOST(tableName: String, filter: String ,page: Int): (Long, util.List[util.ArrayList[String]])
 
 
   /**
@@ -21,7 +21,7 @@ trait GetHBaseDao {
     * @return (Int,util.List[util.ArrayList[String])：（符合条件的数据的总条数，查询页码的数据）
     **/
 
-  def getPrice(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getPrice(tableName: String, age:String, value:String, page: Int): (Long, util.List[util.ArrayList[String]])
 
 
   /**
@@ -30,7 +30,7 @@ trait GetHBaseDao {
     * @param tableName 表名
     * @param page      查询页码
     */
-  def getForIncome(tableName: String, page: Int): (Int, util.List[util.ArrayList[String]])
+  def getForIncome(tableName: String, ages:String,incomes:String,page: Int): (Long, util.List[util.ArrayList[String]])
 
 
 }

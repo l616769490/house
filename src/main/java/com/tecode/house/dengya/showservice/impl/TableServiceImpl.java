@@ -153,7 +153,7 @@ public class TableServiceImpl implements TableService {
         p.setThisPage(tablePost.getPage());
         p.setData(list);
         table.setPage(p);
-       List<Search> search = getSearch(tablePost.getYear(),"市场价格分布图","城市规模统计");
+       List<Search> search = getSearch(tablePost.getYear(),"市场价格分布图","城市规模");
        table.setSearch(search);
         //表头
         List<String> l = new ArrayList<>();
